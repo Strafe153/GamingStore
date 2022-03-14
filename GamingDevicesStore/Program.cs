@@ -1,15 +1,24 @@
 using Microsoft.EntityFrameworkCore;
 using GamingDevicesStore.Data;
+using GamingDevicesStore.Models;
+using GamingDevicesStore.Repositories.Interfaces;
+using GamingDevicesStore.Repositories.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddScoped<IControllable<Company>, CompaniesRepository>();
+
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.SuppressAsyncSuffixInActionNames = false;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
