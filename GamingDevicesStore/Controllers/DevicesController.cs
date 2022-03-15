@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using GamingDevicesStore.Models;
 using GamingDevicesStore.Dtos.Device;
 using GamingDevicesStore.Repositories.Interfaces;
@@ -44,6 +45,7 @@ namespace GamingDevicesStore.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<DeviceReadDto>> CreateDeviceAsync(DeviceCreateDto createDto)
         {
             var device = _mapper.Map<Device>(createDto);
@@ -57,6 +59,7 @@ namespace GamingDevicesStore.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult> UpdateDeviceAsync(Guid id, DeviceUpdateDto updateDto)
         {
             Device? device = await _repo.GetByIdAsync(id);
@@ -74,6 +77,7 @@ namespace GamingDevicesStore.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult> DeleteDeviceAsync(Guid id)
         {
             Device? device = await _repo.GetByIdAsync(id);
