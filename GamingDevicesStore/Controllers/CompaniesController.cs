@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using GamingDevicesStore.Models;
 using GamingDevicesStore.Dtos.Company;
 using GamingDevicesStore.Repositories.Interfaces;
@@ -44,6 +45,7 @@ namespace GamingDevicesStore.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<CompanyReadDto>> CreateCompanyAsync(CompanyCreateUpdateDto createDto)
         {
             var company = _mapper.Map<Company>(createDto);
@@ -57,6 +59,7 @@ namespace GamingDevicesStore.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult> UpdateCompanyAsync(Guid id, CompanyCreateUpdateDto updateDto)
         {
             Company? company = await _repo.GetByIdAsync(id);
@@ -74,6 +77,7 @@ namespace GamingDevicesStore.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult> DeleteCompanyAsync(Guid id)
         {
             Company? company = await _repo.GetByIdAsync(id);
