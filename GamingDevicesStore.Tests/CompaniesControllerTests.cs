@@ -16,7 +16,7 @@ namespace GamingDevicesStore.Tests
         private static readonly CompaniesController _controller = new(_repo.Object, _mapper.Object);
 
         [Fact]
-        public async Task GetAllCompaniesAsync_ValidData_ReturnsActionResultOfReadDtos()
+        public async Task GetAllCompaniesAsync_ValidData_ReturnsOkObjectResult()
         {
             // Act
             var result = await _controller.GetAllCompaniesAsync();
@@ -27,7 +27,7 @@ namespace GamingDevicesStore.Tests
         }
 
         [Fact]
-        public async Task GetCompanyAsync_ExistingCompany_ReturnsActionResultOfReadDto()
+        public async Task GetCompanyAsync_ExistingCompany_ReturnsOkObjectResult()
         {
             // Arrange
             _repo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Company());
