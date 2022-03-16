@@ -26,7 +26,9 @@ namespace GamingDevicesStore.Repositories.Implementations
 
         public async Task<Company?> GetByIdAsync(Guid id)
         {
-            return await _context.Companies.SingleOrDefaultAsync(c => c.Id == id);
+            return await _context.Companies
+                .Include(c => c.Devices)
+                .SingleOrDefaultAsync(c => c.Id == id);
         }
 
         public void Remove(Company entity)
