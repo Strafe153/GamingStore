@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using GamingDevicesStore.Data;
 using GamingDevicesStore.Models;
 using GamingDevicesStore.Dtos.User;
 using GamingDevicesStore.Repositories.Interfaces;
@@ -94,6 +96,11 @@ namespace GamingDevicesStore.Controllers
                 return NotFound("User not found");
             }
 
+            if (!IsAdminOrOwner(user))
+            {
+                return Forbid();
+            }
+
             _mapper.Map(updateDto, user);
             _repo.Update(user);
             await _repo.SaveChangesAsync();
@@ -112,10 +119,27 @@ namespace GamingDevicesStore.Controllers
                 return NotFound("User not found");
             }
 
+            if (!IsAdminOrOwner(user))
+            {
+                return Forbid();
+            }
+
             _repo.Remove(user);
             await _repo.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private bool IsAdminOrOwner(User user)
+        {
+            if (User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Role 
+                && c.Value == UserRole.Admin.ToString()) is not null
+                || User.Identity!.Name == user.Username)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
