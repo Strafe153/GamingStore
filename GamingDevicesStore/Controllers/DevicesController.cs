@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using GamingDevicesStore.Models;
 using GamingDevicesStore.Dtos.Device;
 using GamingDevicesStore.Repositories.Interfaces;
@@ -11,19 +12,38 @@ namespace GamingDevicesStore.Controllers
     [ApiController]
     public class DevicesController : ControllerBase
     {
-        private readonly IControllable<Device> _repo;
+        private readonly IControllable<Device> _devicesRepo;
+        private readonly IControllable<Company> _companiesRepo;
         private readonly IMapper _mapper;
 
-        public DevicesController(IControllable<Device> repo, IMapper mapper)
+        public DevicesController(IControllable<Device> devicesRepo, 
+            IControllable<Company> companiesRepo, IMapper mapper)
         {
-            _repo = repo;
+            _devicesRepo = devicesRepo;
+            _companiesRepo = companiesRepo;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DeviceReadDto>>> GetAllDevicesAsync()
         {
-            IEnumerable<Device> devices = await _repo.GetAllAsync();
+            IEnumerable<Device> devices = await _devicesRepo.GetAllAsync();
+            var readDtos = _mapper.Map<IEnumerable<DeviceReadDto>>(devices);
+
+            return Ok(readDtos);
+        }
+
+        [HttpGet("company/{id}")]
+        public async Task<ActionResult<IEnumerable<DeviceReadDto>>> GetDevicesByCompanyAsync(Guid id)
+        {
+            Company? company = await _companiesRepo.GetByIdAsync(id);
+
+            if (company is null)
+            {
+                return NotFound("Company not found");
+            }
+
+            IEnumerable<Device?> devices = company.Devices.Where(d => d.CompanyId == id);
             var readDtos = _mapper.Map<IEnumerable<DeviceReadDto>>(devices);
 
             return Ok(readDtos);
@@ -32,7 +52,7 @@ namespace GamingDevicesStore.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DeviceReadDto>> GetDeviceAsync(Guid id)
         {
-            Device? device = await _repo.GetByIdAsync(id);
+            Device? device = await _devicesRepo.GetByIdAsync(id);
 
             if (device is null)
             {
@@ -50,8 +70,8 @@ namespace GamingDevicesStore.Controllers
         {
             var device = _mapper.Map<Device>(createDto);
 
-            _repo.Add(device);
-            await _repo.SaveChangesAsync();
+            _devicesRepo.Add(device);
+            await _devicesRepo.SaveChangesAsync();
 
             var readDto = _mapper.Map<DeviceReadDto>(device);
 
@@ -62,7 +82,7 @@ namespace GamingDevicesStore.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult> UpdateDeviceAsync(Guid id, DeviceUpdateDto updateDto)
         {
-            Device? device = await _repo.GetByIdAsync(id);
+            Device? device = await _devicesRepo.GetByIdAsync(id);
 
             if (device is null)
             {
@@ -70,8 +90,8 @@ namespace GamingDevicesStore.Controllers
             }
 
             _mapper.Map(updateDto, device);
-            _repo.Update(device);
-            await _repo.SaveChangesAsync();
+            _devicesRepo.Update(device);
+            await _devicesRepo.SaveChangesAsync();
 
             return NoContent();
         }
@@ -80,15 +100,15 @@ namespace GamingDevicesStore.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult> DeleteDeviceAsync(Guid id)
         {
-            Device? device = await _repo.GetByIdAsync(id);
+            Device? device = await _devicesRepo.GetByIdAsync(id);
 
             if (device is null)
             {
                 return NotFound("Device not found");
             }
 
-            _repo.Remove(device);
-            await _repo.SaveChangesAsync();
+            _devicesRepo.Remove(device);
+            await _devicesRepo.SaveChangesAsync();
 
             return NoContent();
         }
