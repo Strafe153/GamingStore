@@ -5,6 +5,7 @@ export class Users extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = {users: []};
         this.getUsers = this.getUsers.bind(this);
     }
@@ -17,22 +18,37 @@ export class Users extends Component {
                 if (response.ok) {
                     return response.json();
                 } else {
-                    return response.text().then(e => { throw new Error(e.message) });
+                    return response.text().then(error => { throw new Error(error) });
                 }
             })
             .then(data => {
                 this.setState({users: data});
             })
-            .catch(error => console.log(error));
+            .catch(error => console.log(error.message));
     }
 
     render() {
         return <div>
-            {
-                // this.state.users.map(user => {
-                //     return <p>{ user }</p>;
-                // })
-            }
+            <table className="table table-bordered">
+                <thead>
+                    <tr>
+                        <th className="text-center">Id</th>
+                        <th className="text-center">Username</th>
+                        <th className="text-center">Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {
+                    this.state.users.map(user => {
+                        return <tr key={user.id}>
+                            <td>{ user.id }</td>
+                            <td>{ user.username }</td>
+                            <td>{ user.role }</td>
+                        </tr>;
+                    })
+                }
+                </tbody>
+            </table>
 
             <button onClick={this.getUsers}>Get users</button>
         </div>;
