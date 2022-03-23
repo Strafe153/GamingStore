@@ -9,16 +9,16 @@ import { RegisterForm } from './components/RegisterForm';
 import './custom.css'
 
 export default class App extends Component {
-  static displayName = App.name;
+    static displayName = App.name;
 
-  render () {
-    return (
-      <Layout>
-        <Route exact path='/' component={Home} />
-        <Route path='/users' component={Users} />
-        <Route path='/login' component={LoginForm} />
-        <Route path='/register' component={RegisterForm} />
-      </Layout>
-    );
-  }
+    render () {
+        return (
+            <Layout>
+                <Route exact path='/' component={Home} />
+                <Route path='/users' component={Users} />
+                <Route path='/login' component={LoginForm} />
+                <Route path='/register' component={RegisterForm} />
+            </Layout>
+        );
+    }
 }

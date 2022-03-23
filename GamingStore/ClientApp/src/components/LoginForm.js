@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
 export class LoginForm extends Component {
+    static displayName = LoginForm.name;
+
     constructor(props) {
         super(props);
 
@@ -18,7 +20,9 @@ export class LoginForm extends Component {
         this.setState({password: e.target.value});
     }
 
-    async loginUser() {
+    async loginUser(e) {
+        e.preventDefault();
+
         fetch("../api/users/login", {
             method: "POST",
             headers: {
@@ -35,8 +39,8 @@ export class LoginForm extends Component {
                 return response.text().then(error => { throw new Error(error) });
             })
             .then(data => {
-                sessionStorage.setItem("token", data.token);
-                sessionStorage.setItem("role", data.role);
+                sessionStorage.setItem("token", JSON.stringify(data.token));
+                sessionStorage.setItem("role", JSON.stringify(data.role));
             })
             .catch(error => console.log(error));
     }
