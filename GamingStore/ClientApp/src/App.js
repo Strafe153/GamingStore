@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { Users } from './components/Users';
+import { LoginForm } from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
 
 import './custom.css'
@@ -15,6 +16,7 @@ export default class App extends Component {
       <Layout>
         <Route exact path='/' component={Home} />
         <Route path='/users' component={Users} />
+        <Route path='/login' component={LoginForm} />
         <Route path='/register' component={RegisterForm} />
       </Layout>
     );

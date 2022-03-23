@@ -1,16 +1,13 @@
 import React, { Component } from "react";
 
-export class RegisterForm extends Component {
-    static displayName = RegisterForm.name;
-
+export class LoginForm extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {username: "", password: "", confirmPassword: ""};
+        this.state = {username: "", password: ""};
         this.onUsernameChange = this.onUsernameChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
-        this.onConfirmPasswordChange = this.onConfirmPasswordChange.bind(this);
-        this.registerUser = this.registerUser.bind(this);
+        this.loginUser = this.loginUser.bind(this);
     }
 
     onUsernameChange(e) {
@@ -21,12 +18,8 @@ export class RegisterForm extends Component {
         this.setState({password: e.target.value});
     }
 
-    onConfirmPasswordChange(e) {
-        this.setState({confirmPassword: e.target.value});
-    }
-
-    async registerUser() {
-        fetch("../api/users/register", {
+    async loginUser() {
+        fetch("../api/users/login", {
             method: "POST",
             headers: {
                 "Accept": "application/json",
@@ -38,24 +31,25 @@ export class RegisterForm extends Component {
                 if (response.ok) {
                     return response.json();
                 }
-                
+
                 return response.text().then(error => { throw new Error(error) });
             })
-            .catch(error => console.log(error.message));
+            .then(data => {
+                sessionStorage.setItem("token", data.token);
+                sessionStorage.setItem("role", data.role);
+            })
+            .catch(error => console.log(error));
     }
 
     render() {
-        return <form onSubmit={this.registerUser}>
+        return <form onSubmit={this.loginUser}>
             <label htmlFor="username">Login:</label>
             <input id="username" type="text" value={this.state.username} onChange={this.onUsernameChange} />
             <br />
             <label htmlFor="password">Password:</label>
             <input id="password" type="password" value={this.state.password} onChange={this.onPasswordChange} />
             <br />
-            <label htmlFor="confirm-password">Confirm password:</label>
-            <input id="confirm-password" type="password" value={this.state.confirmPassword} onChange={this.onConfirmPasswordChange} />
-            <br />
-            <input type="submit" value="Sign Up" />
+            <input type="submit" value="Login" />
         </form>;
     }
 }
