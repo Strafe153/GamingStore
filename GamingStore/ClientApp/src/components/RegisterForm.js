@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Redirect } from "react";
 
 export class RegisterForm extends Component {
     static displayName = RegisterForm.name;
@@ -25,7 +25,9 @@ export class RegisterForm extends Component {
         this.setState({confirmPassword: e.target.value});
     }
 
-    async registerUser() {
+    async registerUser(e) {
+        e.preventDefault();
+
         fetch("../api/users/register", {
             method: "POST",
             headers: {
@@ -40,6 +42,9 @@ export class RegisterForm extends Component {
                 }
                 
                 return response.text().then(error => { throw new Error(error) });
+            })
+            .then(() => {
+                window.location.href = "/login";
             })
             .catch(error => console.log(error.message));
     }
