@@ -1,4 +1,4 @@
-import React, { Component, Redirect } from "react";
+import React, { Component } from "react";
 
 export class RegisterForm extends Component {
     static displayName = RegisterForm.name;
@@ -6,7 +6,12 @@ export class RegisterForm extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {username: "", password: "", confirmPassword: ""};
+        this.state = {
+            username: "", 
+            password: "", 
+            confirmPassword: ""
+        };
+        
         this.onUsernameChange = this.onUsernameChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.onConfirmPasswordChange = this.onConfirmPasswordChange.bind(this);
@@ -46,21 +51,25 @@ export class RegisterForm extends Component {
             .then(() => {
                 window.location.href = "/login";
             })
-            .catch(error => console.log(error.message));
+            .catch(error => alert(error.message));
     }
 
     render() {
         return <form onSubmit={this.registerUser}>
-            <label htmlFor="username">Login:</label>
-            <input id="username" type="text" value={this.state.username} onChange={this.onUsernameChange} />
-            <br />
-            <label htmlFor="password">Password:</label>
-            <input id="password" type="password" value={this.state.password} onChange={this.onPasswordChange} />
-            <br />
-            <label htmlFor="confirm-password">Confirm password:</label>
-            <input id="confirm-password" type="password" value={this.state.confirmPassword} onChange={this.onConfirmPasswordChange} />
-            <br />
-            <input type="submit" value="Sign Up" />
+            <div className="form-group mb-3">
+                <label htmlFor="username" className="control-label">Login:</label>
+                <input id="username" className="form-control" type="text" value={this.state.username} onChange={this.onUsernameChange} />
+            </div>
+            <div className="form-group mb-3">
+                <label htmlFor="password" className="control-label">Password:</label>
+                <input id="password" className="form-control" type="password" value={this.state.password} onChange={this.onPasswordChange} />
+            </div>
+            <div className="form-group mb-3">
+                <label htmlFor="confirm-password" className="control-label">Confirm password:</label>
+                <input id="confirm-password" className="form-control" type="password" value={this.state.confirmPassword} onChange={this.onConfirmPasswordChange} />
+            </div>
+
+            <input type="submit" className="btn btn-primary" value="Sign Up" />
         </form>;
     }
 }

@@ -1,4 +1,4 @@
-﻿import React, { Component } from "react";
+import React, { Component } from "react";
 
 export class Users extends Component {
     static displayName = Users.name;
@@ -6,8 +6,19 @@ export class Users extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {users: []};
+        this.state = {
+            users: [], 
+            role: sessionStorage.getItem("role"),
+            token: sessionStorage.getItem("token")
+        };
+
         this.getUsers = this.getUsers.bind(this);
+        this.showUserInfo = this.showUserInfo.bind(this);
+        this.showUserInfoForAdmin = this.showUserInfoForAdmin.bind(this);
+    }
+
+    async componentDidMount() {
+        await this.getUsers();
     }
 
     async getUsers() {
@@ -17,9 +28,9 @@ export class Users extends Component {
             .then(response => {
                 if (response.ok) {
                     return response.json();
-                } else {
-                    return response.text().then(error => { throw new Error(error) });
                 }
+                
+                return response.text().then(error => { throw new Error(error) });
             })
             .then(data => {
                 this.setState({users: data});
@@ -27,7 +38,45 @@ export class Users extends Component {
             .catch(error => console.log(error.message));
     }
 
-    render() {
+    async updateUser(id) {
+        await fetch(`../api/users/${id}`, {
+            method: "PUT",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${this.state.token}`
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+
+                return response.text().then(error => { throw new Error(error) });
+            })
+            .catch(error => console.log(error.message));
+    }
+
+    async deleteUser(id) {
+        await fetch(`../api/users/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${this.state.token}`
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+
+                return response.text().then(error => { throw new Error(error) });
+            })
+            .catch(error => console.log(error.message));
+    }
+
+    showUserInfo() {
         return <div>
             <table className="table table-bordered">
                 <thead>
@@ -49,8 +98,44 @@ export class Users extends Component {
                 }
                 </tbody>
             </table>
-
-            <button onClick={this.getUsers}>Get users</button>
         </div>;
+    }
+
+    showUserInfoForAdmin() {
+        return <div>
+            <table className="table table-bordered">
+                <thead>
+                    <tr>
+                        <th className="text-center">Id</th>
+                        <th className="text-center">Username</th>
+                        <th className="text-center">Role</th>
+                        <th className="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {
+                    this.state.users.map(user => {
+                        return <tr key={user.id}>
+                            <td>{ user.id }</td>
+                            <td>{ user.username }</td>
+                            <td>{ user.role }</td>
+                            <td className="text-center d-flex justify-content-around">
+                                <button onClick={() => this.updateUser(user.id)} className="btn btn-sm btn-info text-white">Edit</button>
+                                <button onClick={() => this.deleteUser(user.id)} className="btn btn-sm btn-danger">Delete</button>
+                            </td>
+                        </tr>;
+                    })
+                }
+                </tbody>
+            </table>
+        </div>;
+    }
+
+    render() {
+        if (this.state.role === "0") {
+            return this.showUserInfoForAdmin();
+        } else {
+            return this.showUserInfo();
+        }
     }
 }
