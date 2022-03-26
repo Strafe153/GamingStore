@@ -43,10 +43,6 @@ builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllersWithViews();
-//builder.Services.AddControllers(options =>
-//{
-//    options.SuppressAsyncSuffixInActionNames = false;
-//});
 
 var app = builder.Build();
 
@@ -59,12 +55,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

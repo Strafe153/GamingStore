@@ -6,7 +6,11 @@ export class LoginForm extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {username: "", password: ""};
+        this.state = {
+            username: "", 
+            password: ""
+        };
+        
         this.onUsernameChange = this.onUsernameChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.loginUser = this.loginUser.bind(this);
@@ -39,21 +43,26 @@ export class LoginForm extends Component {
                 return response.text().then(error => { throw new Error(error) });
             })
             .then(data => {
-                sessionStorage.setItem("token", JSON.stringify(data.token));
-                sessionStorage.setItem("role", JSON.stringify(data.role));
+                sessionStorage.setItem("token", data.token);
+                sessionStorage.setItem("role", data.role);
+
+                window.location.href = "/";
             })
-            .catch(error => console.log(error));
+            .catch(error => alert(error.message));
     }
 
     render() {
         return <form onSubmit={this.loginUser}>
-            <label htmlFor="username">Login:</label>
-            <input id="username" type="text" value={this.state.username} onChange={this.onUsernameChange} />
-            <br />
-            <label htmlFor="password">Password:</label>
-            <input id="password" type="password" value={this.state.password} onChange={this.onPasswordChange} />
-            <br />
-            <input type="submit" value="Login" />
+            <div className="form-group mb-3">
+                <label htmlFor="username" className="control-label">Login:</label>
+                <input id="username" className="form-control" type="text" value={this.state.username} onChange={this.onUsernameChange} />
+            </div>
+            <div className="form-group mb-3">
+                <label htmlFor="password" className="control-label">Password:</label>
+                <input id="password" className="form-control" type="password" value={this.state.password} onChange={this.onPasswordChange} />
+            </div>
+
+            <input className="btn btn-primary" type="submit" value="Login" />
         </form>;
     }
 }
