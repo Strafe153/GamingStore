@@ -21,6 +21,10 @@ export class Users extends Component {
         await this.getUsers();
     }
 
+    // async componentDidUpdate() {
+    //     await this.getUsers();
+    // }
+
     async getUsers() {
         await fetch("../api/users", {
             method: "GET"
@@ -32,29 +36,12 @@ export class Users extends Component {
                 
                 return response.text().then(error => { throw new Error(error) });
             })
-            .then(data => {
-                this.setState({users: data});
-            })
+            .then(data => this.setState({users: data}))
             .catch(error => console.log(error.message));
     }
 
-    async updateUser(id) {
-        await fetch(`../api/users/${id}`, {
-            method: "PUT",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${this.state.token}`
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-
-                return response.text().then(error => { throw new Error(error) });
-            })
-            .catch(error => console.log(error.message));
+    updateUser(id) {
+        window.location.href = `/users/edit/${id}`;
     }
 
     async deleteUser(id) {
@@ -73,7 +60,7 @@ export class Users extends Component {
 
                 return response.text().then(error => { throw new Error(error) });
             })
-            .catch(error => console.log(error.message));
+            .catch(error => alert(error.message));
     }
 
     showUserInfo() {
@@ -121,7 +108,7 @@ export class Users extends Component {
                             <td>{ user.role }</td>
                             <td className="text-center d-flex justify-content-around">
                                 <button onClick={() => this.updateUser(user.id)} className="btn btn-sm btn-info text-white">Edit</button>
-                                <button onClick={() => this.deleteUser(user.id)} className="btn btn-sm btn-danger">Delete</button>
+                                <button onClick={async () => { await this.deleteUser(user.id); await this.getUsers(); }} className="btn btn-sm btn-danger">Delete</button>
                             </td>
                         </tr>;
                     })

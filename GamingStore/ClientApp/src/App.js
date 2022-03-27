@@ -5,6 +5,7 @@ import { Home } from './components/Home';
 import { Users } from './components/Users';
 import { LoginForm } from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
+import { EditUserForm } from './components/EditUserForm';
 
 import './custom.css'
 
@@ -18,6 +19,7 @@ export default class App extends Component {
                 <Route path='/users' component={Users} />
                 <Route path='/login' component={LoginForm} />
                 <Route path='/register' component={RegisterForm} />
+                <Route path='/users/edit/*' component={EditUserForm} />
             </Layout>
         );
     }
