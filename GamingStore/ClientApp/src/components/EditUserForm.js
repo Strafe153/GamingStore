@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 
 export class EditUserForm extends Component {
     static displayName = EditUserForm.name;
@@ -16,10 +15,6 @@ export class EditUserForm extends Component {
         this.onUsernameChange = this.onUsernameChange.bind(this);
         this.onRoleChange = this.onRoleChange.bind(this);
         this.updateUser = this.updateUser.bind(this);
-    }
-
-    componentWillUnmount() {
-        ReactDOM.unmountComponentAtNode(document.querySelector("#update-user-form"));
     }
 
     onUsernameChange(e) {
@@ -51,7 +46,7 @@ export class EditUserForm extends Component {
     }
 
     render() {
-        return  <div id="update-user-form">
+        return <div id="update-user-form">
             <form onSubmit={this.updateUser}>
                 <div className="form-group mb-3">
                         <label htmlFor="new-usernmae" className="control-label">Login:</label>
