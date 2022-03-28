@@ -46,7 +46,7 @@ export class EditUserForm extends Component {
     }
 
     render() {
-        return <div id="update-user-form">
+        return <div>
             <form onSubmit={this.updateUser}>
                 <div className="form-group mb-3">
                         <label htmlFor="new-usernmae" className="control-label">Login:</label>
