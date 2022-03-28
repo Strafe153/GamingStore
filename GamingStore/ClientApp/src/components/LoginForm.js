@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 export class LoginForm extends Component {
     static displayName = LoginForm.name;
@@ -7,8 +7,8 @@ export class LoginForm extends Component {
         super(props);
 
         this.state = {
-            username: "", 
-            password: ""
+            username: '', 
+            password: ''
         };
         
         this.onUsernameChange = this.onUsernameChange.bind(this);
@@ -27,11 +27,11 @@ export class LoginForm extends Component {
     async loginUser(e) {
         e.preventDefault();
 
-        fetch("../api/users/login", {
-            method: "POST",
+        fetch('../api/users/login', {
+            method: 'POST',
             headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(this.state)
         })
@@ -43,10 +43,10 @@ export class LoginForm extends Component {
                 return response.text().then(error => { throw new Error(error) });
             })
             .then(data => {
-                sessionStorage.setItem("token", data.token);
-                sessionStorage.setItem("role", data.role);
+                sessionStorage.setItem('token', data.token);
+                sessionStorage.setItem('role', data.role);
 
-                window.location.href = "/";
+                window.location.href = '/';
             })
             .catch(error => alert(error.message));
     }

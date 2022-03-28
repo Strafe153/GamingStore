@@ -12,7 +12,7 @@ export class NavMenu extends Component {
         this.toggleNavbar = this.toggleNavbar.bind(this);
         this.state = {
             collapsed: true,
-            isLoggedIn: sessionStorage.getItem("token") != null
+            isLoggedIn: sessionStorage.getItem('token') != null
         };
     }
 
