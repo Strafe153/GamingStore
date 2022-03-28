@@ -21,10 +21,6 @@ export class Users extends Component {
         await this.getUsers();
     }
 
-    // async componentDidUpdate() {
-    //     await this.getUsers();
-    // }
-
     async getUsers() {
         await fetch("../api/users", {
             method: "GET"
@@ -54,12 +50,11 @@ export class Users extends Component {
             }
         })
             .then(response => {
-                if (response.ok) {
-                    return response.json();
+                if (!response.ok) {
+                    return response.text().then(error => { throw new Error(error) });
                 }
-
-                return response.text().then(error => { throw new Error(error) });
             })
+            .then(() => console.log("hey"))
             .catch(error => alert(error.message));
     }
 
