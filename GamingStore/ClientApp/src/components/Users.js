@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { UserRow } from './UserRow';
 
 export class Users extends Component {
     static displayName = Users.name;
@@ -70,11 +71,10 @@ export class Users extends Component {
                 <tbody>
                 {
                     this.state.users.map(user => {
-                        return <tr key={user.id}>
-                            <td>{ user.id }</td>
-                            <td>{ user.username }</td>
-                            <td>{ user.role }</td>
-                        </tr>;
+                        return <UserRow key={user.id}
+                                        id={user.id}
+                                        username={user.username}
+                                        role={user.role} />
                     })
                 }
                 </tbody>
@@ -102,7 +102,12 @@ export class Users extends Component {
                             <td>{ user.role }</td>
                             <td className="text-center d-flex justify-content-around">
                                 <button onClick={() => this.updateUser(user.id)} className="btn btn-sm btn-info text-white">Edit</button>
-                                <button onClick={async () => { await this.deleteUser(user.id); await this.getUsers(); }} className="btn btn-sm btn-danger">Delete</button>
+                                <button onClick={
+                                    async () => { 
+                                        await this.deleteUser(user.id); 
+                                        await this.getUsers(); 
+                                    }
+                                } className="btn btn-sm btn-danger">Delete</button>
                             </td>
                         </tr>;
                     })
