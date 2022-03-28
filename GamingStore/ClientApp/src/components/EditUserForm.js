@@ -43,11 +43,9 @@ export class EditUserForm extends Component {
             body: JSON.stringify(this.state)
         })
             .then(response => {
-                if (response.ok) {
-                    return response.json();
+                if (!response.ok) {
+                    return response.text().then(error => { throw new Error(error) });
                 }
-
-                return response.text().then(error => { throw new Error(error) });
             })
             .catch(error => alert(error.message));
     }
