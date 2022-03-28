@@ -54,7 +54,6 @@ export class Users extends Component {
                     return response.text().then(error => { throw new Error(error) });
                 }
             })
-            .then(() => console.log("hey"))
             .catch(error => alert(error.message));
     }
 
