@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 export class RegisterForm extends Component {
     static displayName = RegisterForm.name;
@@ -7,9 +7,9 @@ export class RegisterForm extends Component {
         super(props);
 
         this.state = {
-            username: "", 
-            password: "", 
-            confirmPassword: ""
+            username: '', 
+            password: '', 
+            confirmPassword: ''
         };
         
         this.onUsernameChange = this.onUsernameChange.bind(this);
@@ -33,11 +33,11 @@ export class RegisterForm extends Component {
     async registerUser(e) {
         e.preventDefault();
 
-        fetch("../api/users/register", {
-            method: "POST",
+        fetch('../api/users/register', {
+            method: 'POST',
             headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(this.state)
         })
@@ -49,7 +49,7 @@ export class RegisterForm extends Component {
                 return response.text().then(error => { throw new Error(error) });
             })
             .then(() => {
-                window.location.href = "/login";
+                window.location.href = '/login';
             })
             .catch(error => alert(error.message));
     }

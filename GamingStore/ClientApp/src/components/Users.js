@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 export class Users extends Component {
     static displayName = Users.name;
@@ -8,8 +8,8 @@ export class Users extends Component {
 
         this.state = {
             users: [], 
-            role: sessionStorage.getItem("role"),
-            token: sessionStorage.getItem("token")
+            role: sessionStorage.getItem('role'),
+            token: sessionStorage.getItem('token')
         };
 
         this.getUsers = this.getUsers.bind(this);
@@ -22,8 +22,8 @@ export class Users extends Component {
     }
 
     async getUsers() {
-        await fetch("../api/users", {
-            method: "GET"
+        await fetch('../api/users', {
+            method: 'GET'
         })
             .then(response => {
                 if (response.ok) {
@@ -42,11 +42,11 @@ export class Users extends Component {
 
     async deleteUser(id) {
         await fetch(`../api/users/${id}`, {
-            method: "DELETE",
+            method: 'DELETE',
             headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${this.state.token}`
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.state.token}`
             }
         })
             .then(response => {

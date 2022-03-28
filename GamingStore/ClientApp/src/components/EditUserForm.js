@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 export class EditUserForm extends Component {
     static displayName = EditUserForm.name;
@@ -7,9 +7,9 @@ export class EditUserForm extends Component {
         super(props);
 
         this.state = {
-            username: "",
+            username: '',
             role: 1,
-            token: sessionStorage.getItem("token")
+            token: sessionStorage.getItem('token')
         };
 
         this.onUsernameChange = this.onUsernameChange.bind(this);
@@ -28,12 +28,12 @@ export class EditUserForm extends Component {
     async updateUser(e) {
         e.preventDefault();
 
-        await fetch(`../api/users/${window.location.pathname.split("/")[3]}`, {
-            method: "PUT",
+        await fetch(`../api/users/${window.location.pathname.split('/')[3]}`, {
+            method: 'PUT',
             headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${this.state.token}`
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.state.token}`
             },
             body: JSON.stringify(this.state)
         })
