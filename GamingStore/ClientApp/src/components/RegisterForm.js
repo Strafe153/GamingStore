@@ -12,26 +12,21 @@ export class RegisterForm extends Component {
             confirmPassword: ''
         };
         
-        this.onUsernameChange = this.onUsernameChange.bind(this);
-        this.onPasswordChange = this.onPasswordChange.bind(this);
-        this.onConfirmPasswordChange = this.onConfirmPasswordChange.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
         this.registerUser = this.registerUser.bind(this);
     }
 
-    onUsernameChange(e) {
-        this.setState({username: e.target.value});
+    handleInputChange(event) {
+        const name = event.target.name;
+        const value = event.target.value;
+
+        this.setState({
+            [name]: value
+        });
     }
 
-    onPasswordChange(e) {
-        this.setState({password: e.target.value});
-    }
-
-    onConfirmPasswordChange(e) {
-        this.setState({confirmPassword: e.target.value});
-    }
-
-    async registerUser(e) {
-        e.preventDefault();
+    async registerUser(event) {
+        event.preventDefault();
 
         fetch('../api/users/register', {
             method: 'POST',
@@ -58,15 +53,15 @@ export class RegisterForm extends Component {
         return <form onSubmit={this.registerUser}>
             <div className="form-group mb-3">
                 <label htmlFor="username" className="control-label">Login:</label>
-                <input id="username" className="form-control" type="text" value={this.state.username} onChange={this.onUsernameChange} />
+                <input id="username" className="form-control" type="text" name="username" value={this.state.username} onChange={this.handleInputChange} />
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="password" className="control-label">Password:</label>
-                <input id="password" className="form-control" type="password" value={this.state.password} onChange={this.onPasswordChange} />
+                <input id="password" className="form-control" type="password" name="password" value={this.state.password} onChange={this.handleInputChange} />
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="confirm-password" className="control-label">Confirm password:</label>
-                <input id="confirm-password" className="form-control" type="password" value={this.state.confirmPassword} onChange={this.onConfirmPasswordChange} />
+                <input id="confirm-password" className="form-control" type="password" name="confirmPassword" value={this.state.confirmPassword} onChange={this.handleInputChange} />
             </div>
 
             <input type="submit" className="btn btn-primary" value="Sign Up" />

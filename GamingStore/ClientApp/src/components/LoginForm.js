@@ -11,21 +11,21 @@ export class LoginForm extends Component {
             password: ''
         };
         
-        this.onUsernameChange = this.onUsernameChange.bind(this);
-        this.onPasswordChange = this.onPasswordChange.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
         this.loginUser = this.loginUser.bind(this);
     }
 
-    onUsernameChange(e) {
-        this.setState({username: e.target.value});
+    handleInputChange(event) {
+        const name = event.target.name;
+        const value = event.target.value;
+
+        this.setState({
+            [name]: value
+        });
     }
 
-    onPasswordChange(e) {
-        this.setState({password: e.target.value});
-    }
-
-    async loginUser(e) {
-        e.preventDefault();
+    async loginUser(event) {
+        event.preventDefault();
 
         fetch('../api/users/login', {
             method: 'POST',
@@ -55,11 +55,11 @@ export class LoginForm extends Component {
         return <form onSubmit={this.loginUser}>
             <div className="form-group mb-3">
                 <label htmlFor="username" className="control-label">Login:</label>
-                <input id="username" className="form-control" type="text" value={this.state.username} onChange={this.onUsernameChange} />
+                <input id="username" className="form-control" type="text" name="username" value={this.state.username} onChange={this.handleInputChange} />
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="password" className="control-label">Password:</label>
-                <input id="password" className="form-control" type="password" value={this.state.password} onChange={this.onPasswordChange} />
+                <input id="password" className="form-control" type="password" name="password" value={this.state.password} onChange={this.handleInputChange} />
             </div>
 
             <input className="btn btn-primary" type="submit" value="Login" />
