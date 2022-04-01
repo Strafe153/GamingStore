@@ -48,9 +48,7 @@ export class Users extends Component {
                         <th className="text-center">Id</th>
                         <th className="text-center">Username</th>
                         <th className="text-center">Role</th>
-                        {this.state.role === '0' &&
-                            <th className="text-center">Actions</th>
-                        }
+                        <th className="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
