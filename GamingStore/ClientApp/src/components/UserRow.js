@@ -37,8 +37,9 @@ export class UserRow extends Component {
             <td>{ this.props.id }</td>
             <td>{ this.props.username }</td>
             <td>{ this.props.role }</td>
-            {this.props.calledFromAdmin &&
-                <td className="text-center d-flex justify-content-around">
+            <td>
+            {(this.props.calledFromAdmin || (sessionStorage.getItem('username') === this.props.username)) &&
+                <div className="text-center d-flex justify-content-around">
                     <button onClick={() => this.updateUser(this.props.id)} className="btn btn-sm btn-info text-white">Edit</button>
                     <button onClick={
                         async () => { 
@@ -46,8 +47,9 @@ export class UserRow extends Component {
                             await this.props.getUsers(); 
                         }
                     } className="btn btn-sm btn-danger">Delete</button>
-                </td>
+                </div>
             }
+            </td>
         </tr>;
     }
 }
