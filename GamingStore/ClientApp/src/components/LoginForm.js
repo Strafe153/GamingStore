@@ -45,6 +45,7 @@ export class LoginForm extends Component {
             .then(data => {
                 sessionStorage.setItem('token', data.token);
                 sessionStorage.setItem('role', data.role);
+                sessionStorage.setItem('username', data.username);
 
                 window.location.href = '/';
             })
