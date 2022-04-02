@@ -27,7 +27,7 @@ export class LoginForm extends Component {
     async loginUser(event) {
         event.preventDefault();
 
-        fetch('../api/users/login', {
+        await fetch('../api/users/login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

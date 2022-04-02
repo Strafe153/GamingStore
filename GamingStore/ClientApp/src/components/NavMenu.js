@@ -11,7 +11,8 @@ export class NavMenu extends Component {
 
         this.state = {
             collapsed: true,
-            isLoggedIn: sessionStorage.getItem('token') != null
+            isLoggedIn: sessionStorage.getItem('token') != null,
+            isAdmin: sessionStorage.getItem('role') === '0'
         };
         
         this.toggleNavbar = this.toggleNavbar.bind(this);
@@ -38,6 +39,16 @@ export class NavMenu extends Component {
                         <NavItem>
                             <NavLink tag={Link} className="text-dark" to="/users">Users</NavLink>
                         </NavItem>
+                        {this.state.isAdmin &&
+                            <NavItem>
+                                <NavLink tag={Link} className="text-dark" to="/companies">Companies</NavLink>
+                            </NavItem>
+                        }
+                        {this.state.isLoggedIn &&
+                            <NavItem>
+                                <NavLink tag={Link} className="text-danger" to="/logout">Log Out</NavLink>
+                            </NavItem>
+                        }
                         {!this.state.isLoggedIn &&
                             <NavItem>
                                 <NavLink tag={Link} className="text-dark" to="/login">Login</NavLink>
@@ -46,11 +57,6 @@ export class NavMenu extends Component {
                         {!this.state.isLoggedIn &&
                             <NavItem>
                                 <NavLink tag={Link} className="text-dark" to="/register">Sign Up</NavLink>
-                            </NavItem>
-                        }
-                        {this.state.isLoggedIn &&
-                            <NavItem>
-                                <NavLink tag={Link} className="text-danger" to="/logout">Log Out</NavLink>
                             </NavItem>
                         }
                         </ul>

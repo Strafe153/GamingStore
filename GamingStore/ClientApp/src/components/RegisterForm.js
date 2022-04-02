@@ -28,7 +28,7 @@ export class RegisterForm extends Component {
     async registerUser(event) {
         event.preventDefault();
 
-        fetch('../api/users/register', {
+        await fetch('../api/users/register', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
