@@ -5,7 +5,7 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
     env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'http://localhost:50666';
 
 const context =  [
-    "/weatherforecast",
+    "/gamingDevicesStore",
 ];
 
 module.exports = function(app) {
@@ -13,7 +13,7 @@ module.exports = function(app) {
         target: target,
         secure: false,
         headers: {
-        Connection: 'Keep-Alive'
+            Connection: 'Keep-Alive'
         }
     });
 
