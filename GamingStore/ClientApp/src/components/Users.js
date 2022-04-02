@@ -14,7 +14,6 @@ export class Users extends Component {
         };
 
         this.getUsers = this.getUsers.bind(this);
-        this.showUserInfo = this.showUserInfo.bind(this);
     }
 
     async componentDidMount() {
@@ -36,11 +35,11 @@ export class Users extends Component {
             .catch(error => console.log(error.message));
     }
 
-    handleUsers = (users) => {
+    handleUsers = users => {
         this.setState({users: users});
     }
 
-    showUserInfo() {
+    render() {
         return <div>
             <table className="table table-bordered">
                 <thead>
@@ -66,9 +65,5 @@ export class Users extends Component {
                 </tbody>
             </table>
         </div>;
-    }
-
-    render() {
-        return this.showUserInfo();
     }
 }
