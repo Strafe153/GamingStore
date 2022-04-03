@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using GamingStore.ValidationAttributes;
 
 namespace GamingStore.Dtos.Company
 {
@@ -6,6 +7,7 @@ namespace GamingStore.Dtos.Company
     {
         [Required]
         [StringLength(25, MinimumLength = 1)]
+        [UniqueCompanyName]
         public string Name { get; init; } = string.Empty;
     }
 }

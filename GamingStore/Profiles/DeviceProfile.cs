@@ -2,7 +2,7 @@
 using GamingStore.Dtos.Device;
 using AutoMapper;
 
-namespace GamingDevicesStore.Profiles
+namespace GamingStore.Profiles
 {
     public class DeviceProfile : Profile
     {
