@@ -60,7 +60,7 @@ export class Companies extends Component {
                 </tbody>
             </table>
 
-            <a className="btn btn-primary" href="/companies/add">Add</a>
+            <a className="btn btn-secondary w-100" href="/companies/add">Add</a>
         </div>;
     }
 }
