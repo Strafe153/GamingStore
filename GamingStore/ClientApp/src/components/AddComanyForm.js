@@ -44,12 +44,12 @@ export class AddCompanyForm extends Component {
 
     render() {
         return <form onSubmit={this.addCompany}>
-            <div className='form-group mb-3'>
+            <div className='form-group my-3'>
                 <label htmlFor='name' className='form-label'>Name:</label>
                 <input id='name' className='form-control' type='text' value={this.state.name} onChange={this.handleName} />
             </div>
 
-            <input className='btn btn-primary' type='submit' value='Add' />
+            <input className='btn btn-primary' type='submit' value='Create' />
         </form>;
     }
 }
