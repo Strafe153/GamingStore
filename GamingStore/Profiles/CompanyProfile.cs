@@ -2,7 +2,7 @@
 using GamingStore.Dtos.Company;
 using AutoMapper;
 
-namespace GamingDevicesStore.Profiles
+namespace GamingStore.Profiles
 {
     public class CompanyProfile : Profile
     {

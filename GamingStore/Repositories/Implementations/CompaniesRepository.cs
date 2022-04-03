@@ -5,7 +5,7 @@ using GamingStore.Repositories.Interfaces;
 
 namespace GamingStore.Repositories.Implementations
 {
-    public class CompaniesRepository : IControllable<Company>
+    public class CompaniesRepository : ICompanyControllable
     {
         private readonly DataContext _context;
 
@@ -29,6 +29,11 @@ namespace GamingStore.Repositories.Implementations
             return await _context.Companies
                 .Include(c => c.Devices)
                 .SingleOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<Company?> GetByNameAsync(string name)
+        {
+            return await _context.Companies.SingleOrDefaultAsync(c => c.Name == name);
         }
 
         public void Remove(Company entity)
