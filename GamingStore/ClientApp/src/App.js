@@ -6,6 +6,7 @@ import { Users } from './components/Users';
 import { EditUserForm } from './components/EditUserForm';
 import { Companies } from './components/Companies';
 import { AddCompanyForm } from './components/AddComanyForm';
+import { EditCompanyForm } from './components/EditCompanyForm';
 import { LoginForm } from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
 import { Logout } from './components/Logout';
@@ -23,6 +24,7 @@ export default class App extends Component {
                 <Route path='/users/edit/*' component={EditUserForm} />
                 <Route path='/companies' component={Companies} />
                 <Route path='/companies/add' component={AddCompanyForm} />
+                <Route path='/companies/edit/*' component={EditCompanyForm} />
                 <Route path='/login' component={LoginForm} />
                 <Route path='/register' component={RegisterForm} />
                 <Route path='/logout' component={Logout} />
