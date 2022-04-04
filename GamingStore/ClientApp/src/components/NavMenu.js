@@ -18,7 +18,7 @@ export class NavMenu extends Component {
         this.toggleNavbar = this.toggleNavbar.bind(this);
     }
 
-    toggleNavbar () {
+    toggleNavbar() {
         this.setState({
             collapsed: !this.state.collapsed
         });
@@ -42,6 +42,11 @@ export class NavMenu extends Component {
                         {this.state.isAdmin &&
                             <NavItem>
                                 <NavLink tag={Link} className="text-dark" to="/companies">Companies</NavLink>
+                            </NavItem>
+                        }
+                        {this.state.isAdmin &&
+                            <NavItem>
+                                <NavLink tag={Link} className="text-dark" to="/devices">Devices</NavLink>
                             </NavItem>
                         }
                         {this.state.isLoggedIn &&
