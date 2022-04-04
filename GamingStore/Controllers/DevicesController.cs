@@ -12,11 +12,11 @@ namespace GamingStore.Controllers
     public class DevicesController : ControllerBase
     {
         private readonly IControllable<Device> _devicesRepo;
-        private readonly IControllable<Company> _companiesRepo;
+        private readonly ICompanyControllable _companiesRepo;
         private readonly IMapper _mapper;
 
-        public DevicesController(IControllable<Device> devicesRepo, 
-            IControllable<Company> companiesRepo, IMapper mapper)
+        public DevicesController(IControllable<Device> devicesRepo,
+            ICompanyControllable companiesRepo, IMapper mapper)
         {
             _devicesRepo = devicesRepo;
             _companiesRepo = companiesRepo;
