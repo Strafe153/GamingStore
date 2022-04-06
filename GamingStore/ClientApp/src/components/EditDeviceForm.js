@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-export class AddDeviceForm extends Component {
-    static displayName = AddDeviceForm.name;
+export class EditDeviceForm extends Component {
+    static displayName = EditDeviceForm.name;
 
     constructor(props) {
         super(props);
@@ -14,37 +14,11 @@ export class AddDeviceForm extends Component {
             companyId: ''
         };
 
-        this.addDevice = this.addDevice.bind(this);
+        this.updateDevice = this.updateDevice.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    async addDevice(event) {
-        event.preventDefault();
-
-        await fetch('../api/devices', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.state.token}`
-            },
-            body: JSON.stringify({
-                ...this.state,
-                category: parseInt(this.state.category)
-            })
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-
-                return response.text().then(error => { throw new Error(error) });
-            })
-            .then(() => window.location.href = '/devices')
-            .catch(error => alert(error.message));
-    }
-
-    handleInputChange(event) {
+    handleInputChange = event => {
         const name = event.target.name;
         const value = event.target.value;
 
@@ -53,16 +27,32 @@ export class AddDeviceForm extends Component {
         });
     }
 
-    handleRangeInut(event) {
-        const outputField = document.querySelector("output");
-        outputField.value = event.target.value;
+    async updateDevice(event) {
+        event.preventDefault();
+
+        await fetch(`../api/devices/${window.location.pathname.split('/')[3]}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.state.token}`
+            },
+            body: JSON.stringify(this.state)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(error => { throw new Error(error) });
+                }
+            })
+            .then(() => window.location.href = '/devices')
+            .catch(error => alert(error.message));
     }
 
     render() {
-        return <form onSubmit={this.addDevice}>
+        return <form onSubmit={this.updateDevice}>
             <div className="form-group my-3">
-                <label htmlFor="name" className="form-label">Name:</label>
-                <input id="name" className="form-control" type="text" name="name" value={this.state.name} onChange={this.handleInputChange} />
+                <label htmlFor="name" className="control-label">Name:</label>
+                <input id="name" className="form-control" type="text" name="name" value={this.state.name} onChange={this.handleInputChange} /> 
             </div>
             <div className="form-group my-3">
                 <label htmlFor="category" className="form-label">Category:</label>
@@ -87,7 +77,7 @@ export class AddDeviceForm extends Component {
                 <input id="companyId" className="form-control" type="text" name="companyId" value={this.state.companyId} onChange={this.handleInputChange} />
             </div>
 
-            <input className="btn btn-primary" type="submit" value="Create" />
+            <input className="btn btn-primary" type="submit" value="Update" />
         </form>;
     }
 }
