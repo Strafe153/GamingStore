@@ -11,7 +11,7 @@ namespace GamingStore.Tests
 {
     public class CompaniesControllerTests
     {
-        private static readonly Mock<IControllable<Company>> _repo = new();
+        private static readonly Mock<ICompanyControllable> _repo = new();
         private static readonly Mock<IMapper> _mapper = new();
         private static readonly CompaniesController _controller = new(_repo.Object, _mapper.Object);
 

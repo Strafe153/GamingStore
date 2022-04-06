@@ -11,6 +11,7 @@ export class AddDeviceForm extends Component {
             name: '',
             category: 0,
             price: 50,
+            inStock: 1,
             companyId: ''
         };
 
@@ -54,8 +55,7 @@ export class AddDeviceForm extends Component {
     }
 
     handleRangeInut(event) {
-        const outputField = document.querySelector("output");
-        outputField.value = event.target.value;
+        event.target.nextElementSibling.value = event.target.value;
     }
 
     render() {
@@ -81,6 +81,11 @@ export class AddDeviceForm extends Component {
                 <label htmlFor="price" className="form-label">Price:</label>
                 <input id="price" className="form-range" type="range" min="1" max="1000" name="price" value={this.state.price} onChange={this.handleInputChange} onInput={this.handleRangeInut} />
                 <output className="d-flex justify-content-center">50</output>
+            </div>
+            <div className="form-group my-3">
+                <label htmlFor="price" className="form-label">In stock:</label>
+                <input id="price" className="form-range" type="range" min="1" max="5000" name="inStock" value={this.state.inStock} onChange={this.handleInputChange} onInput={this.handleRangeInut} />
+                <output className="d-flex justify-content-center">100</output>
             </div>
             <div className="form-group my-3">
                 <label htmlFor="companyId" className="form-label">Company Id:</label>

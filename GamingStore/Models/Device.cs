@@ -12,6 +12,8 @@ namespace GamingStore.Models
         [Column(TypeName = "decimal(8, 2)")]
         public decimal Price { get; set; }
 
+        public int InStock { get; set; }
+
         public Guid CompanyId { get; set; }
         public Company? Company { get; set; }
     }
