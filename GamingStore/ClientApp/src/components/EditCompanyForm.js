@@ -7,8 +7,8 @@ export class EditCompanyForm extends Component {
         super(props);
 
         this.state = {
-            name: '',
-            token: sessionStorage.getItem('token')
+            token: sessionStorage.getItem('token'),
+            name: ''
         };
 
         this.updateCompany = this.updateCompany.bind(this);
@@ -16,7 +16,9 @@ export class EditCompanyForm extends Component {
     }
 
     handleName = event => {
-        this.setState({name: event.target.value});
+        this.setState({
+            name: event.target.value
+        });
     }
 
     async updateCompany(event) {
@@ -42,7 +44,7 @@ export class EditCompanyForm extends Component {
 
     render() {
         return <form onSubmit={this.updateCompany}>
-            <div className="form-group mb-3">
+            <div className="form-group my-3">
                 <label htmlFor="name" className="control-label">Name:</label>
                 <input id="name" className="form-control" type="text" value={this.state.name} onChange={this.handleName} /> 
             </div>
