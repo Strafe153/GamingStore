@@ -11,6 +11,7 @@ export class EditDeviceForm extends Component {
             name: '',
             category: 0,
             price: 50,
+            inStock: 1,
             companyId: ''
         };
 
@@ -25,6 +26,10 @@ export class EditDeviceForm extends Component {
         this.setState({
             [name]: value
         });
+    }
+
+    handleRangeInut(event) {
+        event.target.nextElementSibling.value = event.target.value;
     }
 
     async updateDevice(event) {
@@ -71,6 +76,11 @@ export class EditDeviceForm extends Component {
                 <label htmlFor="price" className="form-label">Price:</label>
                 <input id="price" className="form-range" type="range" min="1" max="1000" name="price" value={this.state.price} onChange={this.handleInputChange} onInput={this.handleRangeInut} />
                 <output className="d-flex justify-content-center">50</output>
+            </div>
+            <div className="form-group my-3">
+                <label htmlFor="in-tock" className="form-label">In stock:</label>
+                <input id="in-stock" className="form-range" type="range" min="1" max="5000" name="inStock" value={this.state.inStock} onChange={this.handleInputChange} onInput={this.handleRangeInut} />
+                <output className="d-flex justify-content-center">100</output>
             </div>
             <div className="form-group my-3">
                 <label htmlFor="companyId" className="form-label">Company Id:</label>

@@ -14,5 +14,9 @@ namespace GamingStore.Dtos.Device
         [Required]
         [Range(1, 1000)]
         public decimal Price { get; init; }
+
+        [Required]
+        [Range(1, 5000)]
+        public int InStock { get; init; }
     }
 }

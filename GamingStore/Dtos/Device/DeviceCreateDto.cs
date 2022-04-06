@@ -16,6 +16,10 @@ namespace GamingStore.Dtos.Device
         public decimal Price { get; init; }
 
         [Required]
+        [Range(1, 5000)]
+        public int InStock { get; init; }
+
+        [Required]
         public Guid CompanyId { get; init; }
     }
 }

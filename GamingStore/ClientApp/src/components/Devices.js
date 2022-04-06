@@ -46,6 +46,7 @@ export class Devices extends Component {
                         <th className="text-center">Name</th>
                         <th className="text-center">Category</th>
                         <th className="text-center">Price</th>
+                        <th className="text-center">In Stock</th>
                         <th className="text-center">CompanyId</th>
                         <th className="text-center">Actions</th>
                     </tr>
@@ -59,6 +60,7 @@ export class Devices extends Component {
                                         name={device.name}
                                         category={device.category}
                                         price={device.price}
+                                        inStock={device.inStock}
                                         companyId={device.companyId}
                                         getDevices={this.getDevices} />
                     })
