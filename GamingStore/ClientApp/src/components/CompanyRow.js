@@ -34,7 +34,7 @@ export class CompanyRow extends Component {
 
     render() {
         return <tr>
-            <td>
+            <td className="text-center">
                 <img src={ `data:image/png;base64,${this.props.icon}` } alt="company-icon" width="100" />
             </td>
             <td>{ this.props.id }</td>
