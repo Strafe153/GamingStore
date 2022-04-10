@@ -42,6 +42,7 @@ export class Devices extends Component {
             <table className="table table-bordered">
                 <thead>
                     <tr>
+                        <th className="text-center">Icon</th>
                         <th className="text-center">Id</th>
                         <th className="text-center">Name</th>
                         <th className="text-center">Category</th>
@@ -56,6 +57,7 @@ export class Devices extends Component {
                     this.state.devices.map(device => {
                         return <DeviceRow onGetDevices={this.handleDevices}
                                         key={device.id}
+                                        icon={device.icon}
                                         id={device.id}
                                         name={device.name}
                                         category={device.category}

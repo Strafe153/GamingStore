@@ -34,6 +34,9 @@ export class DeviceRow extends Component {
 
     render() {
         return <tr>
+            <td>
+                <img src={ `data:image/png;base64,${this.props.icon}` } alt="device-icon" width="100" />
+            </td>
             <td>{ this.props.id }</td>
             <td>{ this.props.name }</td>
             <td>{ this.props.category }</td>

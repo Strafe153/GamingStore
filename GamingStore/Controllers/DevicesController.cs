@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
+using GamingStore.Data;
 using GamingStore.Models;
 using GamingStore.Dtos.Device;
 using GamingStore.Repositories.Interfaces;
@@ -67,7 +69,18 @@ namespace GamingStore.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<DeviceReadDto>> CreateDeviceAsync(DeviceCreateDto createDto)
         {
-            var device = _mapper.Map<Device>(createDto);
+            JsonSerializerOptions options = new()
+            {
+                WriteIndented = true,
+                Converters =
+                {
+                    new ByteArrayConverter()
+                }
+            };
+
+            var icon = JsonSerializer.Deserialize<byte[]>(createDto.Icon, options);
+            var device = _mapper.Map<Device>(createDto with { Icon = null! });
+            device.Icon = icon;
 
             _devicesRepo.Add(device);
             await _devicesRepo.SaveChangesAsync();

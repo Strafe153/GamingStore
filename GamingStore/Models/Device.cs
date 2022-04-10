@@ -13,6 +13,7 @@ namespace GamingStore.Models
         public decimal Price { get; set; }
 
         public int InStock { get; set; }
+        public byte[]? Icon { get; set; }
 
         public Guid CompanyId { get; set; }
         public Company? Company { get; set; }
