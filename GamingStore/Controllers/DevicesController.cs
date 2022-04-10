@@ -16,6 +16,14 @@ namespace GamingStore.Controllers
         private readonly IControllable<Device> _devicesRepo;
         private readonly ICompanyControllable _companiesRepo;
         private readonly IMapper _mapper;
+        private static readonly JsonSerializerOptions serializerOptions = new()
+        {
+            WriteIndented = true,
+            Converters =
+            {
+                new ByteArrayConverter()
+            }
+        };
 
         public DevicesController(IControllable<Device> devicesRepo,
             ICompanyControllable companiesRepo, IMapper mapper)
@@ -69,16 +77,7 @@ namespace GamingStore.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<DeviceReadDto>> CreateDeviceAsync(DeviceCreateDto createDto)
         {
-            JsonSerializerOptions options = new()
-            {
-                WriteIndented = true,
-                Converters =
-                {
-                    new ByteArrayConverter()
-                }
-            };
-
-            var icon = JsonSerializer.Deserialize<byte[]>(createDto.Icon, options);
+            var icon = JsonSerializer.Deserialize<byte[]>(createDto.Icon, serializerOptions);
             var device = _mapper.Map<Device>(createDto with { Icon = null! });
             device.Icon = icon;
 
@@ -101,7 +100,11 @@ namespace GamingStore.Controllers
                 return NotFound("Device not found");
             }
 
-            _mapper.Map(updateDto, device);
+            var icon = JsonSerializer.Deserialize<byte[]>(updateDto.Icon, serializerOptions);
+
+            _mapper.Map(updateDto with { Icon = null! }, device);
+            device.Icon = icon;
+
             _devicesRepo.Update(device);
             await _devicesRepo.SaveChangesAsync();
 
