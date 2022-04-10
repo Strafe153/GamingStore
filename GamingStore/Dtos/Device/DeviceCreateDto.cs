@@ -19,6 +19,8 @@ namespace GamingStore.Dtos.Device
         [Range(1, 5000)]
         public int InStock { get; init; }
 
+        public string Icon { get; init; } = string.Empty;
+
         [Required]
         public Guid CompanyId { get; init; }
     }

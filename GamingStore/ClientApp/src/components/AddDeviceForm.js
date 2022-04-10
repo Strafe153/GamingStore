@@ -13,11 +13,12 @@ export class AddDeviceForm extends Component {
             price: 49.99,
             inStock: 100,
             companyId: '',
-            logo: []
+            icon: []
         };
 
         this.addDevice = this.addDevice.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleFileChange = this.handleFileChange.bind(this);
     }
 
     async addDevice(event) {
@@ -32,7 +33,8 @@ export class AddDeviceForm extends Component {
             },
             body: JSON.stringify({
                 ...this.state,
-                category: parseInt(this.state.category)
+                category: parseInt(this.state.category),
+                icon: JSON.stringify(this.state.icon)
             })
         })
             .then(response => {
@@ -46,15 +48,34 @@ export class AddDeviceForm extends Component {
             .catch(error => alert(error.message));
     }
 
-    handleInputChange(event) {
+    handleInputChange = event => {
         const name = event.target.name;
         const value = event.target.value;
 
         this.setState({
             [name]: value
         });
+    }
 
-        console.log(value);
+    handleFileChange = event => {
+        const reader = new FileReader();
+        const fileByteArray = [];
+
+        reader.readAsArrayBuffer(event.target.files[0]);
+        reader.onloadend = evt => {
+            if (evt.target.readyState === FileReader.DONE) {
+                const arrayBuffer = evt.target.result;
+                const array = new Uint8Array(arrayBuffer);
+
+                for (let i = 0; i < array.length; i++) {
+                    fileByteArray.push(array[i]);
+                }
+
+                this.setState({
+                    icon: fileByteArray
+                });
+            }
+        }
     }
 
     render() {
@@ -89,8 +110,8 @@ export class AddDeviceForm extends Component {
                 <input id="companyId" className="form-control" type="text" name="companyId" value={this.state.companyId} onChange={this.handleInputChange} />
             </div>
             <div className="form-group my-2">
-                <label htmlFor="logo" className="form-label">Choose a picture:</label>
-                <input id="logo" className="form-control" type="file" name="logo" value={this.state.logo} onChange={this.handleInputChange} />
+                <label htmlFor="icon" className="form-label">Choose a picture:</label>
+                <input id="icon" className="form-control" type="file" onChange={this.handleFileChange} />
             </div>
 
             <input className="btn btn-primary" type="submit" value="Create" />

@@ -9,6 +9,7 @@ namespace GamingStore.Dtos.Device
         public DeviceCategory Category { get; init; }
         public decimal Price { get; init; }
         public int InStock { get; init; }
+        public byte[]? Icon { get; init; }
         public Guid CompanyId { get; init; }
     }
 }
