@@ -6,7 +6,7 @@ namespace GamingStore.Dtos.Device
     public record DeviceUpdateDto
     {
         [Required]
-        [StringLength(20, MinimumLength = 1)]
+        [StringLength(40, MinimumLength = 1)]
         public string Name { get; init; } = string.Empty;
 
         public DeviceCategory Category { get; init; } = DeviceCategory.Mouse;
@@ -19,6 +19,6 @@ namespace GamingStore.Dtos.Device
         [Range(1, 5000)]
         public int InStock { get; init; }
 
-        public byte[]? Icon { get; init; }
+        public string Icon { get; init; } = string.Empty;
     }
 }

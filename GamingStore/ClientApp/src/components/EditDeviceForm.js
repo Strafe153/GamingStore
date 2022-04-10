@@ -12,21 +12,15 @@ export class EditDeviceForm extends Component {
             category: 0,
             price: 49.99,
             inStock: 100,
-            companyId: ''
+            companyId: '',
+            icon: []
         };
 
         this.updateDevice = this.updateDevice.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleFileChange = this.handleFileChange.bind(this);
     }
 
-    handleInputChange = event => {
-        const name = event.target.name;
-        const value = event.target.value;
-
-        this.setState({
-            [name]: value
-        });
-    }
     async updateDevice(event) {
         event.preventDefault();
 
@@ -37,7 +31,11 @@ export class EditDeviceForm extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.state.token}`
             },
-            body: JSON.stringify(this.state)
+            body: JSON.stringify({
+                ...this.state,
+                category: parseInt(this.state.category),
+                icon: JSON.stringify(this.state.icon)
+            })
         })
             .then(response => {
                 if (!response.ok) {
@@ -46,6 +44,36 @@ export class EditDeviceForm extends Component {
             })
             .then(() => window.location.href = '/devices')
             .catch(error => alert(error.message));
+    }
+
+    handleInputChange = event => {
+        const name = event.target.name;
+        const value = event.target.value;
+
+        this.setState({
+            [name]: value
+        });
+    }
+
+    handleFileChange = event => {
+        const reader = new FileReader();
+        const fileByteArray = [];
+
+        reader.readAsArrayBuffer(event.target.files[0]);
+        reader.onloadend = evt => {
+            if (evt.target.readyState === FileReader.DONE) {
+                const arrayBuffer = evt.target.result;
+                const array = new Uint8Array(arrayBuffer);
+
+                for (let i = 0; i < array.length; i++) {
+                    fileByteArray.push(array[i]);
+                }
+
+                this.setState({
+                    icon: fileByteArray
+                });
+            }
+        }
     }
 
     render() {
@@ -74,6 +102,10 @@ export class EditDeviceForm extends Component {
             <div className="form-group my-2">
                 <label htmlFor="in-stock" className="form-label">In stock:</label>
                 <input id="in-stock" className="form-control" type="number" name="inStock" value={this.state.inStock} onChange={this.handleInputChange} /> 
+            </div>
+            <div className="form-group my-2">
+                <label htmlFor="icon" className="form-label">Choose a picture:</label>
+                <input id="icon" className="form-control" type="file" onChange={this.handleFileChange} />
             </div>
 
             <input className="btn btn-primary" type="submit" value="Update" />
