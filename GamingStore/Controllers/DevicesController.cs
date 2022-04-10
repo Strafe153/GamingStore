@@ -100,9 +100,8 @@ namespace GamingStore.Controllers
                 return NotFound("Device not found");
             }
 
-            var icon = JsonSerializer.Deserialize<byte[]>(updateDto.Icon, serializerOptions);
-
             _mapper.Map(updateDto with { Icon = null! }, device);
+            var icon = JsonSerializer.Deserialize<byte[]>(updateDto.Icon, serializerOptions);
             device.Icon = icon;
 
             _devicesRepo.Update(device);

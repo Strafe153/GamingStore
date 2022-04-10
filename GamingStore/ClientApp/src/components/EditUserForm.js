@@ -16,15 +16,6 @@ export class EditUserForm extends Component {
         this.updateUser = this.updateUser.bind(this);
     }
 
-    handleInputChange(event) {
-        const name = event.target.name;
-        const value = event.target.value;
-
-        this.setState({
-            [name]: value
-        });
-    }
-
     async updateUser(event) {
         event.preventDefault();
 
@@ -46,6 +37,15 @@ export class EditUserForm extends Component {
             .catch(error => alert(error.message));
     }
 
+    handleInputChange = event => {
+        const name = event.target.name;
+        const value = event.target.value;
+
+        this.setState({
+            [name]: value
+        });
+    }
+    
     render() {
         return <form onSubmit={this.updateUser}>
             <div className="form-group mb-3">

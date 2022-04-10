@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
+using GamingStore.Data;
 using GamingStore.Models;
 using GamingStore.Dtos.Company;
 using GamingStore.Repositories.Interfaces;
@@ -13,6 +15,14 @@ namespace GamingStore.Controllers
     {
         private readonly ICompanyControllable _repo;
         private readonly IMapper _mapper;
+        private static readonly JsonSerializerOptions serializerOptions = new()
+        {
+            WriteIndented = true,
+            Converters =
+            {
+                new ByteArrayConverter()
+            }
+        };
 
         public CompaniesController(ICompanyControllable repo, IMapper mapper)
         {
@@ -48,7 +58,9 @@ namespace GamingStore.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<CompanyReadDto>> CreateCompanyAsync(CompanyCreateUpdateDto createDto)
         {
-            var company = _mapper.Map<Company>(createDto);
+            var icon = JsonSerializer.Deserialize<byte[]>(createDto.Icon, serializerOptions);
+            var company = _mapper.Map<Company>(createDto with { Icon = null! });
+            company.Icon = icon;
 
             _repo.Add(company);
             await _repo.SaveChangesAsync();
@@ -69,7 +81,10 @@ namespace GamingStore.Controllers
                 return NotFound("Company not found");
             }
 
-            _mapper.Map(updateDto, company);
+            _mapper.Map(updateDto with { Icon = null! }, company);
+            var icon = JsonSerializer.Deserialize<byte[]>(updateDto.Icon, serializerOptions);
+            company.Icon = icon;
+
             _repo.Update(company);
             await _repo.SaveChangesAsync();
 
