@@ -42,6 +42,7 @@ export class Companies extends Component {
             <table className="table table-bordered">
                 <thead>
                     <tr>
+                        <th className="text-center">Icon</th>
                         <th className="text-center">Id</th>
                         <th className="text-center">Name</th>
                         <th className="text-center">Actions</th>
@@ -52,6 +53,7 @@ export class Companies extends Component {
                     this.state.companies.map(company => {
                         return <CompanyRow onGetCompanies={this.handleCompanies}
                                         key={company.id}
+                                        icon={company.icon}
                                         id={company.id}
                                         name={company.name}
                                         getCompanies={this.getCompanies} />

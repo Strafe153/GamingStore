@@ -15,15 +15,6 @@ export class LoginForm extends Component {
         this.loginUser = this.loginUser.bind(this);
     }
 
-    handleInputChange(event) {
-        const name = event.target.name;
-        const value = event.target.value;
-
-        this.setState({
-            [name]: value
-        });
-    }
-
     async loginUser(event) {
         event.preventDefault();
 
@@ -50,6 +41,15 @@ export class LoginForm extends Component {
                 window.location.href = '/';
             })
             .catch(error => alert(error.message));
+    }
+
+    handleInputChange = event => {
+        const name = event.target.name;
+        const value = event.target.value;
+
+        this.setState({
+            [name]: value
+        });
     }
 
     render() {

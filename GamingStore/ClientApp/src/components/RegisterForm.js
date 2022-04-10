@@ -16,15 +16,6 @@ export class RegisterForm extends Component {
         this.registerUser = this.registerUser.bind(this);
     }
 
-    handleInputChange(event) {
-        const name = event.target.name;
-        const value = event.target.value;
-
-        this.setState({
-            [name]: value
-        });
-    }
-
     async registerUser(event) {
         event.preventDefault();
 
@@ -47,6 +38,15 @@ export class RegisterForm extends Component {
                 window.location.href = '/login';
             })
             .catch(error => alert(error.message));
+    }
+
+    handleInputChange = event => {
+        const name = event.target.name;
+        const value = event.target.value;
+
+        this.setState({
+            [name]: value
+        });
     }
 
     render() {

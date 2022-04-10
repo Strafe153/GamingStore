@@ -9,5 +9,7 @@ namespace GamingStore.Dtos.Company
         [StringLength(25, MinimumLength = 1)]
         [UniqueCompanyName]
         public string Name { get; init; } = string.Empty;
+
+        public string Icon { get; init; } = string.Empty;
     }
 }
