@@ -85,10 +85,15 @@ namespace GamingStore.Tests
         public async Task CreateDeviceAsync_ValidData_ReturnsCreatedAtActionResult()
         {
             // Arrange
-            _mapper.Setup(m => m.Map<DeviceReadDto>(It.IsAny<Company>())).Returns(new DeviceReadDto());
+            _mapper.Setup(m => m.Map<Device>(It.IsAny<DeviceCreateDto>())).Returns(new Device());
+            _mapper.Setup(m => m.Map<DeviceReadDto>(It.IsAny<Device>())).Returns(new DeviceReadDto());
 
             // Act
-            var result = await _controller.CreateDeviceAsync(new DeviceCreateDto());
+            var result = await _controller.CreateDeviceAsync(
+                new DeviceCreateDto()
+                {
+                    Icon = "[0]"
+                });
 
             // Assert
             Assert.IsType<ActionResult<DeviceReadDto>>(result);
@@ -102,7 +107,11 @@ namespace GamingStore.Tests
             _devicesRepo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Device());
 
             // Act
-            var result = await _controller.UpdateDeviceAsync(Guid.Empty, new DeviceUpdateDto());
+            var result = await _controller.UpdateDeviceAsync(Guid.Empty, 
+                new DeviceUpdateDto()
+                {
+                    Icon = "[0]"
+                });
 
             // Assert
             Assert.IsType<NoContentResult>(result);
