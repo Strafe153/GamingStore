@@ -51,6 +51,15 @@ namespace GamingStore.Controllers
         {
             User user = _mapper.Map<User>(registerDto);
 
+            await SetDefaultProfilePicture(user);
+
+            Console.WriteLine("[");
+            foreach (var b in user.ProfilePicture!)
+            {
+                Console.Write($"{b}, ");
+            }
+            Console.WriteLine("]");
+
             _repo.GeneratePasswordHash(registerDto.Password, out byte[] hash, out byte[] salt);
 
             user.PasswordHash = hash;
@@ -140,6 +149,17 @@ namespace GamingStore.Controllers
             }
 
             return false;
+        }
+
+        private async Task SetDefaultProfilePicture(User user)
+        {
+            string picPath = $"{Directory.GetCurrentDirectory()}/Data/Icons/default_profile_pic.jpg";
+
+            using (FileStream stream = new(picPath, FileMode.Open, FileAccess.Read))
+            {
+                user.ProfilePicture = await System.IO.File.ReadAllBytesAsync(picPath);
+                await stream.ReadAsync(user.ProfilePicture, 0, Convert.ToInt32(stream.Length));
+            }
         }
     }
 }
