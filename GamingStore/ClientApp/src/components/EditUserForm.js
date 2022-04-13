@@ -9,6 +9,7 @@ export class EditUserForm extends Component {
         this.state = {
             username: '',
             role: 1,
+            profilePicture: [],
             token: sessionStorage.getItem('token')
         };
 
@@ -26,14 +27,20 @@ export class EditUserForm extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.state.token}`
             },
-            body: JSON.stringify(this.state)
+            body: JSON.stringify({
+                ...this.state,
+                profilePicture: JSON.stringify(this.state.profilePicture)
+            })
         })
             .then(response => {
                 if (!response.ok) {
                     return response.text().then(error => { throw new Error(error) });
                 }
             })
-            .then(() => window.location.href = '/users')
+            .then(() => {
+                sessionStorage.setItem('username', this.state.username);
+                window.location.href = '/users';
+            })
             .catch(error => alert(error.message));
     }
 
@@ -45,11 +52,32 @@ export class EditUserForm extends Component {
             [name]: value
         });
     }
+
+    handleFileChange = event => {
+        const reader = new FileReader();
+        const fileByteArray = [];
+
+        reader.readAsArrayBuffer(event.target.files[0]);
+        reader.onloadend = evt => {
+            if (evt.target.readyState === FileReader.DONE) {
+                const arrayBuffer = evt.target.result;
+                const array = new Uint8Array(arrayBuffer);
+
+                for (let i = 0; i < array.length; i++) {
+                    fileByteArray.push(array[i]);
+                }
+
+                this.setState({
+                    profilePicture: fileByteArray
+                });
+            }
+        }
+    }
     
     render() {
         return <form onSubmit={this.updateUser}>
             <div className="form-group mb-3">
-                    <label htmlFor="new-usernmae" className="control-label">Login:</label>
+                    <label htmlFor="new-usernmae" className="control-label">Username:</label>
                     <input id="new-usernmae" className="form-control" type="text" name="username" value={this.state.username} onChange={this.handleInputChange} />
                 </div>
                 <div className="form-group mb-3">
@@ -59,6 +87,10 @@ export class EditUserForm extends Component {
                         <option value="1">User</option>
                     </select>
                 </div>
+            <div className="form-group my-2">
+                <label htmlFor="profile-picture" className="form-label">Choose a picture:</label>
+                <input id="profile-picture" className="form-control" type="file" onChange={this.handleFileChange} />
+            </div>
 
                 <input className="btn btn-primary" type="submit" value="Update" />
         </form>;

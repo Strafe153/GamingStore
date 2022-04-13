@@ -11,5 +11,6 @@ namespace GamingStore.Dtos.User
         public string Username { get; init; } = string.Empty;
 
         public UserRole Role { get; init; } = UserRole.User;
+        public string ProfilePicture { get; init; } = string.Empty;
     }
 }

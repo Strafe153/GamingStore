@@ -44,6 +44,7 @@ export class Users extends Component {
             <table className="table table-bordered">
                 <thead>
                     <tr>
+                        <th className="text-center">Profile Picture</th>
                         <th className="text-center">Id</th>
                         <th className="text-center">Username</th>
                         <th className="text-center">Role</th>
@@ -55,6 +56,7 @@ export class Users extends Component {
                     this.state.users.map(user => {
                         return <UserRow onGetUsers={this.handleUsers}
                                         key={user.id}
+                                        profilePicture={user.profilePicture}
                                         id={user.id}
                                         username={user.username}
                                         role={user.role}

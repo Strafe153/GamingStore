@@ -34,6 +34,9 @@ export class UserRow extends Component {
 
     render() {
         return <tr>
+            <td className="text-center">
+                <img src={ `data:image/png;base64,${this.props.profilePicture}` } alt="user-profile-pic" width="75" />
+            </td>
             <td>{ this.props.id }</td>
             <td>{ this.props.username }</td>
             <td>{ this.props.role }</td>

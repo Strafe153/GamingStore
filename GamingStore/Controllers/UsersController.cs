@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
 using System.Security.Claims;
 using GamingStore.Data;
 using GamingStore.Models;
@@ -15,6 +16,14 @@ namespace GamingStore.Controllers
     {
         private readonly IUserControllable _repo;
         private readonly IMapper _mapper;
+        private static readonly JsonSerializerOptions serializerOptions = new()
+        {
+            WriteIndented = true,
+            Converters =
+            {
+                new ByteArrayConverter()
+            }
+        };
 
         public UsersController(IUserControllable repo, IMapper mapper)
         {
@@ -52,14 +61,6 @@ namespace GamingStore.Controllers
             User user = _mapper.Map<User>(registerDto);
 
             await SetDefaultProfilePicture(user);
-
-            Console.WriteLine("[");
-            foreach (var b in user.ProfilePicture!)
-            {
-                Console.Write($"{b}, ");
-            }
-            Console.WriteLine("]");
-
             _repo.GeneratePasswordHash(registerDto.Password, out byte[] hash, out byte[] salt);
 
             user.PasswordHash = hash;
@@ -110,7 +111,10 @@ namespace GamingStore.Controllers
                 return Forbid();
             }
 
-            _mapper.Map(updateDto, user);
+            _mapper.Map(updateDto with { ProfilePicture = null! }, user);
+            var profilePicture = JsonSerializer.Deserialize<byte[]>(updateDto.ProfilePicture, serializerOptions);
+            user.ProfilePicture = profilePicture;
+
             _repo.Update(user);
             await _repo.SaveChangesAsync();
 
