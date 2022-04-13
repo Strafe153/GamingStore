@@ -59,6 +59,8 @@ namespace GamingStore.Tests
         public async Task RegisterUserAsync_ValidData_ReturnsCreatedAtActionResult()
         {
             // Arrange
+            _repo.Setup(r => r.GetDefaultPicturePath()).Returns(
+                $"{Directory.GetCurrentDirectory()[0..26]}\\Data\\Icons\\default_profile_pic.jpg");
             _mapper.Setup(m => m.Map<User>(It.IsAny<UserRegisterDto>())).Returns(new User());
             _mapper.Setup(m => m.Map<UserReadDto>(It.IsAny<User>())).Returns(new UserReadDto());
 
@@ -125,7 +127,11 @@ namespace GamingStore.Tests
             MockUserIdentityName(_controller);
 
             // Act
-            var result = await _controller.UpdateUserAsync(Guid.Empty, new UserUpdateDto());
+            var result = await _controller.UpdateUserAsync(Guid.Empty, 
+                new UserUpdateDto()
+                {
+                    ProfilePicture = "[0]"
+                });
 
             // Assert
             Assert.IsType<NoContentResult>(result);

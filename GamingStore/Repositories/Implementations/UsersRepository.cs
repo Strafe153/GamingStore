@@ -73,6 +73,11 @@ namespace GamingStore.Repositories.Implementations
             return await _context.Users.SingleOrDefaultAsync(u => u.Username == name);
         }
 
+        public string GetDefaultPicturePath()
+        {
+            return $"{Directory.GetCurrentDirectory()}/Data/Icons/default_profile_pic.jpg";
+        }
+
         public void Remove(User entity)
         {
             _context.Users.Remove(entity);
