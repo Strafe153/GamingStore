@@ -157,7 +157,7 @@ namespace GamingStore.Controllers
 
         private async Task SetDefaultProfilePicture(User user)
         {
-            string picPath = $"{Directory.GetCurrentDirectory()}/Data/Icons/default_profile_pic.jpg";
+            string picPath = _repo.GetDefaultPicturePath();
 
             using (FileStream stream = new(picPath, FileMode.Open, FileAccess.Read))
             {
