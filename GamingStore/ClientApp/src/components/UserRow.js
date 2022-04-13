@@ -33,20 +33,22 @@ export class UserRow extends Component {
     }
 
     render() {
+        const userId = this.props.id;
+
         return <tr>
             <td className="text-center">
                 <img src={ `data:image/png;base64,${this.props.profilePicture}` } alt="user-profile-pic" width="75" />
             </td>
-            <td>{ this.props.id }</td>
+            <td>{ userId }</td>
             <td>{ this.props.username }</td>
             <td>{ this.props.role }</td>
             <td>
             {(this.props.calledFromAdmin || (sessionStorage.getItem('username') === this.props.username)) &&
                 <div className="text-center d-flex justify-content-around">
-                    <button onClick={() => this.updateUser(this.props.id)} className="btn btn-sm btn-info text-white">Edit</button>
+                    <button onClick={() => this.updateUser(userId)} className="btn btn-sm btn-info text-white">Edit</button>
                     <button onClick={
                         async () => { 
-                            await this.deleteUser(this.props.id); 
+                            await this.deleteUser(userId); 
                             await this.props.getUsers(); 
                         }
                     } className="btn btn-sm btn-danger">Delete</button>
