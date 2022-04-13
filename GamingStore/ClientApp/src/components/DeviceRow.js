@@ -33,21 +33,23 @@ export class DeviceRow extends Component {
     }
 
     render() {
+        const deviceId = this.props.id;
+
         return <tr>
             <td className="text-center">
                 <img src={ `data:image/png;base64,${this.props.icon}` } alt="device-icon" width="100" />
             </td>
-            <td>{ this.props.id }</td>
+            <td>{ deviceId }</td>
             <td>{ this.props.name }</td>
             <td>{ this.props.category }</td>
             <td>{ this.props.price }</td>
             <td>{ this.props.inStock }</td>
             <td>{ this.props.companyId }</td>
             <td className="text-center d-flex justify-content-around">
-                <button onClick={() => this.updateDevice(this.props.id)} className="btn btn-sm btn-info text-white">Edit</button>
+                <button onClick={() => this.updateDevice(deviceId)} className="btn btn-sm btn-info text-white">Edit</button>
                 <button onClick={
                     async () => { 
-                        await this.deleteDevice(this.props.id); 
+                        await this.deleteDevice(deviceId); 
                         await this.props.getDevices(); 
                     }
                 } className="btn btn-sm btn-danger">Delete</button>

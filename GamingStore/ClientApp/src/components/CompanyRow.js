@@ -33,17 +33,19 @@ export class CompanyRow extends Component {
     }
 
     render() {
+        const companyId = this.props.id;
+
         return <tr>
             <td className="text-center">
                 <img src={ `data:image/png;base64,${this.props.icon}` } alt="company-icon" width="100" />
             </td>
-            <td>{ this.props.id }</td>
+            <td>{ companyId }</td>
             <td>{ this.props.name }</td>
             <td className="text-center d-flex justify-content-around">
-                <button onClick={() => this.updateCompany(this.props.id)} className="btn btn-sm btn-info text-white">Edit</button>
+                <button onClick={() => this.updateCompany(companyId)} className="btn btn-sm btn-info text-white">Edit</button>
                 <button onClick={
                     async () => { 
-                        await this.deleteCompany(this.props.id); 
+                        await this.deleteCompany(companyId); 
                         await this.props.getCompanies(); 
                     }
                 } className="btn btn-sm btn-danger">Delete</button>
