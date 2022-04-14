@@ -11,8 +11,8 @@ export class LoginForm extends Component {
             password: ''
         };
         
-        this.handleInputChange = this.handleInputChange.bind(this);
         this.loginUser = this.loginUser.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     async loginUser(event) {

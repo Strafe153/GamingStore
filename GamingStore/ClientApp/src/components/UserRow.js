@@ -1,4 +1,5 @@
-import React, { Component} from 'react';
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 export class UserRow extends Component {
     static displayName = UserRow.name;
@@ -28,30 +29,34 @@ export class UserRow extends Component {
             .catch(error => alert(error.message));
     }
 
-    updateUser(id) {
-        window.location.href = `/users/edit/${id}`;
-    }
-
     render() {
         const userId = this.props.id;
-
+        const username = this.props.username;
+        const role = this.props.role;
+        
         return <tr>
             <td className="text-center">
                 <img src={ `data:image/png;base64,${this.props.profilePicture}` } alt="user-profile-pic" width="75" />
             </td>
             <td>{ userId }</td>
-            <td>{ this.props.username }</td>
-            <td>{ this.props.role }</td>
+            <td>{ username }</td>
+            <td>{ role }</td>
             <td>
-            {(this.props.calledFromAdmin || (sessionStorage.getItem('username') === this.props.username)) &&
+            {(this.props.calledFromAdmin || (sessionStorage.getItem('username') === username)) &&
                 <div className="text-center d-flex justify-content-around">
-                    <button onClick={() => this.updateUser(userId)} className="btn btn-sm btn-info text-white">Edit</button>
-                    <button onClick={
+                    <NavLink className="btn btn-sm btn-info text-white" to={{
+                        pathname: `/users/edit/${userId}`,
+                        state: {
+                            username: username,
+                            role: role
+                        }
+                    }}>Edit</NavLink>
+                    <button className="btn btn-sm btn-danger" onClick={
                         async () => { 
                             await this.deleteUser(userId); 
                             await this.props.getUsers(); 
                         }
-                    } className="btn btn-sm btn-danger">Delete</button>
+                    }>Delete</button>
                 </div>
             }
             </td>

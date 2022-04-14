@@ -7,14 +7,14 @@ export class EditUserForm extends Component {
         super(props);
 
         this.state = {
-            username: '',
-            role: 1,
+            username: this.props.location.state.username,
+            role: this.props.location.state.role,
             profilePicture: [],
             token: sessionStorage.getItem('token')
         };
 
-        this.handleInputChange = this.handleInputChange.bind(this);
         this.updateUser = this.updateUser.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     async updateUser(event) {

@@ -12,8 +12,8 @@ export class RegisterForm extends Component {
             confirmPassword: ''
         };
         
-        this.handleInputChange = this.handleInputChange.bind(this);
         this.registerUser = this.registerUser.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     async registerUser(event) {
