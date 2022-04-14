@@ -8,6 +8,7 @@ export class UserRow extends Component {
         super(props);
 
         this.state = {
+            username: sessionStorage.getItem('username'),
             token: sessionStorage.getItem('token')
         };
     }
@@ -33,22 +34,24 @@ export class UserRow extends Component {
         const userId = this.props.id;
         const username = this.props.username;
         const role = this.props.role;
+        const profilePicture = this.props.profilePicture;
         
         return <tr>
             <td className="text-center">
-                <img src={ `data:image/png;base64,${this.props.profilePicture}` } alt="user-profile-pic" width="75" />
+                <img src={ `data:image/png;base64,${profilePicture}` } alt="user-profile-pic" width="75" />
             </td>
             <td>{ userId }</td>
             <td>{ username }</td>
             <td>{ role }</td>
             <td>
-            {(this.props.calledFromAdmin || (sessionStorage.getItem('username') === username)) &&
+            {(this.props.calledFromAdmin || (this.state.username === username)) &&
                 <div className="text-center d-flex justify-content-around">
                     <NavLink className="btn btn-sm btn-info text-white" to={{
                         pathname: `/users/edit/${userId}`,
                         state: {
                             username: username,
-                            role: role
+                            role: role,
+                            profilePicture: profilePicture
                         }
                     }}>Edit</NavLink>
                     <button className="btn btn-sm btn-danger" onClick={
