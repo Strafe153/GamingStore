@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { base64ToArray } from '../modules/converter';
 
 export class EditCompanyForm extends Component {
     static displayName = EditCompanyForm.name;
@@ -7,9 +8,9 @@ export class EditCompanyForm extends Component {
         super(props);
 
         this.state = {
-            token: sessionStorage.getItem('token'),
-            name: '',
-            icon: []
+            name: this.props.location.state.name,
+            icon: JSON.stringify(base64ToArray(this.props.location.state.icon)),
+            token: sessionStorage.getItem('token')
         };
 
         this.updateCompany = this.updateCompany.bind(this);
@@ -27,10 +28,7 @@ export class EditCompanyForm extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.state.token}`
             },
-            body: JSON.stringify({
-                ...this.state,
-                icon: JSON.stringify(this.state.icon)
-            })
+            body: JSON.stringify(this.state)
         })
             .then(response => {
                 if (!response.ok) {
@@ -62,7 +60,7 @@ export class EditCompanyForm extends Component {
                 }
 
                 this.setState({
-                    icon: fileByteArray
+                    icon: JSON.stringify(fileByteArray)
                 });
             }
         }
