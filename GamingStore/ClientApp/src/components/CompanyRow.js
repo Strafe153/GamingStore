@@ -30,7 +30,7 @@ export class CompanyRow extends Component {
     }
 
     render() {
-        const companyId = this.props.id;
+        const id = this.props.id;
         const name = this.props.name;
         const icon = this.props.icon;
 
@@ -38,11 +38,11 @@ export class CompanyRow extends Component {
             <td className="text-center">
                 <img src={ `data:image/png;base64,${icon}` } alt="company-icon" width="100" />
             </td>
-            <td>{ companyId }</td>
+            <td>{ id }</td>
             <td>{ name }</td>
             <td className="text-center d-flex justify-content-around">
                 <NavLink className="btn btn-sm btn-info text-white" to={{
-                    pathname: `/companies/edit/${companyId}`,
+                    pathname: `/companies/edit/${id}`,
                     state: {
                         name: name,
                         icon: icon
@@ -50,7 +50,7 @@ export class CompanyRow extends Component {
                 }}>Edit</NavLink>
                 <button onClick={
                     async () => { 
-                        await this.deleteCompany(companyId); 
+                        await this.deleteCompany(id); 
                         await this.props.getCompanies(); 
                     }
                 } className="btn btn-sm btn-danger">Delete</button>

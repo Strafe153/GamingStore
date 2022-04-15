@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 export class DeviceRow extends Component {
     static displayName = DeviceRow.name;
@@ -33,23 +34,39 @@ export class DeviceRow extends Component {
     }
 
     render() {
-        const deviceId = this.props.id;
+        const id = this.props.id;
+        const name = this.props.name;
+        const category = this.props.category;
+        const price = this.props.price;
+        const inStock = this.props.inStock;
+        const companyId = this.props.companyId;
+        const icon = this.props.icon;
 
         return <tr>
             <td className="text-center">
-                <img src={ `data:image/png;base64,${this.props.icon}` } alt="device-icon" width="100" />
+                <img src={ `data:image/png;base64,${icon}` } alt="device-icon" width="100" />
             </td>
-            <td>{ deviceId }</td>
-            <td>{ this.props.name }</td>
-            <td>{ this.props.category }</td>
-            <td>{ this.props.price }</td>
-            <td>{ this.props.inStock }</td>
-            <td>{ this.props.companyId }</td>
+            <td>{ id }</td>
+            <td>{ name }</td>
+            <td>{ category }</td>
+            <td>{ price }</td>
+            <td>{ inStock }</td>
+            <td>{ companyId }</td>
             <td className="text-center d-flex justify-content-around">
-                <button onClick={() => this.updateDevice(deviceId)} className="btn btn-sm btn-info text-white">Edit</button>
+                <NavLink className="btn btn-sm btn-info text-white" to={{
+                    pathname: `/devices/edit/${id}`,
+                    state: {
+                        name: name,
+                        category: category,
+                        price: price,
+                        inStock: inStock,
+                        companyId: companyId,
+                        icon: icon
+                    }
+                }}>Edit</NavLink>
                 <button onClick={
                     async () => { 
-                        await this.deleteDevice(deviceId); 
+                        await this.deleteDevice(id); 
                         await this.props.getDevices(); 
                     }
                 } className="btn btn-sm btn-danger">Delete</button>
