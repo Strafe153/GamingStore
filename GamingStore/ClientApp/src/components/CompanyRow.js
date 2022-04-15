@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 export class CompanyRow extends Component {
     static displayName = CompanyRow.name;
@@ -28,21 +29,25 @@ export class CompanyRow extends Component {
             .catch(error => alert(error.message));
     }
 
-    updateCompany(id) {
-        window.location.href = `/companies/edit/${id}`;
-    }
-
     render() {
         const companyId = this.props.id;
+        const name = this.props.name;
+        const icon = this.props.icon;
 
         return <tr>
             <td className="text-center">
-                <img src={ `data:image/png;base64,${this.props.icon}` } alt="company-icon" width="100" />
+                <img src={ `data:image/png;base64,${icon}` } alt="company-icon" width="100" />
             </td>
             <td>{ companyId }</td>
-            <td>{ this.props.name }</td>
+            <td>{ name }</td>
             <td className="text-center d-flex justify-content-around">
-                <button onClick={() => this.updateCompany(companyId)} className="btn btn-sm btn-info text-white">Edit</button>
+                <NavLink className="btn btn-sm btn-info text-white" to={{
+                    pathname: `/companies/edit/${companyId}`,
+                    state: {
+                        name: name,
+                        icon: icon
+                    }
+                }}>Edit</NavLink>
                 <button onClick={
                     async () => { 
                         await this.deleteCompany(companyId); 

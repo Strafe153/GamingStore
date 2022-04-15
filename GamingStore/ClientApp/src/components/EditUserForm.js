@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { base64ToArray } from '../modules/converter';
 
 export class EditUserForm extends Component {
     static displayName = EditUserForm.name;
@@ -9,7 +10,7 @@ export class EditUserForm extends Component {
         this.state = {
             username: this.props.location.state.username,
             role: this.props.location.state.role,
-            profilePicture: JSON.stringify(this.base64ToArray(this.props.location.state.profilePicture)),
+            profilePicture: JSON.stringify(base64ToArray(this.props.location.state.profilePicture)),
             token: sessionStorage.getItem('token')
         };
 
@@ -27,7 +28,10 @@ export class EditUserForm extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.state.token}`
             },
-            body: JSON.stringify(this.state)
+            body: JSON.stringify({
+                ...this.state,
+                role: parseInt(this.state.role)
+            })
         })
             .then(response => {
                 if (!response.ok) {
@@ -39,17 +43,6 @@ export class EditUserForm extends Component {
                 window.location.href = '/users';
             })
             .catch(error => alert(error.message));
-    }
-
-    base64ToArray(base64) {
-        const binaryString = window.atob(base64);
-        const bytes = [];
-
-        for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
-
-        return bytes;
     }
 
     handleInputChange = event => {
