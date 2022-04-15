@@ -31,7 +31,7 @@ export class UserRow extends Component {
     }
 
     render() {
-        const userId = this.props.id;
+        const id = this.props.id;
         const username = this.props.username;
         const role = this.props.role;
         const profilePicture = this.props.profilePicture;
@@ -40,14 +40,14 @@ export class UserRow extends Component {
             <td className="text-center">
                 <img src={ `data:image/png;base64,${profilePicture}` } alt="user-profile-pic" width="75" />
             </td>
-            <td>{ userId }</td>
+            <td>{ id }</td>
             <td>{ username }</td>
             <td>{ role }</td>
             <td>
             {(this.props.calledFromAdmin || (this.state.username === username)) &&
                 <div className="text-center d-flex justify-content-around">
                     <NavLink className="btn btn-sm btn-info text-white" to={{
-                        pathname: `/users/edit/${userId}`,
+                        pathname: `/users/edit/${id}`,
                         state: {
                             username: username,
                             role: role,
@@ -56,7 +56,7 @@ export class UserRow extends Component {
                     }}>Edit</NavLink>
                     <button className="btn btn-sm btn-danger" onClick={
                         async () => { 
-                            await this.deleteUser(userId); 
+                            await this.deleteUser(id); 
                             await this.props.getUsers(); 
                         }
                     }>Delete</button>
