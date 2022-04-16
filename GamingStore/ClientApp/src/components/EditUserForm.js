@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { base64ToArray } from '../modules/converter';
+import { formErrorMessage } from '../modules/errorMessageFormer';
 
 export class EditUserForm extends Component {
     static displayName = EditUserForm.name;
@@ -35,15 +36,7 @@ export class EditUserForm extends Component {
         })
             .then(response => {
                 if (!response.ok) {
-                    return response.json().then(data => {
-                        let errorString = "";
-
-                        for (const error of Object.values(data.errors)) {
-                            errorString += `${error[0]}\n`;
-                        }
-
-                        throw new Error(errorString);
-                    })
+                    return formErrorMessage(response);
                 }
             })
             .then(() => {
