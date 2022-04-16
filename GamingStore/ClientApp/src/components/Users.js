@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { UserRow } from './UserRow';
+import { formErrorMessage } from '../modules/errorMessageFormer';
 
 export class Users extends Component {
     static displayName = Users.name;
@@ -29,7 +30,7 @@ export class Users extends Component {
                     return response.json();
                 }
                 
-                return response.text().then(error => { throw new Error(error) });
+                return formErrorMessage(response);
             })
             .then(data => this.setState({users: data}))
             .catch(error => console.log(error.message));

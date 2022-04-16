@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import { formErrorMessage } from '../modules/errorMessageFormer';
 
 export class CompanyRow extends Component {
     static displayName = CompanyRow.name;
@@ -23,7 +24,7 @@ export class CompanyRow extends Component {
         })
             .then(response => {
                 if (!response.ok) {
-                    return response.text().then(error => { throw new Error(error) });
+                    return formErrorMessage(response);
                 }
             })
             .catch(error => alert(error.message));

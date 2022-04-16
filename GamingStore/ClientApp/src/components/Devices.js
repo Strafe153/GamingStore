@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { DeviceRow } from './DeviceRow';
+import { formErrorMessage } from '../modules/errorMessageFormer';
 
 export class Devices extends Component {
     static displayName = Devices.name;
@@ -27,7 +28,7 @@ export class Devices extends Component {
                     return response.json();
                 }
 
-                return response.text().then(error => { throw new Error(error) });
+                return formErrorMessage(response);
             })
             .then(data => this.setState({devices: data}))
             .catch(error => alert(error.message));

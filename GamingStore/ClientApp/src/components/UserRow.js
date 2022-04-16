@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import { formErrorMessage } from '../modules/errorMessageFormer';
 
 export class UserRow extends Component {
     static displayName = UserRow.name;
@@ -13,7 +14,7 @@ export class UserRow extends Component {
         };
     }
 
-    async deleteUser(id) {
+    async deleteUser(id, username) {
         await fetch(`../api/users/${id}`, {
             method: 'DELETE',
             headers: {
@@ -24,7 +25,11 @@ export class UserRow extends Component {
         })
             .then(response => {
                 if (!response.ok) {
-                    return response.text().then(error => { throw new Error(error) });
+                    return formErrorMessage(response);
+                }
+
+                if (username === this.state.username) {
+                    window.location.href = '/logout';
                 }
             })
             .catch(error => alert(error.message));
@@ -56,7 +61,7 @@ export class UserRow extends Component {
                     }}>Edit</NavLink>
                     <button className="btn btn-sm btn-danger" onClick={
                         async () => { 
-                            await this.deleteUser(id); 
+                            await this.deleteUser(id, username); 
                             await this.props.getUsers(); 
                         }
                     }>Delete</button>

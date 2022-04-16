@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { CompanyRow } from './CompanyRow';
+import { formErrorMessage } from '../modules/errorMessageFormer';
 
 export class Companies extends Component {
     static displayName = Companies.name;
@@ -27,7 +28,7 @@ export class Companies extends Component {
                     return response.json();
                 }
 
-                return response.text().then(error => { throw new Error(error) });
+                return formErrorMessage(response);
             })
             .then(data => this.setState({companies: data}))
             .catch(error => alert(error.message));
