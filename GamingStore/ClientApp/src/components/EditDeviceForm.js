@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { base64ToArray } from '../modules/converter';
+import { formErrorMessage } from '../modules/errorMessageFormer';
 
 export class EditDeviceForm extends Component {
     static displayName = EditDeviceForm.name;
@@ -39,7 +40,7 @@ export class EditDeviceForm extends Component {
         })
             .then(response => {
                 if (!response.ok) {
-                    return response.text().then(error => { throw new Error(error) });
+                    return formErrorMessage(response);
                 }
             })
             .then(() => window.location.href = '/devices')

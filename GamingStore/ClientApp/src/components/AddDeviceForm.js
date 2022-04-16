@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { formErrorMessage } from '../modules/errorMessageFormer';
 
 export class AddDeviceForm extends Component {
     static displayName = AddDeviceForm.name;
@@ -42,10 +43,10 @@ export class AddDeviceForm extends Component {
                     return response.json();
                 }
 
-                return response.text().then(error => { throw new Error(error) });
+                return formErrorMessage(response);
             })
             .then(() => window.location.href = '/devices')
-            .catch(error => alert(error.message));
+            .catch(error => alert(error));
     }
 
     handleInputChange = event => {

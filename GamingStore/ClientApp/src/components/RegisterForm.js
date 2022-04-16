@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { formErrorMessage } from '../modules/errorMessageFormer';
 
 export class RegisterForm extends Component {
     static displayName = RegisterForm.name;
@@ -32,7 +33,7 @@ export class RegisterForm extends Component {
                     return response.json();
                 }
                 
-                return response.text().then(error => { throw new Error(error) });
+                return formErrorMessage(response);
             })
             .then(() => {
                 window.location.href = '/login';

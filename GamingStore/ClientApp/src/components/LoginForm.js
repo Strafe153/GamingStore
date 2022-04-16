@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { formErrorMessage } from '../modules/errorMessageFormer';
 
 export class LoginForm extends Component {
     static displayName = LoginForm.name;
@@ -31,7 +32,7 @@ export class LoginForm extends Component {
                     return response.json();
                 }
 
-                return response.text().then(error => { throw new Error(error) });
+                return formErrorMessage(response);
             })
             .then(data => {
                 sessionStorage.setItem('token', data.token);

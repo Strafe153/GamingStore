@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { formErrorMessage } from '../modules/errorMessageFormer';
+
 
 export class AddCompanyForm extends Component {
     static displayName = AddCompanyForm.name;
@@ -37,7 +39,7 @@ export class AddCompanyForm extends Component {
                     return response.json();
                 }
 
-                return response.text().then(error => { throw new Error(error) });
+                return formErrorMessage(response);
             })
             .then(() => window.location.href = '/companies')
             .catch(error => alert(error.message));
