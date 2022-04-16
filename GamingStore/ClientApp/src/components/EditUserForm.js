@@ -35,14 +35,22 @@ export class EditUserForm extends Component {
         })
             .then(response => {
                 if (!response.ok) {
-                    return response.text().then(error => { throw new Error(error) });
+                    return response.json().then(data => {
+                        let errorString = "";
+
+                        for (const error of Object.values(data.errors)) {
+                            errorString += `${error[0]}\n`;
+                        }
+
+                        throw new Error(errorString);
+                    })
                 }
             })
             .then(() => {
                 sessionStorage.setItem('username', this.state.username);
                 window.location.href = '/users';
             })
-            .catch(error => alert(error.message));
+            .catch(error => alert(error));
     }
 
     handleInputChange = event => {
