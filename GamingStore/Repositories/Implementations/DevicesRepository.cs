@@ -29,6 +29,11 @@ namespace GamingStore.Repositories.Implementations
             return await _context.Devices.SingleOrDefaultAsync(d => d.Id == id);
         }
 
+        public async Task<Device?> GetByNameAsync(string name)
+        {
+            return await _context.Devices.SingleOrDefaultAsync(d => d.Name == name);
+        }
+
         public void Remove(Device entity)
         {
             _context.Devices.Remove(entity);

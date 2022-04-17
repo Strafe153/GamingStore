@@ -13,7 +13,7 @@ namespace GamingStore.Controllers
     [ApiController]
     public class CompaniesController : ControllerBase
     {
-        private readonly ICompanyControllable _repo;
+        private readonly IControllable<Company> _repo;
         private readonly IMapper _mapper;
         private static readonly JsonSerializerOptions serializerOptions = new()
         {
@@ -24,7 +24,7 @@ namespace GamingStore.Controllers
             }
         };
 
-        public CompaniesController(ICompanyControllable repo, IMapper mapper)
+        public CompaniesController(IControllable<Company> repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;

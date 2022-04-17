@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using GamingStore.Data;
+using GamingStore.ValidationAttributes;
 
 namespace GamingStore.Dtos.Device
 {
@@ -7,6 +8,7 @@ namespace GamingStore.Dtos.Device
     {
         [Required]
         [StringLength(40, MinimumLength = 1)]
+        [UniqueDeviceName]
         public string Name { get; init; } = string.Empty;
 
         public DeviceCategory Category { get; init; } = DeviceCategory.Mouse;

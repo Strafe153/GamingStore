@@ -14,7 +14,7 @@ namespace GamingStore.Controllers
     public class DevicesController : ControllerBase
     {
         private readonly IControllable<Device> _devicesRepo;
-        private readonly ICompanyControllable _companiesRepo;
+        private readonly IControllable<Company> _companiesRepo;
         private readonly IMapper _mapper;
         private static readonly JsonSerializerOptions serializerOptions = new()
         {
@@ -26,7 +26,7 @@ namespace GamingStore.Controllers
         };
 
         public DevicesController(IControllable<Device> devicesRepo,
-            ICompanyControllable companiesRepo, IMapper mapper)
+            IControllable<Company> companiesRepo, IMapper mapper)
         {
             _devicesRepo = devicesRepo;
             _companiesRepo = companiesRepo;

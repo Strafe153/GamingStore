@@ -34,7 +34,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddScoped<IUserControllable, UsersRepository>();
-builder.Services.AddScoped<ICompanyControllable, CompaniesRepository>();
+builder.Services.AddScoped<IControllable<Company>, CompaniesRepository>();
 builder.Services.AddScoped<IControllable<Device>, DevicesRepository>();
 
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(
