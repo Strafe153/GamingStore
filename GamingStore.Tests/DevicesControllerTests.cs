@@ -12,7 +12,7 @@ namespace GamingStore.Tests
     public class DevicesControllerTests
     {
         private static readonly Mock<IControllable<Device>> _devicesRepo = new();
-        private static readonly Mock<ICompanyControllable> _companiesRepo = new();
+        private static readonly Mock<IControllable<Company>> _companiesRepo = new();
         private static readonly Mock<IMapper> _mapper = new();
         private static readonly DevicesController _controller = new(
             _devicesRepo.Object, _companiesRepo.Object, _mapper.Object);

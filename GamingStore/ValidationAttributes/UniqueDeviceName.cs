@@ -4,12 +4,12 @@ using GamingStore.Repositories.Interfaces;
 
 namespace GamingStore.ValidationAttributes
 {
-    public class UniqueCompanyName : ValidationAttribute
+    public class UniqueDeviceName : ValidationAttribute
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext context)
         {
-            var service = (IControllable<Company>)context.GetService(typeof(IControllable<Company>))!;
-
+            var service = (IControllable<Device>)context.GetService(typeof(IControllable<Device>))!;
+            
             if (value is string name)
             {
                 if (service.GetByNameAsync(name).Result is null)

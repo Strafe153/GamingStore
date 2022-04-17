@@ -5,7 +5,7 @@ using GamingStore.Repositories.Interfaces;
 
 namespace GamingStore.Repositories.Implementations
 {
-    public class CompaniesRepository : ICompanyControllable
+    public class CompaniesRepository : IControllable<Company>
     {
         private readonly DataContext _context;
 
