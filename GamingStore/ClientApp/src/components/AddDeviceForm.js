@@ -8,13 +8,13 @@ export class AddDeviceForm extends Component {
         super(props);
 
         this.state = {
-            token: sessionStorage.getItem('token'),
             name: '',
             category: 0,
             price: 49.99,
             inStock: 100,
             companyId: '',
-            icon: []
+            icon: [],
+            token: sessionStorage.getItem('token')
         };
 
         this.addDevice = this.addDevice.bind(this);
