@@ -9,7 +9,6 @@ export class EditDeviceForm extends Component {
         super(props);
 
         this.state = {
-            name: this.props.location.state.name,
             category: this.props.location.state.category,
             price: this.props.location.state.price,
             inStock: this.props.location.state.inStock,
@@ -79,10 +78,6 @@ export class EditDeviceForm extends Component {
 
     render() {
         return <form onSubmit={this.updateDevice}>
-            <div className="form-group my-3">
-                <label htmlFor="name" className="control-label">Name:</label>
-                <input id="name" className="form-control" type="text" name="name" value={this.state.name} onChange={this.handleInputChange} /> 
-            </div>
             <div className="form-group my-3">
                 <label htmlFor="category" className="form-label">Category:</label>
                 <select id="category" className="form-select" name="category" value={this.state.category} onChange={this.handleInputChange}>

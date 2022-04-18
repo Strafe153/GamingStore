@@ -57,7 +57,6 @@ export class DeviceRow extends Component {
                 <NavLink className="btn btn-sm btn-info text-white" to={{
                     pathname: `/devices/edit/${id}`,
                     state: {
-                        name: name,
                         category: category,
                         price: price,
                         inStock: inStock,

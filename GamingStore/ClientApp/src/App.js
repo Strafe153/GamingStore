@@ -5,7 +5,7 @@ import { Home } from './components/Home';
 import { Users } from './components/Users';
 import { EditUserForm } from './components/EditUserForm';
 import { Companies } from './components/Companies';
-import { AddCompanyForm } from './components/AddComanyForm';
+import { AddCompanyForm } from './components/AddCompanyForm';
 import { EditCompanyForm } from './components/EditCompanyForm';
 import { Devices } from './components/Devices';
 import { AddDeviceForm } from './components/AddDeviceForm';

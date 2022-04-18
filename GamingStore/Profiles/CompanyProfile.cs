@@ -9,7 +9,7 @@ namespace GamingStore.Profiles
         public CompanyProfile()
         {
             CreateMap<Company, CompanyReadDto>();
-            CreateMap<CompanyCreateUpdateDto, Company>();
+            CreateMap<CompanyCreateDto, Company>();
         }
     }
 }

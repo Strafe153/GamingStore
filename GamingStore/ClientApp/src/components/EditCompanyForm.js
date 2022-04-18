@@ -9,13 +9,11 @@ export class EditCompanyForm extends Component {
         super(props);
 
         this.state = {
-            name: this.props.location.state.name,
             icon: JSON.stringify(base64ToArray(this.props.location.state.icon)),
             token: sessionStorage.getItem('token')
         };
 
         this.updateCompany = this.updateCompany.bind(this);
-        this.handleName = this.handleName.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
     }
 
@@ -38,12 +36,6 @@ export class EditCompanyForm extends Component {
             })
             .then(() => window.location.href = '/companies')
             .catch(error => alert(error.message));
-    }
-
-    handleName = event => {
-        this.setState({
-            name: event.target.value
-        });
     }
 
     handleFileChange = event => {
@@ -69,10 +61,6 @@ export class EditCompanyForm extends Component {
 
     render() {
         return <form onSubmit={this.updateCompany}>
-            <div className="form-group my-3">
-                <label htmlFor="name" className="control-label">Name:</label>
-                <input id="name" className="form-control" type="text" value={this.state.name} onChange={this.handleName} /> 
-            </div>
             <div className="form-group my-2">
                 <label htmlFor="icon" className="form-label">Choose a picture:</label>
                 <input id="icon" className="form-control" type="file" onChange={this.handleFileChange} />
