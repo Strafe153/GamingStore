@@ -45,7 +45,6 @@ export class CompanyRow extends Component {
                 <NavLink className="btn btn-sm btn-info text-white" to={{
                     pathname: `/companies/edit/${id}`,
                     state: {
-                        name: name,
                         icon: icon
                     }
                 }}>Edit</NavLink>

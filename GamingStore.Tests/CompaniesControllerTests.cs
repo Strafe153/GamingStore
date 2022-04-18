@@ -15,7 +15,7 @@ namespace GamingStore.Tests
         private static readonly Mock<IMapper> _mapper = new();
         private static readonly CompaniesController _controller = new(_repo.Object, _mapper.Object);
 
-        private static readonly CompanyCreateUpdateDto _createUpdateDto = new() { Icon = "[0]" };
+        private static readonly CompanyCreateDto _createUpdateDto = new() { Icon = "[0]" };
 
         [Fact]
         public async Task GetAllCompaniesAsync_ValidData_ReturnsOkObjectResult()
@@ -58,7 +58,7 @@ namespace GamingStore.Tests
         public async Task CreateCompanyAsync_ValidData_ReturnsCreatedAtActionResult()
         {
             // Arrange
-            _mapper.Setup(m => m.Map<Company>(It.IsAny<CompanyCreateUpdateDto>())).Returns(new Company());
+            _mapper.Setup(m => m.Map<Company>(It.IsAny<CompanyCreateDto>())).Returns(new Company());
             _mapper.Setup(m => m.Map<CompanyReadDto>(It.IsAny<Company>())).Returns(new CompanyReadDto());
 
             // Act

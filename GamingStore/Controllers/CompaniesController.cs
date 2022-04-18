@@ -56,7 +56,7 @@ namespace GamingStore.Controllers
 
         [HttpPost]
         [Authorize(Policy = "AdminOnly")]
-        public async Task<ActionResult<CompanyReadDto>> CreateCompanyAsync(CompanyCreateUpdateDto createDto)
+        public async Task<ActionResult<CompanyReadDto>> CreateCompanyAsync(CompanyCreateDto createDto)
         {
             var icon = JsonSerializer.Deserialize<byte[]>(createDto.Icon, serializerOptions);
             var company = _mapper.Map<Company>(createDto with { Icon = null! });
@@ -72,7 +72,7 @@ namespace GamingStore.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Policy = "AdminOnly")]
-        public async Task<ActionResult> UpdateCompanyAsync(Guid id, CompanyCreateUpdateDto updateDto)
+        public async Task<ActionResult> UpdateCompanyAsync(Guid id, CompanyUpdateDto updateDto)
         {
             Company? company = await _repo.GetByIdAsync(id);
 
@@ -81,7 +81,6 @@ namespace GamingStore.Controllers
                 return NotFound("Company not found");
             }
 
-            _mapper.Map(updateDto with { Icon = null! }, company);
             var icon = JsonSerializer.Deserialize<byte[]>(updateDto.Icon, serializerOptions);
             company.Icon = icon;
 

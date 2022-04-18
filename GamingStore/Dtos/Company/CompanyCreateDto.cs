@@ -3,7 +3,7 @@ using GamingStore.ValidationAttributes;
 
 namespace GamingStore.Dtos.Company
 {
-    public record CompanyCreateUpdateDto
+    public record CompanyCreateDto
     {
         [Required]
         [StringLength(25, MinimumLength = 1)]
