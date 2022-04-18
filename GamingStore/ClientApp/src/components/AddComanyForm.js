@@ -9,9 +9,9 @@ export class AddCompanyForm extends Component {
         super(props);
 
         this.state = {
-            token: sessionStorage.getItem('token'),
             name: '',
-            icon: []
+            icon: [],
+            token: sessionStorage.getItem('token')
         };
 
         this.addCompany = this.addCompany.bind(this);

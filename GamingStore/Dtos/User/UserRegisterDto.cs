@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using GamingStore.ValidationAttributes;
 
 namespace GamingStore.Dtos.User
 {
@@ -7,7 +6,6 @@ namespace GamingStore.Dtos.User
     {
         [Required]
         [StringLength(20, MinimumLength = 1)]
-        [UniqueUsername]
         public string Username { get; init; } = string.Empty;
 
         [Required]

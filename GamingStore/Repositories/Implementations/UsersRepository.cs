@@ -68,9 +68,14 @@ namespace GamingStore.Repositories.Implementations
             return await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task<User?> GetByNameAsync(string name)
+        public async Task<List<User>> GetByNameAsync(string name)
         {
-            return await _context.Users.SingleOrDefaultAsync(u => u.Username == name);
+            return await _context.Users.Where(u => u.Username == name).ToListAsync();
+        }
+
+        Task<User?> IControllable<User>.GetByNameAsync(string name)
+        {
+            throw new NotImplementedException();
         }
 
         public string GetDefaultPicturePath()
