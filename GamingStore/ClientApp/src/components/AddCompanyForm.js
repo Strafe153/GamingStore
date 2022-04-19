@@ -46,7 +46,9 @@ export class AddCompanyForm extends Component {
     }
 
     handleName = event => {
-        this.setState({name: event.target.value});
+        this.setState({
+            name: event.target.value
+        });
     }
 
     handleFileChange = event => {
