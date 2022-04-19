@@ -77,6 +77,11 @@ namespace GamingStore.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<DeviceReadDto>> CreateDeviceAsync(DeviceCreateDto createDto)
         {
+            if (await _companiesRepo.GetByIdAsync(createDto.CompanyId) is null)
+            {
+                return NotFound("Company not found");
+            }
+
             var icon = JsonSerializer.Deserialize<byte[]>(createDto.Icon, serializerOptions);
             var device = _mapper.Map<Device>(createDto with { Icon = null! });
             device.Icon = icon;
