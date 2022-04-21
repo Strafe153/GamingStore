@@ -12,7 +12,8 @@ export class EditUserForm extends Component {
             username: this.props.location.state.username,
             role: this.props.location.state.role,
             profilePicture: JSON.stringify(base64ToArray(this.props.location.state.profilePicture)),
-            token: sessionStorage.getItem('token')
+            token: sessionStorage.getItem('token'),
+            isObserverAdmin: sessionStorage.getItem('role') === '0'
         };
 
         this.updateUser = this.updateUser.bind(this);
@@ -78,23 +79,26 @@ export class EditUserForm extends Component {
     
     render() {
         return <form onSubmit={this.updateUser}>
-            <div className="form-group mb-3">
-                    <label htmlFor="new-usernmae" className="control-label">Username:</label>
-                    <input id="new-usernmae" className="form-control" type="text" name="username" value={this.state.username} onChange={this.handleInputChange} />
-                </div>
                 <div className="form-group mb-3">
-                    <label htmlFor="new-role" className="control-label">Role:</label>
-                    <select id="new-role" className="form-control" name="role" value={this.state.role} onChange={this.handleInputChange}>
-                        <option value="0">Admin</option>
-                        <option value="1">User</option>
-                    </select>
+                        <label htmlFor="new-usernmae" className="control-label">Username:</label>
+                        <input id="new-usernmae" className="form-control" type="text" name="username" value={this.state.username} onChange={this.handleInputChange} />
+                    </div>
+                    {
+                        this.state.isObserverAdmin &&
+                            <div className="form-group mb-3">
+                            <label htmlFor="new-role" className="control-label">Role:</label>
+                            <select id="new-role" className="form-control" name="role" value={this.state.role} onChange={this.handleInputChange}>
+                                <option value="0">Admin</option>
+                                <option value="1">User</option>
+                            </select>
+                        </div>
+                    }
+                <div className="form-group my-2">
+                    <label htmlFor="profile-picture" className="form-label">Choose a picture:</label>
+                    <input id="profile-picture" className="form-control" type="file" onChange={this.handleFileChange} />
                 </div>
-            <div className="form-group my-2">
-                <label htmlFor="profile-picture" className="form-label">Choose a picture:</label>
-                <input id="profile-picture" className="form-control" type="file" onChange={this.handleFileChange} />
-            </div>
 
-                <input className="btn btn-primary" type="submit" value="Update" />
-        </form>;
+                    <input className="btn btn-primary" type="submit" value="Update" />
+            </form>;
     }
 }
