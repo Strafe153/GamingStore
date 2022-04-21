@@ -77,24 +77,6 @@ namespace GamingStore.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserWithTokenReadDto>> LoginUserAsync(UserLoginDto loginDto)
         {
-            //User? user = await _repo.GetByNameAsync(loginDto.Username);
-
-            //if (user is null)
-            //{
-            //    return NotFound("User not found");
-            //}
-
-            //if (!_repo.VerifyPasswordHash(loginDto.Password, user.PasswordHash!, user.PasswordSalt!))
-            //{
-            //    return BadRequest("Incorrect password");
-            //}
-
-            //string token = _repo.GenerateToken(user);
-            //var readDto = _mapper.Map<UserWithTokenReadDto>(user) with { Token = token };
-
-            //return Ok(readDto);
-
-
             List<User> users = await _repo.GetByNameAsync(loginDto.Username);
 
             if (users.Count == 0)
