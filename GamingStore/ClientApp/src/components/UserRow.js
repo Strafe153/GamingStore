@@ -10,6 +10,7 @@ export class UserRow extends Component {
 
         this.state = {
             username: sessionStorage.getItem('username'),
+            id: sessionStorage.getItem('id'),
             token: sessionStorage.getItem('token')
         };
     }
@@ -49,7 +50,7 @@ export class UserRow extends Component {
             <td>{ username }</td>
             <td>{ role }</td>
             <td>
-            {(this.props.calledFromAdmin || (this.state.username === username)) &&
+            {(this.props.calledFromAdmin || (this.state.id === id)) &&
                 <div className="text-center d-flex justify-content-around">
                     <NavLink className="btn btn-sm btn-info text-white" to={{
                         pathname: `/users/edit/${id}`,

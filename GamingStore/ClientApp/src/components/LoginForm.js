@@ -38,6 +38,7 @@ export class LoginForm extends Component {
                 sessionStorage.setItem('token', data.token);
                 sessionStorage.setItem('role', data.role);
                 sessionStorage.setItem('username', data.username);
+                sessionStorage.setItem('id', data.id);
 
                 window.location.href = '/';
             })
