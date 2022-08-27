@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
+using AutoMapper;
 using Core.Entities;
 using Core.Enums;
 using Core.Interfaces.Services;
@@ -8,9 +9,7 @@ using Core.ViewModels;
 using Core.ViewModels.CompanyViewModels;
 using Core.ViewModels.DeviceViewModels;
 using Moq;
-using System.Drawing;
 using WebApi.Controllers;
-using WebApi.Mappers.Interfaces;
 
 namespace WebApi.Tests.Fixtures
 {
@@ -22,20 +21,12 @@ namespace WebApi.Tests.Fixtures
 
             MockCompanyService = fixture.Freeze<Mock<IService<Company>>>();
             MockDeviceService = fixture.Freeze<Mock<IDeviceService>>();
-            MockCompanyPaginatedMapper = fixture.Freeze<Mock<IMapper<PaginatedList<Company>, PageViewModel<CompanyReadViewModel>>>>();
-            MockCompanyReadMapper = fixture.Freeze<Mock<IMapper<Company, CompanyReadViewModel>>>();
-            MockCompanyCreateMapper = fixture.Freeze<Mock<IMapper<CompanyBaseViewModel, Company>>>();
-            MockCompanyUpdateMapper = fixture.Freeze<Mock<IUpdateMapper<CompanyBaseViewModel, Company>>>();
-            MockDeviceReadEnumerableMapper = fixture.Freeze<Mock<IMapper<PaginatedList<Device>, PageViewModel<DeviceReadViewModel>>>>();
+            MockMapper = fixture.Freeze<Mock<IMapper>>();
 
             MockCompaniesController = new(
                 MockCompanyService.Object,
                 MockDeviceService.Object,
-                MockCompanyReadMapper.Object,
-                MockCompanyPaginatedMapper.Object,
-                MockCompanyCreateMapper.Object,
-                MockCompanyUpdateMapper.Object,
-                MockDeviceReadEnumerableMapper.Object);
+                MockMapper.Object);
 
             Id = 1;
             Name = "Company";
@@ -52,11 +43,7 @@ namespace WebApi.Tests.Fixtures
         public CompaniesController MockCompaniesController { get; }
         public Mock<IService<Company>> MockCompanyService { get; }
         public Mock<IDeviceService> MockDeviceService { get; }
-        public Mock<IMapper<PaginatedList<Company>, PageViewModel<CompanyReadViewModel>>> MockCompanyPaginatedMapper { get; }
-        public Mock<IMapper<Company, CompanyReadViewModel>> MockCompanyReadMapper { get; }
-        public Mock<IMapper<CompanyBaseViewModel, Company>> MockCompanyCreateMapper { get; }
-        public Mock<IUpdateMapper<CompanyBaseViewModel, Company>> MockCompanyUpdateMapper { get; }
-        public Mock<IMapper<PaginatedList<Device>, PageViewModel<DeviceReadViewModel>>> MockDeviceReadEnumerableMapper { get; }
+        public Mock<IMapper> MockMapper { get; }
 
         public int Id { get; }
         public string Name { get; }

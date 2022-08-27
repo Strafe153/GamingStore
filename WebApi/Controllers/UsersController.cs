@@ -1,11 +1,11 @@
-﻿using Core.Entities;
+﻿using AutoMapper;
+using Core.Entities;
 using Core.Interfaces.Services;
 using Core.Models;
 using Core.ViewModels;
 using Core.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Mappers.Interfaces;
 
 namespace WebApi.Controllers
 {
@@ -16,22 +16,16 @@ namespace WebApi.Controllers
     {
         private readonly IUserService _userService;
         private readonly IPasswordService _passwordService;
-        private readonly IMapper<User, UserReadViewModel> _readMapper;
-        private readonly IMapper<PaginatedList<User>, PageViewModel<UserReadViewModel>> _paginatedMapper;
-        private readonly IMapper<User, UserWithTokenReadViewModel> _readWithTokenMapper;
+        private readonly IMapper _mapper;
 
         public UsersController(
             IUserService userService,
             IPasswordService passwordService,
-            IMapper<User, UserReadViewModel> readMapper,
-            IMapper<PaginatedList<User>, PageViewModel<UserReadViewModel>> paginatedMapper,
-            IMapper<User, UserWithTokenReadViewModel> readWithTokenMapper)
+            IMapper mapper)
         {
             _userService = userService;
             _passwordService = passwordService;
-            _readMapper = readMapper;
-            _paginatedMapper = paginatedMapper;
-            _readWithTokenMapper = readWithTokenMapper;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -39,7 +33,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<PageViewModel<UserReadViewModel>>> GetAsync([FromQuery] PageParameters pageParams)
         {
             var users = await _userService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize);
-            var readModels = _paginatedMapper.Map(users);
+            var readModels = _mapper.Map<PageViewModel<UserReadViewModel>>(users);
 
             return Ok(readModels);
         }
@@ -48,7 +42,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<UserReadViewModel>> GetAsync([FromRoute] int id)
         {
             var user = await _userService.GetByIdAsync(id);
-            var readModel = _readMapper.Map(user);
+            var readModel = _mapper.Map<UserReadViewModel>(user);
 
             return Ok(readModel);
         }
@@ -63,7 +57,7 @@ namespace WebApi.Controllers
             User user = _userService.ConstructUser(authorizeModel.Username!, hash, salt);
             await _userService.CreateAsync(user);
 
-            var readModel = _readMapper.Map(user);
+            var readModel = _mapper.Map<UserReadViewModel>(user);
 
             return CreatedAtAction(nameof(GetAsync), new { Id = readModel.Id }, readModel);
         }
@@ -77,7 +71,7 @@ namespace WebApi.Controllers
             _passwordService.VerifyPasswordHash(authorizeModel.Password!, user.PasswordHash!, user.PasswordSalt!);
 
             string token = _passwordService.CreateToken(user);
-            var readModel = _readWithTokenMapper.Map(user) with { Token = token };
+            var readModel = _mapper.Map<UserWithTokenReadViewModel>(user) with { Token = token };
 
             return Ok(readModel);
         }
@@ -88,7 +82,7 @@ namespace WebApi.Controllers
             var user = await _userService.GetByIdAsync(id);
 
             _userService.VerifyUserAccessRights(user, User.Identity!, User.Claims!);
-            user.Username = updateModel.Username;
+            _mapper.Map(updateModel, user);
             await _userService.UpdateAsync(user);
 
             return NoContent();
@@ -117,10 +111,10 @@ namespace WebApi.Controllers
             [FromRoute] int id,
             [FromBody] UserChangeRoleViewModel changeRoleModel)
         {
-            var player = await _userService.GetByIdAsync(id);
+            var user = await _userService.GetByIdAsync(id);
 
-            player.Role = changeRoleModel.Role;
-            await _userService.UpdateAsync(player);
+            _mapper.Map(changeRoleModel, user);
+            await _userService.UpdateAsync(user);
 
             return NoContent();
         }

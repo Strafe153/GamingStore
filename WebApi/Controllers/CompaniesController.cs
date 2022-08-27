@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using AutoMapper;
+using Core.Entities;
 using Core.Interfaces.Services;
 using Core.Models;
 using Core.ViewModels;
@@ -6,7 +7,6 @@ using Core.ViewModels.CompanyViewModels;
 using Core.ViewModels.DeviceViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Mappers.Interfaces;
 
 namespace WebApi.Controllers
 {
@@ -17,28 +17,16 @@ namespace WebApi.Controllers
     {
         private readonly IService<Company> _companyService;
         private readonly IDeviceService _deviceService;
-        private readonly IMapper<Company, CompanyReadViewModel> _readCompanyMapper;
-        private readonly IMapper<PaginatedList<Company>, PageViewModel<CompanyReadViewModel>> _pagedCompanyMapper;
-        private readonly IMapper<CompanyBaseViewModel, Company> _createCompanyMapper;
-        private readonly IUpdateMapper<CompanyBaseViewModel, Company> _updateCompanyMapper;
-        private readonly IMapper<PaginatedList<Device>, PageViewModel<DeviceReadViewModel>> _readDeviceEnumerableMapper;
+        private readonly IMapper _mapper;
 
         public CompaniesController(
             IService<Company> companyService,
             IDeviceService deviceService,
-            IMapper<Company, CompanyReadViewModel> readCompanyMapper,
-            IMapper<PaginatedList<Company>, PageViewModel<CompanyReadViewModel>> pagedCompanyMapper,
-            IMapper<CompanyBaseViewModel, Company> createCompanyMapper,
-            IUpdateMapper<CompanyBaseViewModel, Company> updateCompanyMapper,
-            IMapper<PaginatedList<Device>, PageViewModel<DeviceReadViewModel>> readDeviceEnumerableMapper)
+            IMapper mapper)
         {
             _companyService = companyService;
             _deviceService = deviceService;
-            _readCompanyMapper = readCompanyMapper;
-            _pagedCompanyMapper = pagedCompanyMapper;
-            _createCompanyMapper = createCompanyMapper;
-            _updateCompanyMapper = updateCompanyMapper;
-            _readDeviceEnumerableMapper = readDeviceEnumerableMapper;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -46,7 +34,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<PageViewModel<CompanyReadViewModel>>> GetAsync([FromQuery] PageParameters pageParams)
         {
             var companies = await _companyService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize);
-            var readModels = _pagedCompanyMapper.Map(companies);
+            var readModels = _mapper.Map<PageViewModel<CompanyReadViewModel>>(companies);
 
             return Ok(readModels);
         }
@@ -56,7 +44,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<CompanyReadViewModel>> GetAsync([FromRoute] int id)
         {
             var company = await _companyService.GetByIdAsync(id);
-            var readModel = _readCompanyMapper.Map(company);
+            var readModel = _mapper.Map<CompanyReadViewModel>(company);
 
             return Ok(readModel);
         }
@@ -69,7 +57,7 @@ namespace WebApi.Controllers
         {
             var company = await _companyService.GetByIdAsync(id);
             var devices = await _deviceService.GetByCompanyAsync(company.Id, pageParams.PageNumber, pageParams.PageSize);
-            var readModels = _readDeviceEnumerableMapper.Map(devices);
+            var readModels = _mapper.Map<PageViewModel<DeviceReadViewModel>>(devices);
 
             return Ok(readModels);
         }
@@ -77,10 +65,10 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<CompanyReadViewModel>> CreateAsync([FromBody] CompanyBaseViewModel createModel)
         {
-            var company = _createCompanyMapper.Map(createModel);
+            var company = _mapper.Map<Company>(createModel);
             await _companyService.CreateAsync(company);
 
-            var readModel = _readCompanyMapper.Map(company);
+            var readModel = _mapper.Map<CompanyReadViewModel>(company);
 
             return CreatedAtAction(nameof(GetAsync), new { Id = readModel.Id }, readModel);
         }
@@ -90,7 +78,7 @@ namespace WebApi.Controllers
         {
             var company = await _companyService.GetByIdAsync(id);
 
-            _updateCompanyMapper.Map(updateModel, company);
+            _mapper.Map(updateModel, company);
             await _companyService.UpdateAsync(company);
 
             return NoContent();

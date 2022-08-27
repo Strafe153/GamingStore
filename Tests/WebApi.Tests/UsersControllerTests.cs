@@ -28,8 +28,8 @@ namespace WebApi.Tests
                 .Setup(s => s.GetAllAsync(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(_fixture.UserPaginatedList);
 
-            _fixture.MockUserPaginatedMapper
-                .Setup(m => m.Map(It.IsAny<PaginatedList<User>>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<PageViewModel<UserReadViewModel>>(It.IsAny<PaginatedList<User>>()))
                 .Returns(_fixture.UserPageViewModel);
 
             // Act
@@ -50,8 +50,8 @@ namespace WebApi.Tests
                 .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(_fixture.User);
 
-            _fixture.MockUserReadMapper
-                .Setup(m => m.Map(It.IsAny<User>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<UserReadViewModel>(It.IsAny<User>()))
                 .Returns(_fixture.UserReadViewModel);
 
             // Act
@@ -68,8 +68,8 @@ namespace WebApi.Tests
         public async Task RegisterAsync_ValidViewModel_ReturnsActionResultOfUserWithTokenReadViewModel()
         {
             // Arrange
-            _fixture.MockUserReadMapper
-                .Setup(m => m.Map(It.IsAny<User>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<UserReadViewModel>(It.IsAny<User>()))
                 .Returns(_fixture.UserReadViewModel);
 
             // Act
@@ -86,8 +86,8 @@ namespace WebApi.Tests
         public async Task LoginAsync_ValidViewModel_ReturnsActionResultOfUserWithTokenReadViewModel()
         {
             // Arrange
-            _fixture.MockUserWithTokenReadMapper
-                .Setup(m => m.Map(It.IsAny<User>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<UserWithTokenReadViewModel>(It.IsAny<User>()))
                 .Returns(_fixture.UserWithTokenReadViewModel);
 
             // Act

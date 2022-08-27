@@ -1,11 +1,11 @@
-﻿using Core.Entities;
+﻿using AutoMapper;
+using Core.Entities;
 using Core.Interfaces.Services;
 using Core.Models;
 using Core.ViewModels;
 using Core.ViewModels.DeviceViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Mappers.Interfaces;
 
 namespace WebApi.Controllers
 {
@@ -15,23 +15,14 @@ namespace WebApi.Controllers
     public class DevicesController : ControllerBase
     {
         private readonly IDeviceService _deviceService;
-        private readonly IMapper<Device, DeviceReadViewModel> _readMapper;
-        private readonly IMapper<PaginatedList<Device>, PageViewModel<DeviceReadViewModel>> _paginatedMapper;
-        private readonly IMapper<DeviceBaseViewModel, Device> _createMapper;
-        private readonly IUpdateMapper<DeviceBaseViewModel, Device> _updateMapper;
+        private readonly IMapper _mapper;
 
         public DevicesController(
-            IDeviceService deviceService, 
-            IMapper<Device, DeviceReadViewModel> readMapper,
-            IMapper<PaginatedList<Device>, PageViewModel<DeviceReadViewModel>> paginatedMapper,
-            IMapper<DeviceBaseViewModel, Device> createMapper,
-            IUpdateMapper<DeviceBaseViewModel, Device> updateMapper)
+            IDeviceService deviceService,
+            IMapper mapper)
         {
             _deviceService = deviceService;
-            _readMapper = readMapper;
-            _paginatedMapper = paginatedMapper;
-            _createMapper = createMapper;
-            _updateMapper = updateMapper;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -39,7 +30,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<PageViewModel<DeviceReadViewModel>>> GetAsync([FromQuery] PageParameters pageParams)
         {
             var devices = await _deviceService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize);
-            var readModels = _paginatedMapper.Map(devices);
+            var readModels = _mapper.Map<PageViewModel<DeviceReadViewModel>>(devices);
 
             return Ok(readModels);
         }
@@ -49,7 +40,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<DeviceReadViewModel>> GetAsync([FromRoute] int id)
         {
             var device = await _deviceService.GetByIdAsync(id);
-            var readModel = _readMapper.Map(device);
+            var readModel = _mapper.Map<DeviceReadViewModel>(device);
 
             return Ok(readModel);
         }
@@ -57,10 +48,10 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<DeviceReadViewModel>> CreateAsync([FromBody] DeviceBaseViewModel createModel)
         {
-            var device = _createMapper.Map(createModel);
+            var device = _mapper.Map<Device>(createModel);
             await _deviceService.CreateAsync(device);
 
-            var readModel = _readMapper.Map(device);
+            var readModel = _mapper.Map<DeviceReadViewModel>(device);
 
             return CreatedAtAction(nameof(GetAsync), new { Id = readModel.Id }, readModel);
         }
@@ -70,7 +61,7 @@ namespace WebApi.Controllers
         {
             var device = await _deviceService.GetByIdAsync(id);
 
-            _updateMapper.Map(updateModel, device);
+            _mapper.Map(updateModel, device);
             await _deviceService.UpdateAsync(device);
 
             return NoContent();

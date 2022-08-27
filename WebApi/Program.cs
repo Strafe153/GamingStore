@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.Text;
-using WebApi.Mappers;
 using WebApi.Middleware;
 using WebApi.Validators;
 
@@ -16,7 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationValidators();
 builder.Services.AddApplicationRepositories();
 builder.Services.AddApplicationServices();
-builder.Services.AddApplicationMappers();
 
 // Add, configure controllers
 builder.Services
@@ -60,6 +58,9 @@ builder.Services.AddAuthorization(options =>
 builder.Services
     .AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters();
+
+// Add AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
