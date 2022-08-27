@@ -18,7 +18,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public async Task GetAllAsync_ValidData_ReturnsPaginatedList()
+        public async Task GetAllAsync_ValidParameters_ReturnsPaginatedListOfCompany()
         {
             // Arrange
             _fixture.MockCompanyRepository

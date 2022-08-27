@@ -20,7 +20,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public async Task GetAllAsync_ValidData_ReturnsPaginatedList()
+        public async Task GetAllAsync_ValidParameters_ReturnsPaginatedListOfUser()
         {
             // Arrange
             _fixture.MockUserRepository
@@ -104,7 +104,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public void CreateAsync_ValidUser_ReturnsVoid()
+        public void CreateAsync_ValidUser_ReturnsTask()
         {
             // Act
             var result = _fixture.MockUserService.CreateAsync(_fixture.User);
@@ -114,7 +114,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public void UpdateAsync_ValidUser_ReturnsVoid()
+        public void UpdateAsync_ValidUser_ReturnsTask()
         {
             // Act
             var result = _fixture.MockUserService.UpdateAsync(_fixture.User);
@@ -124,7 +124,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public void DeleteAsync_ValidUser_ReturnsVoid()
+        public void DeleteAsync_ValidUser_ReturnsTask()
         {
             // Act
             var result = _fixture.MockUserService.DeleteAsync(_fixture.User);
@@ -164,7 +164,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public void ConstructUser_ValidUser_ReturnsPlayer()
+        public void ConstructUser_ValidParameters_ReturnsUser()
         {
             // Act
             var result = _fixture.MockUserService.ConstructUser(_fixture.Name!, _fixture.Bytes, _fixture.Bytes);
@@ -175,7 +175,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public void ChangePasswordData_ValidData_ReturnsVoid()
+        public void ChangePasswordData_ValidParameters_ReturnsVoid()
         {
             // Act
             var result = () => _fixture.MockUserService
