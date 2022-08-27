@@ -65,7 +65,7 @@ namespace WebApi.Tests
         }
 
         [Fact]
-        public async Task GetDevicesAsync_ExistingCompany_ReturnsActionResultOfPageViewModelOfCompany()
+        public async Task GetDevicesAsync_ExistingCompany_ReturnsActionResultOfPageViewModelOfDeviceReadViewModel()
         {
             // Arrange
             _fixture.MockCompanyService
@@ -91,7 +91,7 @@ namespace WebApi.Tests
         }
 
         [Fact]
-        public async Task CreateAsync_ExistingCompanyValidViewModel_ReturnsActionResultOfCompanyReadViewModel()
+        public async Task CreateAsync_ValidViewModel_ReturnsActionResultOfCompanyReadViewModel()
         {
             // Arrange
             _fixture.MockCompanyCreateMapper

@@ -65,7 +65,7 @@ namespace WebApi.Tests
         }
 
         [Fact]
-        public async Task CreateAsync_ExistingDeviceValidViewModel_ReturnsActionResultOfDeviceReadViewModel()
+        public async Task CreateAsync_ValidViewModel_ReturnsActionResultOfDeviceReadViewModel()
         {
             // Arrange
             _fixture.MockDeviceCreateMapper

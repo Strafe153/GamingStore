@@ -18,7 +18,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public async Task GetAllAsync_ValidData_ReturnsPaginatedList()
+        public async Task GetAllAsync_ValidParameters_ReturnsPaginatedListOfDevice()
         {
             // Arrange
             _fixture.MockDeviceRepository
@@ -70,7 +70,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public async Task GetByCompanyAsync_ExistingCompany_ReturnsTaskOfPaginatedListOfDevice()
+        public async Task GetByCompanyAsync_ExistingCompany_ReturnsPaginatedListOfDevice()
         {
             // Arrange
             _fixture.MockDeviceRepository

@@ -16,7 +16,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public void CreatePasswordHash_ValidData_ReturnsVoid()
+        public void CreatePasswordHash_ValidPassword_ReturnsVoid()
         {
             // Act
             var result = () => _fixture.MockPasswordService
@@ -27,7 +27,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public void CreateToken_ValidData_ReturnsJsonWebToken()
+        public void CreateToken_ValidUser_ReturnsString()
         {
             // Arrange
             _fixture.MockConfigurationSection

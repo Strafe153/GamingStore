@@ -65,7 +65,7 @@ namespace WebApi.Tests
         }
 
         [Fact]
-        public async Task RegisterAsync_ValidViewModel_ReturnsCreatedAtActionResultOfUserWithTokenReadViewModel()
+        public async Task RegisterAsync_ValidViewModel_ReturnsActionResultOfUserWithTokenReadViewModel()
         {
             // Arrange
             _fixture.MockUserReadMapper
@@ -83,7 +83,7 @@ namespace WebApi.Tests
         }
 
         [Fact]
-        public async Task LoginAsync_ValidViewModel_ReturnsOkObjectResultOfUserWithTokenReadViewModel()
+        public async Task LoginAsync_ValidViewModel_ReturnsActionResultOfUserWithTokenReadViewModel()
         {
             // Arrange
             _fixture.MockUserWithTokenReadMapper
@@ -101,7 +101,7 @@ namespace WebApi.Tests
         }
 
         [Fact]
-        public async Task UpdateAsync_ExistingUser_ReturnsNoContentResult()
+        public async Task UpdateAsync_ExistingUserValidViewModel_ReturnsNoContentResult()
         {
             // Arrange
             _fixture.MockUserService
@@ -140,6 +140,22 @@ namespace WebApi.Tests
         }
 
         [Fact]
+        public async Task ChangeRoleAsync_ExistingUserValidRole_ReturnsNoContentResult()
+        {
+            // Arrange
+            _fixture.MockUserService
+                .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(_fixture.User);
+
+            // Act
+            var result = await _fixture.MockUsersController.ChangeRoleAsync(_fixture.Id, _fixture.UserChangeRoleViewModel);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeOfType<NoContentResult>();
+        }
+
+        [Fact]
         public async Task DeleteAsync_ExistingUser_ReturnsNoContentResult()
         {
             // Arrange
@@ -149,22 +165,6 @@ namespace WebApi.Tests
 
             // Act
             var result = await _fixture.MockUsersController.DeleteAsync(_fixture.Id);
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<NoContentResult>();
-        }
-
-        [Fact]
-        public async Task ChangeRoleAsync_ExistingUser_ReturnsNoContentResult()
-        {
-            // Arrange
-            _fixture.MockUserService
-                .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(_fixture.User);
-
-            // Act
-            var result = await _fixture.MockUsersController.ChangeRoleAsync(_fixture.Id, _fixture.UserChangeRoleViewModel);
 
             // Assert
             result.Should().NotBeNull();
