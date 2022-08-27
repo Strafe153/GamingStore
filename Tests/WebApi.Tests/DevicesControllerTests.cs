@@ -28,8 +28,8 @@ namespace WebApi.Tests
                 .Setup(s => s.GetAllAsync(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(_fixture.DevicePaginatedList);
 
-            _fixture.MockDevicePaginatedMapper
-                .Setup(m => m.Map(It.IsAny<PaginatedList<Device>>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<PageViewModel<DeviceReadViewModel>>(It.IsAny<PaginatedList<Device>>()))
                 .Returns(_fixture.DevicePageViewModel);
 
             // Act
@@ -50,8 +50,8 @@ namespace WebApi.Tests
                 .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(_fixture.Device);
 
-            _fixture.MockDeviceReadMapper
-                .Setup(m => m.Map(It.IsAny<Device>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<DeviceReadViewModel>(It.IsAny<Device>()))
                 .Returns(_fixture.DeviceReadViewModel);
 
             // Act
@@ -68,12 +68,12 @@ namespace WebApi.Tests
         public async Task CreateAsync_ValidViewModel_ReturnsActionResultOfDeviceReadViewModel()
         {
             // Arrange
-            _fixture.MockDeviceCreateMapper
-                .Setup(m => m.Map(It.IsAny<DeviceBaseViewModel>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<Device>(It.IsAny<DeviceBaseViewModel>()))
                 .Returns(_fixture.Device);
 
-            _fixture.MockDeviceReadMapper
-                .Setup(m => m.Map(It.IsAny<Device>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<DeviceReadViewModel>(It.IsAny<Device>()))
                 .Returns(_fixture.DeviceReadViewModel);
 
             // Act

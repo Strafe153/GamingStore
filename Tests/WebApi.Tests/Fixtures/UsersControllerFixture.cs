@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
+using AutoMapper;
 using Core.Entities;
 using Core.Enums;
 using Core.Interfaces.Services;
@@ -11,7 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Security.Claims;
 using WebApi.Controllers;
-using WebApi.Mappers.Interfaces;
 
 namespace WebApi.Tests.Fixtures
 {
@@ -23,16 +23,12 @@ namespace WebApi.Tests.Fixtures
 
             MockUserService = fixture.Freeze<Mock<IUserService>>();
             MockPasswordService = fixture.Freeze<Mock<IPasswordService>>();
-            MockUserReadMapper = fixture.Freeze<Mock<IMapper<User, UserReadViewModel>>>();
-            MockUserPaginatedMapper = fixture.Freeze<Mock<IMapper<PaginatedList<User>, PageViewModel<UserReadViewModel>>>>();
-            MockUserWithTokenReadMapper = fixture.Freeze<Mock<IMapper<User, UserWithTokenReadViewModel>>>();
+            MockMapper = fixture.Freeze<Mock<IMapper>>();
 
             MockUsersController = new(
                 MockUserService.Object,
                 MockPasswordService.Object,
-                MockUserReadMapper.Object,
-                MockUserPaginatedMapper.Object,
-                MockUserWithTokenReadMapper.Object);
+                MockMapper.Object);
 
             Id = 1;
             Username = "Username";
@@ -52,9 +48,7 @@ namespace WebApi.Tests.Fixtures
         public UsersController MockUsersController { get; }
         public Mock<IUserService> MockUserService { get; }
         public Mock<IPasswordService> MockPasswordService { get; }
-        public Mock<IMapper<User, UserReadViewModel>> MockUserReadMapper { get; }
-        public Mock<IMapper<PaginatedList<User>, PageViewModel<UserReadViewModel>>> MockUserPaginatedMapper { get; }
-        public Mock<IMapper<User, UserWithTokenReadViewModel>> MockUserWithTokenReadMapper { get; }
+        public Mock<IMapper> MockMapper { get; }
 
         public int Id { get; }
         public string Username { get; }

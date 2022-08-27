@@ -28,8 +28,8 @@ namespace WebApi.Tests
                 .Setup(s => s.GetAllAsync(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(_fixture.CompanyPaginatedList);
 
-            _fixture.MockCompanyPaginatedMapper
-                .Setup(m => m.Map(It.IsAny<PaginatedList<Company>>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<PageViewModel<CompanyReadViewModel>>(It.IsAny<PaginatedList<Company>>()))
                 .Returns(_fixture.CompanyPageViewModel);
 
             // Act
@@ -50,8 +50,8 @@ namespace WebApi.Tests
                 .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(_fixture.Company);
 
-            _fixture.MockCompanyReadMapper
-                .Setup(m => m.Map(It.IsAny<Company>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<CompanyReadViewModel>(It.IsAny<Company>()))
                 .Returns(_fixture.CompanyReadViewModel);
 
             // Act
@@ -76,8 +76,8 @@ namespace WebApi.Tests
                 .Setup(s => s.GetByCompanyAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(_fixture.DevicePaginatedList);
 
-            _fixture.MockDeviceReadEnumerableMapper
-                .Setup(m => m.Map(It.IsAny<PaginatedList<Device>>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<PageViewModel<DeviceReadViewModel>>(It.IsAny<PaginatedList<Device>>()))
                 .Returns(_fixture.DevicePageViewModel);
 
             // Act
@@ -94,12 +94,12 @@ namespace WebApi.Tests
         public async Task CreateAsync_ValidViewModel_ReturnsActionResultOfCompanyReadViewModel()
         {
             // Arrange
-            _fixture.MockCompanyCreateMapper
-                .Setup(m => m.Map(It.IsAny<CompanyBaseViewModel>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<Company>(It.IsAny<CompanyBaseViewModel>()))
                 .Returns(_fixture.Company);
 
-            _fixture.MockCompanyReadMapper
-                .Setup(m => m.Map(It.IsAny<Company>()))
+            _fixture.MockMapper
+                .Setup(m => m.Map<CompanyReadViewModel>(It.IsAny<Company>()))
                 .Returns(_fixture.CompanyReadViewModel);
 
             // Act
