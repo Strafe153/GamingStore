@@ -1,13 +1,13 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoMapper;
+using Core.Dtos;
+using Core.Dtos.CompanyDtos;
+using Core.Dtos.DeviceDtos;
 using Core.Entities;
 using Core.Enums;
 using Core.Interfaces.Services;
 using Core.Models;
-using Core.ViewModels;
-using Core.ViewModels.CompanyViewModels;
-using Core.ViewModels.DeviceViewModels;
 using Moq;
 using WebApi.Controllers;
 
@@ -31,13 +31,13 @@ namespace WebApi.Tests.Fixtures
             Id = 1;
             Name = "Company";
             Company = GetCompany();
-            CompanyReadViewModel = GetCompanyReadViewModel();
-            CompanyBaseViewModel = GetCompanyBaseViewModel();
+            CompanyReadDto = GetCompanyReadDto();
+            CompanyBaseDto = GetCompanyBaseDto();
             PageParameters = GetPageParameters();
             CompanyPaginatedList = GetCompanyPaginatedList();
             DevicePaginatedList = GetDevicePaginatedList();
-            CompanyPageViewModel = GetCompanyPageViewModel();
-            DevicePageViewModel = GetDevicePageViewModel();
+            CompanyPageDto = GetCompanyPageDto();
+            DevicePageDto = GetDevicePageDto();
         }
 
         public CompaniesController MockCompaniesController { get; }
@@ -48,13 +48,13 @@ namespace WebApi.Tests.Fixtures
         public int Id { get; }
         public string Name { get; }
         public Company Company { get; }
-        public CompanyReadViewModel CompanyReadViewModel { get; }
-        public CompanyBaseViewModel CompanyBaseViewModel { get; }
+        public CompanyReadDto CompanyReadDto { get; }
+        public CompanyBaseDto CompanyBaseDto { get; }
         public PageParameters PageParameters { get; }
         public PaginatedList<Company> CompanyPaginatedList { get; }
         public PaginatedList<Device> DevicePaginatedList { get; }
-        public PageViewModel<CompanyReadViewModel> CompanyPageViewModel { get; }
-        public PageViewModel<DeviceReadViewModel> DevicePageViewModel { get; }
+        public PageDto<CompanyReadDto> CompanyPageDto { get; }
+        public PageDto<DeviceReadDto> DevicePageDto { get; }
 
         private Company GetCompany()
         {
@@ -115,35 +115,35 @@ namespace WebApi.Tests.Fixtures
             return new PaginatedList<Device>(GetDevices(), 6, 1, 5);
         }
 
-        private CompanyReadViewModel GetCompanyReadViewModel()
+        private CompanyReadDto GetCompanyReadDto()
         {
-            return new CompanyReadViewModel()
+            return new CompanyReadDto()
             {
                 Id = Id,
                 Name = Name
             };
         }
 
-        private CompanyBaseViewModel GetCompanyBaseViewModel()
+        private CompanyBaseDto GetCompanyBaseDto()
         {
-            return new CompanyBaseViewModel()
+            return new CompanyBaseDto()
             {
                 Name = Name
             };
         }
 
-        private List<CompanyReadViewModel> GetCompanyReadViewModels()
+        private List<CompanyReadDto> GetCompanyReadViewModels()
         {
-            return new List<CompanyReadViewModel>()
+            return new List<CompanyReadDto>()
             {
-                CompanyReadViewModel,
-                CompanyReadViewModel
+                CompanyReadDto,
+                CompanyReadDto
             };
         }
 
-        private PageViewModel<CompanyReadViewModel> GetCompanyPageViewModel()
+        private PageDto<CompanyReadDto> GetCompanyPageDto()
         {
-            return new PageViewModel<CompanyReadViewModel>()
+            return new PageDto<CompanyReadDto>()
             {
                 CurrentPage = 1,
                 TotalPages = 2,
@@ -155,9 +155,9 @@ namespace WebApi.Tests.Fixtures
             };
         }
 
-        private DeviceReadViewModel GetDeviceReadViewModel()
+        private DeviceReadDto GetDeviceReadViewModel()
         {
-            return new DeviceReadViewModel()
+            return new DeviceReadDto()
             {
                 Id = Id,
                 Name = Name,
@@ -168,18 +168,18 @@ namespace WebApi.Tests.Fixtures
             };
         }
 
-        private List<DeviceReadViewModel> GetDeviceReadViewModels()
+        private List<DeviceReadDto> GetDeviceReadViewModels()
         {
-            return new List<DeviceReadViewModel>()
+            return new List<DeviceReadDto>()
             {
                 GetDeviceReadViewModel(),
                 GetDeviceReadViewModel()
             };
         }
 
-        private PageViewModel<DeviceReadViewModel> GetDevicePageViewModel()
+        private PageDto<DeviceReadDto> GetDevicePageDto()
         {
-            return new PageViewModel<DeviceReadViewModel>()
+            return new PageDto<DeviceReadDto>()
             {
                 CurrentPage = 1,
                 TotalPages = 2,

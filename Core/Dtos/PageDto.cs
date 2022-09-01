@@ -1,6 +1,6 @@
-﻿namespace Core.ViewModels
+﻿namespace Core.Dtos
 {
-    public class PageViewModel<T>
+    public class PageDto<T>
     {
         public int CurrentPage { get; init; }
         public int TotalPages { get; init; }

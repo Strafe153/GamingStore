@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using Core.Dtos;
+using Core.Dtos.UserDtos;
 using Core.Entities;
 using Core.Models;
-using Core.ViewModels;
-using Core.ViewModels.UserViewModels;
 
 namespace WebApi.AutoMapperProfiles
 {
@@ -10,13 +10,13 @@ namespace WebApi.AutoMapperProfiles
     {
         public UserProfile()
         {
-            CreateMap<PaginatedList<User>, PageViewModel<UserReadViewModel>>()
+            CreateMap<PaginatedList<User>, PageDto<UserReadDto>>()
                 .ForMember(pvm => pvm.Entities, opt => opt.MapFrom(pl => pl));
 
-            CreateMap<User, UserReadViewModel>();
-            CreateMap<User, UserWithTokenReadViewModel>();
-            CreateMap<UserBaseViewModel, User>();
-            CreateMap<UserChangeRoleViewModel, User>();
+            CreateMap<User, UserReadDto>();
+            CreateMap<User, UserWithTokenReadDto>();
+            CreateMap<UserBaseDto, User>();
+            CreateMap<UserChangeRoleDto, User>();
         }
     }
 }

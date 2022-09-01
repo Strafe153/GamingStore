@@ -1,10 +1,10 @@
 ﻿using Core.Enums;
-using Core.ViewModels.DeviceViewModels;
+using Core.Dtos.DeviceDtos;
 using FluentValidation;
 
 namespace WebApi.Validators.DeviceValidators
 {
-    public class DeviceBaseValidator : AbstractValidator<DeviceBaseViewModel>
+    public class DeviceBaseValidator : AbstractValidator<DeviceBaseDto>
     {
         public DeviceBaseValidator()
         {

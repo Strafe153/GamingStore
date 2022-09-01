@@ -134,36 +134,6 @@ namespace Application.Tests
         }
 
         [Fact]
-        public async Task VerifyNameUniqueness_UniqueName_ReturnsTrue()
-        {
-            // Arrange
-            _fixture.MockUserRepository
-                .Setup(r => r.GetByNameAsync(It.IsAny<string>()))
-                .ReturnsAsync((User)null!);
-
-            // Act
-            var result = await _fixture.MockUserService.VerifyNameUniqueness(_fixture.Name!);
-
-            // Assert
-            result.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task VerifyNameUniqueness_NotUniqueName_ReturnsFalse()
-        {
-            // Arrange
-            _fixture.MockUserRepository
-                .Setup(r => r.GetByNameAsync(It.IsAny<string>()))
-                .ReturnsAsync(_fixture.User);
-
-            // Act
-            var result = await _fixture.MockUserService.VerifyNameUniqueness(_fixture.Name!);
-
-            // Assert
-            result.Should().BeFalse();
-        }
-
-        [Fact]
         public void ConstructUser_ValidParameters_ReturnsUser()
         {
             // Act

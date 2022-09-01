@@ -1,12 +1,12 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoMapper;
+using Core.Dtos;
+using Core.Dtos.UserDtos;
 using Core.Entities;
 using Core.Enums;
 using Core.Interfaces.Services;
 using Core.Models;
-using Core.ViewModels;
-using Core.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -34,15 +34,15 @@ namespace WebApi.Tests.Fixtures
             Username = "Username";
             Bytes = new byte[0];
             User = GetUser();
-            UserBaseViewModel = GetUserBaseViewModel();
-            UserReadViewModel = GetUserReadViewModel();
-            UserAuthorizeViewModel = GetUserAuthorizeViewModel();
-            UserChangeRoleViewModel = GetUserChangeRoleViewModel();
-            UserChangePasswordViewModel = GetUserChangePasswordViewModel();
-            UserWithTokenReadViewModel = GetUserWithTokenReadViewModel();
+            UserBaseDto = GetUserBaseDto();
+            UserReadDto = GetUserReadDto();
+            UserAuthorizeDto = GetUserAuthorizeDto();
+            UserChangeRoleDto = GetUserChangeRoleDto();
+            UserChangePasswordDto = GetUserChangePasswordDto();
+            UserWithTokenReadDto = GetUserWithTokenReadDto();
             PageParameters = GetPageParameters();
             UserPaginatedList = GetUserPaginatedList();
-            UserPageViewModel = GetUserPageViewModel();
+            UserPageDto = GetUserPageDto();
         }
 
         public UsersController MockUsersController { get; }
@@ -54,15 +54,15 @@ namespace WebApi.Tests.Fixtures
         public string Username { get; }
         public byte[] Bytes { get; }
         public User User { get; }
-        public UserBaseViewModel UserBaseViewModel { get; }
-        public UserReadViewModel UserReadViewModel { get; }
-        public UserAuthorizeViewModel UserAuthorizeViewModel { get; }
-        public UserChangeRoleViewModel UserChangeRoleViewModel { get; }
-        public UserChangePasswordViewModel UserChangePasswordViewModel { get; }
-        public UserWithTokenReadViewModel UserWithTokenReadViewModel { get; }
+        public UserBaseDto UserBaseDto { get; }
+        public UserReadDto UserReadDto { get; }
+        public UserAuthorizeDto UserAuthorizeDto { get; }
+        public UserChangeRoleDto UserChangeRoleDto { get; }
+        public UserChangePasswordDto UserChangePasswordDto { get; }
+        public UserWithTokenReadDto UserWithTokenReadDto { get; }
         public PageParameters PageParameters { get; }
         public PaginatedList<User> UserPaginatedList { get; }
-        public PageViewModel<UserReadViewModel> UserPageViewModel { get; }
+        public PageDto<UserReadDto> UserPageDto { get; }
 
         public void MockControllerBaseUser()
         {
@@ -110,17 +110,17 @@ namespace WebApi.Tests.Fixtures
             return new PaginatedList<User>(GetUsers(), 6, 1, 5);
         }
 
-        private UserBaseViewModel GetUserBaseViewModel()
+        private UserBaseDto GetUserBaseDto()
         {
-            return new UserBaseViewModel()
+            return new UserBaseDto()
             {
                 Username = Username
             };
         }
 
-        private UserReadViewModel GetUserReadViewModel()
+        private UserReadDto GetUserReadDto()
         {
-            return new UserReadViewModel()
+            return new UserReadDto()
             {
                 Id = Id,
                 Username = Username,
@@ -128,34 +128,34 @@ namespace WebApi.Tests.Fixtures
             };
         }
 
-        private UserAuthorizeViewModel GetUserAuthorizeViewModel()
+        private UserAuthorizeDto GetUserAuthorizeDto()
         {
-            return new UserAuthorizeViewModel()
+            return new UserAuthorizeDto()
             {
                 Username = Username,
                 Password = Username
             };
         }
 
-        private UserChangeRoleViewModel GetUserChangeRoleViewModel()
+        private UserChangeRoleDto GetUserChangeRoleDto()
         {
-            return new UserChangeRoleViewModel()
+            return new UserChangeRoleDto()
             {
                 Role = UserRole.Admin
             };
         }
 
-        private UserChangePasswordViewModel GetUserChangePasswordViewModel()
+        private UserChangePasswordDto GetUserChangePasswordDto()
         {
-            return new UserChangePasswordViewModel()
+            return new UserChangePasswordDto()
             {
                 Password = Username
             };
         }
 
-        private UserWithTokenReadViewModel GetUserWithTokenReadViewModel()
+        private UserWithTokenReadDto GetUserWithTokenReadDto()
         {
-            return new UserWithTokenReadViewModel()
+            return new UserWithTokenReadDto()
             {
                 Id = Id,
                 Username = Username,
@@ -164,18 +164,18 @@ namespace WebApi.Tests.Fixtures
             };
         }
 
-        private List<UserReadViewModel> GetUserReadViewModels()
+        private List<UserReadDto> GetUserReadViewModels()
         {
-            return new List<UserReadViewModel>()
+            return new List<UserReadDto>()
             {
-                UserReadViewModel,
-                UserReadViewModel
+                UserReadDto,
+                UserReadDto
             };
         }
 
-        private PageViewModel<UserReadViewModel> GetUserPageViewModel()
+        private PageDto<UserReadDto> GetUserPageDto()
         {
-            return new PageViewModel<UserReadViewModel>()
+            return new PageDto<UserReadDto>()
             {
                 CurrentPage = 1,
                 TotalPages = 2,

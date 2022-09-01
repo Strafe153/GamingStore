@@ -74,17 +74,6 @@ namespace Application.Services
             await _repository.SaveChangesAsync();
         }
 
-        public async Task<bool> VerifyNameUniqueness(string name)
-        {
-            var player = await _repository.GetByNameAsync(name);
-
-            if (player is not null)
-            {
-                return false;
-            }
-
-            return true;
-        }
         public User ConstructUser(string name, byte[] passwordHash, byte[] passwordSalt)
         {
             User user = new()

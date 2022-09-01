@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using Core.Dtos;
+using Core.Dtos.CompanyDtos;
 using Core.Entities;
 using Core.Models;
-using Core.ViewModels;
-using Core.ViewModels.CompanyViewModels;
 
 namespace WebApi.AutoMapperProfiles
 {
@@ -10,11 +10,11 @@ namespace WebApi.AutoMapperProfiles
     {
         public CompanyProfile()
         {
-            CreateMap<PaginatedList<Company>, PageViewModel<CompanyReadViewModel>>()
+            CreateMap<PaginatedList<Company>, PageDto<CompanyReadDto>>()
                 .ForMember(pvm => pvm.Entities, opt => opt.MapFrom(pl => pl));
 
-            CreateMap<Company, CompanyReadViewModel>();
-            CreateMap<CompanyBaseViewModel, Company>();
+            CreateMap<Company, CompanyReadDto>();
+            CreateMap<CompanyBaseDto, Company>();
         }
     }
 }

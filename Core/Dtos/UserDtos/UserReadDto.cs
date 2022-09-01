@@ -1,8 +1,8 @@
 ﻿using Core.Enums;
 
-namespace Core.ViewModels.UserViewModels
+namespace Core.Dtos.UserDtos
 {
-    public record UserReadViewModel : UserBaseViewModel
+    public record UserReadDto : UserBaseDto
     {
         public int Id { get; init; }
         public UserRole Role { get; init; }

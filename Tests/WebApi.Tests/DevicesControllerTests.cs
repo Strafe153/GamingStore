@@ -1,8 +1,7 @@
-﻿using Core.Entities;
+﻿using Core.Dtos;
+using Core.Dtos.DeviceDtos;
+using Core.Entities;
 using Core.Models;
-using Core.ViewModels;
-using Core.ViewModels.CompanyViewModels;
-using Core.ViewModels.DeviceViewModels;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -21,7 +20,7 @@ namespace WebApi.Tests
         }
 
         [Fact]
-        public async Task GetAsync_ValidPageParameters_ReturnsActionResultOfPageViewModelOfDeviceReadViewModel()
+        public async Task GetAsync_ValidPageParameters_ReturnsActionResultOfPageDtoOfDeviceReadDto()
         {
             // Arrange
             _fixture.MockDeviceService
@@ -29,21 +28,21 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.DevicePaginatedList);
 
             _fixture.MockMapper
-                .Setup(m => m.Map<PageViewModel<DeviceReadViewModel>>(It.IsAny<PaginatedList<Device>>()))
-                .Returns(_fixture.DevicePageViewModel);
+                .Setup(m => m.Map<PageDto<DeviceReadDto>>(It.IsAny<PaginatedList<Device>>()))
+                .Returns(_fixture.DevicePageDto);
 
             // Act
             var result = await _fixture.MockDevicesController.GetAsync(_fixture.PageParameters);
-            var pageViewModel = result.Result.As<OkObjectResult>().Value.As<PageViewModel<DeviceReadViewModel>>();
+            var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<DeviceReadDto>>();
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<PageViewModel<DeviceReadViewModel>>>();
-            pageViewModel.Entities.Should().NotBeEmpty();
+            result.Should().BeOfType<ActionResult<PageDto<DeviceReadDto>>>();
+            pageDto.Entities.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task GetAsync_ExistingDevice_ReturnsActionResultOfDeviceReadViewModel()
+        public async Task GetAsync_ExistingDevice_ReturnsActionResultOfDeviceReadDto()
         {
             // Arrange
             _fixture.MockDeviceService
@@ -51,43 +50,43 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.Device);
 
             _fixture.MockMapper
-                .Setup(m => m.Map<DeviceReadViewModel>(It.IsAny<Device>()))
-                .Returns(_fixture.DeviceReadViewModel);
+                .Setup(m => m.Map<DeviceReadDto>(It.IsAny<Device>()))
+                .Returns(_fixture.DeviceReadDto);
 
             // Act
             var result = await _fixture.MockDevicesController.GetAsync(_fixture.Id);
-            var readViewModel = result.Result.As<OkObjectResult>().Value.As<DeviceReadViewModel>();
+            var readDto = result.Result.As<OkObjectResult>().Value.As<DeviceReadDto>();
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<DeviceReadViewModel>>();
-            readViewModel.Should().NotBeNull();
+            result.Should().BeOfType<ActionResult<DeviceReadDto>>();
+            readDto.Should().NotBeNull();
         }
 
         [Fact]
-        public async Task CreateAsync_ValidViewModel_ReturnsActionResultOfDeviceReadViewModel()
+        public async Task CreateAsync_ValidDto_ReturnsActionResultOfDeviceReadDto()
         {
             // Arrange
             _fixture.MockMapper
-                .Setup(m => m.Map<Device>(It.IsAny<DeviceBaseViewModel>()))
+                .Setup(m => m.Map<Device>(It.IsAny<DeviceBaseDto>()))
                 .Returns(_fixture.Device);
 
             _fixture.MockMapper
-                .Setup(m => m.Map<DeviceReadViewModel>(It.IsAny<Device>()))
-                .Returns(_fixture.DeviceReadViewModel);
+                .Setup(m => m.Map<DeviceReadDto>(It.IsAny<Device>()))
+                .Returns(_fixture.DeviceReadDto);
 
             // Act
-            var result = await _fixture.MockDevicesController.CreateAsync(_fixture.DeviceBaseViewModel);
-            var readViewModel = result.Result.As<CreatedAtActionResult>().Value.As<DeviceReadViewModel>();
+            var result = await _fixture.MockDevicesController.CreateAsync(_fixture.DeviceBaseDto);
+            var readDto = result.Result.As<CreatedAtActionResult>().Value.As<DeviceReadDto>();
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<DeviceReadViewModel>>();
-            readViewModel.Should().NotBeNull();
+            result.Should().BeOfType<ActionResult<DeviceReadDto>>();
+            readDto.Should().NotBeNull();
         }
 
         [Fact]
-        public async Task UpdateAsync_ExistingDeviceValidViewModel_ReturnsNoContentResult()
+        public async Task UpdateAsync_ExistingDeviceValidDto_ReturnsNoContentResult()
         {
             // Arrange
             _fixture.MockDeviceService
@@ -95,7 +94,7 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.Device);
 
             // Act
-            var result = await _fixture.MockDevicesController.UpdateAsync(_fixture.Id, _fixture.DeviceBaseViewModel);
+            var result = await _fixture.MockDevicesController.UpdateAsync(_fixture.Id, _fixture.DeviceBaseDto);
 
             // Assert
             result.Should().NotBeNull();

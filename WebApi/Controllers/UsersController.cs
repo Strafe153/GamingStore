@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using Core.Dtos;
+using Core.Dtos.UserDtos;
 using Core.Entities;
 using Core.Interfaces.Services;
 using Core.Models;
-using Core.ViewModels;
-using Core.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,59 +30,57 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Authorize(Policy = "AdminOnly")]
-        public async Task<ActionResult<PageViewModel<UserReadViewModel>>> GetAsync([FromQuery] PageParameters pageParams)
+        public async Task<ActionResult<PageDto<UserReadDto>>> GetAsync([FromQuery] PageParameters pageParams)
         {
             var users = await _userService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize);
-            var readModels = _mapper.Map<PageViewModel<UserReadViewModel>>(users);
+            var pageDto = _mapper.Map<PageDto<UserReadDto>>(users);
 
-            return Ok(readModels);
+            return Ok(pageDto);
         }
 
         [HttpGet("{id:int:min(1)}")]
-        public async Task<ActionResult<UserReadViewModel>> GetAsync([FromRoute] int id)
+        public async Task<ActionResult<UserReadDto>> GetAsync([FromRoute] int id)
         {
             var user = await _userService.GetByIdAsync(id);
-            var readModel = _mapper.Map<UserReadViewModel>(user);
+            var readDto = _mapper.Map<UserReadDto>(user);
 
-            return Ok(readModel);
+            return Ok(readDto);
         }
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<ActionResult<UserReadViewModel>> RegisterAsync(
-            [FromBody] UserAuthorizeViewModel authorizeModel)
+        public async Task<ActionResult<UserReadDto>> RegisterAsync([FromBody] UserAuthorizeDto authorizeDto)
         {
-            _passwordService.CreatePasswordHash(authorizeModel.Password!, out byte[] hash, out byte[] salt);
+            _passwordService.CreatePasswordHash(authorizeDto.Password!, out byte[] hash, out byte[] salt);
 
-            User user = _userService.ConstructUser(authorizeModel.Username!, hash, salt);
+            User user = _userService.ConstructUser(authorizeDto.Username!, hash, salt);
             await _userService.CreateAsync(user);
 
-            var readModel = _mapper.Map<UserReadViewModel>(user);
+            var readDto = _mapper.Map<UserReadDto>(user);
 
-            return CreatedAtAction(nameof(GetAsync), new { Id = readModel.Id }, readModel);
+            return CreatedAtAction(nameof(GetAsync), new { Id = readDto.Id }, readDto);
         }
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<UserWithTokenReadViewModel>> LoginAsync(
-            [FromBody] UserAuthorizeViewModel authorizeModel)
+        public async Task<ActionResult<UserWithTokenReadDto>> LoginAsync([FromBody] UserAuthorizeDto authorizeDto)
         {
-            var user = await _userService.GetByNameAsync(authorizeModel.Username!);
-            _passwordService.VerifyPasswordHash(authorizeModel.Password!, user.PasswordHash!, user.PasswordSalt!);
+            var user = await _userService.GetByNameAsync(authorizeDto.Username!);
+            _passwordService.VerifyPasswordHash(authorizeDto.Password!, user.PasswordHash!, user.PasswordSalt!);
 
             string token = _passwordService.CreateToken(user);
-            var readModel = _mapper.Map<UserWithTokenReadViewModel>(user) with { Token = token };
+            var readDto = _mapper.Map<UserWithTokenReadDto>(user) with { Token = token };
 
-            return Ok(readModel);
+            return Ok(readDto);
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromBody] UserBaseViewModel updateModel)
+        public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromBody] UserBaseDto updateDto)
         {
             var user = await _userService.GetByIdAsync(id);
 
             _userService.VerifyUserAccessRights(user, User.Identity!, User.Claims!);
-            _mapper.Map(updateModel, user);
+            _mapper.Map(updateDto, user);
             await _userService.UpdateAsync(user);
 
             return NoContent();
@@ -91,12 +89,12 @@ namespace WebApi.Controllers
         [HttpPut("{id:int:min(1)}/changePassword")]
         public async Task<ActionResult<string>> ChangePasswordAsync(
             [FromRoute] int id,
-            [FromBody] UserChangePasswordViewModel updateModel)
+            [FromBody] UserChangePasswordDto changePasswordDto)
         {
             var player = await _userService.GetByIdAsync(id);
 
             _userService.VerifyUserAccessRights(player, User.Identity!, User.Claims!);
-            _passwordService.CreatePasswordHash(updateModel.Password!, out byte[] hash, out byte[] salt);
+            _passwordService.CreatePasswordHash(changePasswordDto.Password!, out byte[] hash, out byte[] salt);
             _userService.ChangePasswordData(player, hash, salt);
             await _userService.UpdateAsync(player);
 
@@ -107,13 +105,11 @@ namespace WebApi.Controllers
 
         [HttpPut("{id:int:min(1)}/changeRole")]
         [Authorize(Policy = "AdminOnly")]
-        public async Task<ActionResult> ChangeRoleAsync(
-            [FromRoute] int id,
-            [FromBody] UserChangeRoleViewModel changeRoleModel)
+        public async Task<ActionResult> ChangeRoleAsync([FromRoute] int id, [FromBody] UserChangeRoleDto changeRoleDto)
         {
             var user = await _userService.GetByIdAsync(id);
 
-            _mapper.Map(changeRoleModel, user);
+            _mapper.Map(changeRoleDto, user);
             await _userService.UpdateAsync(user);
 
             return NoContent();

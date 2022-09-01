@@ -1,10 +1,10 @@
 ﻿using Core.Enums;
-using Core.ViewModels.UserViewModels;
+using Core.Dtos.UserDtos;
 using FluentValidation;
 
 namespace WebApi.Validators.UserValidators
 {
-    public class UserChangeRoleValidator : AbstractValidator<UserChangeRoleViewModel>
+    public class UserChangeRoleValidator : AbstractValidator<UserChangeRoleDto>
     {
         public UserChangeRoleValidator()
         {

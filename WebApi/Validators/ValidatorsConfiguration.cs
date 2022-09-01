@@ -1,6 +1,6 @@
-﻿using Core.ViewModels.CompanyViewModels;
-using Core.ViewModels.DeviceViewModels;
-using Core.ViewModels.UserViewModels;
+﻿using Core.Dtos.CompanyDtos;
+using Core.Dtos.DeviceDtos;
+using Core.Dtos.UserDtos;
 using FluentValidation;
 using WebApi.Validators.CompanyValidators;
 using WebApi.Validators.DeviceValidators;
@@ -13,15 +13,15 @@ namespace WebApi.Validators
         public static void AddApplicationValidators(this IServiceCollection services)
         {
             // User validators
-            services.AddScoped<IValidator<UserBaseViewModel>, UserBaseValidator<UserBaseViewModel>>();
-            services.AddScoped<IValidator<UserChangeRoleViewModel>, UserChangeRoleValidator>();
-            services.AddScoped<IValidator<UserChangePasswordViewModel>, UserChangePasswordValidator>();
+            services.AddScoped<IValidator<UserBaseDto>, UserBaseValidator<UserBaseDto>>();
+            services.AddScoped<IValidator<UserChangeRoleDto>, UserChangeRoleValidator>();
+            services.AddScoped<IValidator<UserChangePasswordDto>, UserChangePasswordValidator>();
 
             // Company validators
-            services.AddScoped<IValidator<CompanyBaseViewModel>, CompanyBaseValidator>();
+            services.AddScoped<IValidator<CompanyBaseDto>, CompanyBaseValidator>();
 
             // Device validators
-            services.AddScoped<IValidator<DeviceBaseViewModel>, DeviceBaseValidator>();
+            services.AddScoped<IValidator<DeviceBaseDto>, DeviceBaseValidator>();
         }
     }
 }

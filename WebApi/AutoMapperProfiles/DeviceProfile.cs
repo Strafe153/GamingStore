@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using Core.Dtos;
+using Core.Dtos.DeviceDtos;
 using Core.Entities;
 using Core.Models;
-using Core.ViewModels;
-using Core.ViewModels.DeviceViewModels;
 
 namespace WebApi.AutoMapperProfiles
 {
@@ -10,11 +10,11 @@ namespace WebApi.AutoMapperProfiles
     {
         public DeviceProfile()
         {
-            CreateMap<PaginatedList<Device>, PageViewModel<DeviceReadViewModel>>()
+            CreateMap<PaginatedList<Device>, PageDto<DeviceReadDto>>()
                 .ForMember(pvm => pvm.Entities, opt => opt.MapFrom(pl => pl));
 
-            CreateMap<Device, DeviceReadViewModel>();
-            CreateMap<DeviceBaseViewModel, Device>();
+            CreateMap<Device, DeviceReadDto>();
+            CreateMap<DeviceBaseDto, Device>();
         }
     }
 }

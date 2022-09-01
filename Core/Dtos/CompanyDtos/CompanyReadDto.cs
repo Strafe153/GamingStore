@@ -1,8 +1,8 @@
 ﻿using Core.Entities;
 
-namespace Core.ViewModels.CompanyViewModels
+namespace Core.Dtos.CompanyDtos
 {
-    public record CompanyReadViewModel : CompanyBaseViewModel
+    public record CompanyReadDto : CompanyBaseDto
     {
         public int Id { get; init; }
         public ICollection<Device>? Devices { get; init; }
