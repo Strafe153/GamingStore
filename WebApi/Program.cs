@@ -5,11 +5,22 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Serilog;
 using System.Text;
 using WebApi.Middleware;
 using WebApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Create a serilog instance.
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
+// Configure logging.
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 // Add custom validators, repositories, services and mappers
 builder.Services.AddApplicationValidators();

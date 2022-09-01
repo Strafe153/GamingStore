@@ -5,18 +5,24 @@ using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Core.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Xml.Linq;
 
 namespace Application.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
+        private readonly ILogger<UserService> _logger;
 
-        public UserService(IUserRepository repository)
+        public UserService(
+            IUserRepository repository,
+            ILogger<UserService> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task CreateAsync(User entity)
@@ -25,9 +31,12 @@ namespace Application.Services
             {
                 _repository.Create(entity);
                 await _repository.SaveChangesAsync();
+
+                _logger.LogInformation("Succesfully registered a user");
             } 
             catch (DbUpdateException)
             {
+                _logger.LogWarning($"Failed to register a user. The username '{entity.Username}' is already taken");
                 throw new UsernameNotUniqueException($"Username '{entity.Username}' is already taken");
             }
         }
@@ -36,11 +45,15 @@ namespace Application.Services
         {
             _repository.Delete(entity);
             await _repository.SaveChangesAsync();
+
+            _logger.LogInformation($"Succesfully deleted a user with id {entity.Id}");
         }
 
         public async Task<PaginatedList<User>> GetAllAsync(int pageNumber, int pageSize)
         {
             var users = await _repository.GetAllAsync(pageNumber, pageSize);
+            _logger.LogInformation("Successfully retrieved all users");
+
             return users;
         }
 
@@ -50,8 +63,11 @@ namespace Application.Services
 
             if (user is null)
             {
+                _logger.LogWarning($"Failed to retrieve a user with id {id}");
                 throw new NullReferenceException($"User with id {id} not found");
             }
+
+            _logger.LogInformation($"Successfully retrieved a user with id {id}");
 
             return user;
         }
@@ -62,8 +78,11 @@ namespace Application.Services
 
             if (user is null)
             {
+                _logger.LogWarning($"Failed to retrieve a user with name {name}");
                 throw new NullReferenceException($"User with name {name} not found");
             }
+
+            _logger.LogInformation($"Successfully retrieved a user with name {name}");
 
             return user;
         }
@@ -72,6 +91,8 @@ namespace Application.Services
         {
             _repository.Update(entity);
             await _repository.SaveChangesAsync();
+
+            _logger.LogInformation($"Successfully updated a user with id {entity.Id}");
         }
 
         public User ConstructUser(string name, byte[] passwordHash, byte[] passwordSalt)
@@ -98,6 +119,7 @@ namespace Application.Services
             if (performedOn.Username != performer.Name
                 && !claims.Any(c => c.Value == UserRole.Admin.ToString()))
             {
+                _logger.LogWarning($"User '{performer.Name}' failed to perform an operation due to insufficient access rights");
                 throw new NotEnoughRightsException("Not enough rights to perform the operation");
             }
         }
