@@ -1,8 +1,8 @@
-﻿using Core.Entities;
+﻿using Core.Dtos;
+using Core.Dtos.CompanyDtos;
+using Core.Dtos.DeviceDtos;
+using Core.Entities;
 using Core.Models;
-using Core.ViewModels;
-using Core.ViewModels.CompanyViewModels;
-using Core.ViewModels.DeviceViewModels;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -21,7 +21,7 @@ namespace WebApi.Tests
         }
 
         [Fact]
-        public async Task GetAsync_ValidPageParameters_ReturnsActionResultOfPageViewModelOfCompanyReadViewModel()
+        public async Task GetAsync_ValidPageParameters_ReturnsActionResultOfPageDtoOfCompanyReadDto()
         {
             // Arrange
             _fixture.MockCompanyService
@@ -29,21 +29,21 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.CompanyPaginatedList);
 
             _fixture.MockMapper
-                .Setup(m => m.Map<PageViewModel<CompanyReadViewModel>>(It.IsAny<PaginatedList<Company>>()))
-                .Returns(_fixture.CompanyPageViewModel);
+                .Setup(m => m.Map<PageDto<CompanyReadDto>>(It.IsAny<PaginatedList<Company>>()))
+                .Returns(_fixture.CompanyPageDto);
 
             // Act
             var result = await _fixture.MockCompaniesController.GetAsync(_fixture.PageParameters);
-            var pageViewModel = result.Result.As<OkObjectResult>().Value.As<PageViewModel<CompanyReadViewModel>>();
+            var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<CompanyReadDto>>();
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<PageViewModel<CompanyReadViewModel>>>();
-            pageViewModel.Entities.Should().NotBeEmpty();
+            result.Should().BeOfType<ActionResult<PageDto<CompanyReadDto>>>();
+            pageDto.Entities.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task GetAsync_ExistingCompany_ReturnsActionResultOfCompanyReadViewModel()
+        public async Task GetAsync_ExistingCompany_ReturnsActionResultOfCompanyReadDto()
         {
             // Arrange
             _fixture.MockCompanyService
@@ -51,21 +51,21 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.Company);
 
             _fixture.MockMapper
-                .Setup(m => m.Map<CompanyReadViewModel>(It.IsAny<Company>()))
-                .Returns(_fixture.CompanyReadViewModel);
+                .Setup(m => m.Map<CompanyReadDto>(It.IsAny<Company>()))
+                .Returns(_fixture.CompanyReadDto);
 
             // Act
             var result = await _fixture.MockCompaniesController.GetAsync(_fixture.Id);
-            var readViewModel = result.Result.As<OkObjectResult>().Value.As<CompanyReadViewModel>();
+            var readDto = result.Result.As<OkObjectResult>().Value.As<CompanyReadDto>();
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<CompanyReadViewModel>>();
-            readViewModel.Should().NotBeNull();
+            result.Should().BeOfType<ActionResult<CompanyReadDto>>();
+            readDto.Should().NotBeNull();
         }
 
         [Fact]
-        public async Task GetDevicesAsync_ExistingCompany_ReturnsActionResultOfPageViewModelOfDeviceReadViewModel()
+        public async Task GetDevicesAsync_ExistingCompany_ReturnsActionResultOfPageDtoOfDeviceReadDto()
         {
             // Arrange
             _fixture.MockCompanyService
@@ -77,43 +77,43 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.DevicePaginatedList);
 
             _fixture.MockMapper
-                .Setup(m => m.Map<PageViewModel<DeviceReadViewModel>>(It.IsAny<PaginatedList<Device>>()))
-                .Returns(_fixture.DevicePageViewModel);
+                .Setup(m => m.Map<PageDto<DeviceReadDto>>(It.IsAny<PaginatedList<Device>>()))
+                .Returns(_fixture.DevicePageDto);
 
             // Act
             var result = await _fixture.MockCompaniesController.GetDevicesAsync(_fixture.Id, _fixture.PageParameters);
-            var pageViewModel = result.Result.As<OkObjectResult>().Value.As<PageViewModel<DeviceReadViewModel>>();
+            var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<DeviceReadDto>>();
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<PageViewModel<DeviceReadViewModel>>>();
-            pageViewModel.Should().NotBeNull();
+            result.Should().BeOfType<ActionResult<PageDto<DeviceReadDto>>>();
+            pageDto.Should().NotBeNull();
         }
 
         [Fact]
-        public async Task CreateAsync_ValidViewModel_ReturnsActionResultOfCompanyReadViewModel()
+        public async Task CreateAsync_ValidDto_ReturnsActionResultOfCompanyReadDto()
         {
             // Arrange
             _fixture.MockMapper
-                .Setup(m => m.Map<Company>(It.IsAny<CompanyBaseViewModel>()))
+                .Setup(m => m.Map<Company>(It.IsAny<CompanyBaseDto>()))
                 .Returns(_fixture.Company);
 
             _fixture.MockMapper
-                .Setup(m => m.Map<CompanyReadViewModel>(It.IsAny<Company>()))
-                .Returns(_fixture.CompanyReadViewModel);
+                .Setup(m => m.Map<CompanyReadDto>(It.IsAny<Company>()))
+                .Returns(_fixture.CompanyReadDto);
 
             // Act
-            var result = await _fixture.MockCompaniesController.CreateAsync(_fixture.CompanyBaseViewModel);
-            var readViewModel = result.Result.As<CreatedAtActionResult>().Value.As<CompanyReadViewModel>();
+            var result = await _fixture.MockCompaniesController.CreateAsync(_fixture.CompanyBaseDto);
+            var readDto = result.Result.As<CreatedAtActionResult>().Value.As<CompanyReadDto>();
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<CompanyReadViewModel>>();
-            readViewModel.Should().NotBeNull();
+            result.Should().BeOfType<ActionResult<CompanyReadDto>>();
+            readDto.Should().NotBeNull();
         }
 
         [Fact]
-        public async Task UpdateAsync_ExistingCompanyValidViewModel_ReturnsNoContentResult()
+        public async Task UpdateAsync_ExistingCompanyValidDto_ReturnsNoContentResult()
         {
             // Arrange
             _fixture.MockCompanyService
@@ -121,7 +121,7 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.Company);
 
             // Act
-            var result = await _fixture.MockCompaniesController.UpdateAsync(_fixture.Id, _fixture.CompanyBaseViewModel);
+            var result = await _fixture.MockCompaniesController.UpdateAsync(_fixture.Id, _fixture.CompanyBaseDto);
 
             // Assert
             result.Should().NotBeNull();

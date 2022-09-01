@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using Core.Dtos;
+using Core.Dtos.CompanyDtos;
+using Core.Dtos.DeviceDtos;
 using Core.Entities;
 using Core.Interfaces.Services;
 using Core.Models;
-using Core.ViewModels;
-using Core.ViewModels.CompanyViewModels;
-using Core.ViewModels.DeviceViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,54 +31,54 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<PageViewModel<CompanyReadViewModel>>> GetAsync([FromQuery] PageParameters pageParams)
+        public async Task<ActionResult<PageDto<CompanyReadDto>>> GetAsync([FromQuery] PageParameters pageParams)
         {
             var companies = await _companyService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize);
-            var readModels = _mapper.Map<PageViewModel<CompanyReadViewModel>>(companies);
+            var pageDto = _mapper.Map<PageDto<CompanyReadDto>>(companies);
 
-            return Ok(readModels);
+            return Ok(pageDto);
         }
 
         [HttpGet("{id:int:min(1)}")]
         [AllowAnonymous]
-        public async Task<ActionResult<CompanyReadViewModel>> GetAsync([FromRoute] int id)
+        public async Task<ActionResult<CompanyReadDto>> GetAsync([FromRoute] int id)
         {
             var company = await _companyService.GetByIdAsync(id);
-            var readModel = _mapper.Map<CompanyReadViewModel>(company);
+            var readDto = _mapper.Map<CompanyReadDto>(company);
 
-            return Ok(readModel);
+            return Ok(readDto);
         }
 
         [HttpGet("{id:int:min(1)}/devices")]
         [AllowAnonymous]
-        public async Task<ActionResult<PageViewModel<DeviceReadViewModel>>> GetDevicesAsync(
+        public async Task<ActionResult<PageDto<DeviceReadDto>>> GetDevicesAsync(
             [FromRoute] int id,
             [FromQuery] PageParameters pageParams)
         {
             var company = await _companyService.GetByIdAsync(id);
             var devices = await _deviceService.GetByCompanyAsync(company.Id, pageParams.PageNumber, pageParams.PageSize);
-            var readModels = _mapper.Map<PageViewModel<DeviceReadViewModel>>(devices);
+            var pageDto = _mapper.Map<PageDto<DeviceReadDto>>(devices);
 
-            return Ok(readModels);
+            return Ok(pageDto);
         }
 
         [HttpPost]
-        public async Task<ActionResult<CompanyReadViewModel>> CreateAsync([FromBody] CompanyBaseViewModel createModel)
+        public async Task<ActionResult<CompanyReadDto>> CreateAsync([FromBody] CompanyBaseDto createDto)
         {
-            var company = _mapper.Map<Company>(createModel);
+            var company = _mapper.Map<Company>(createDto);
             await _companyService.CreateAsync(company);
 
-            var readModel = _mapper.Map<CompanyReadViewModel>(company);
+            var readDto = _mapper.Map<CompanyReadDto>(company);
 
-            return CreatedAtAction(nameof(GetAsync), new { Id = readModel.Id }, readModel);
+            return CreatedAtAction(nameof(GetAsync), new { Id = readDto.Id }, readDto);
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromBody] CompanyBaseViewModel updateModel)
+        public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromBody] CompanyBaseDto updateDto)
         {
             var company = await _companyService.GetByIdAsync(id);
 
-            _mapper.Map(updateModel, company);
+            _mapper.Map(updateDto, company);
             await _companyService.UpdateAsync(company);
 
             return NoContent();

@@ -1,9 +1,9 @@
-﻿using Core.ViewModels.UserViewModels;
+﻿using Core.Dtos.UserDtos;
 using FluentValidation;
 
 namespace WebApi.Validators.UserValidators
 {
-    public class UserChangePasswordValidator : AbstractValidator<UserChangePasswordViewModel>
+    public class UserChangePasswordValidator : AbstractValidator<UserChangePasswordDto>
     {
         public UserChangePasswordValidator()
         {

@@ -1,9 +1,9 @@
-﻿using Core.ViewModels.UserViewModels;
+﻿using Core.Dtos.UserDtos;
 using FluentValidation;
 
 namespace WebApi.Validators.UserValidators
 {
-    public class UserBaseValidator<T> : AbstractValidator<T> where T : UserBaseViewModel
+    public class UserBaseValidator<T> : AbstractValidator<T> where T : UserBaseDto
     {
         public UserBaseValidator()
         {

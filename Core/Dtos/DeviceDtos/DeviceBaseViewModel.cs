@@ -1,8 +1,8 @@
 ﻿using Core.Enums;
 
-namespace Core.ViewModels.DeviceViewModels
+namespace Core.Dtos.DeviceDtos
 {
-    public record DeviceBaseViewModel
+    public record DeviceBaseDto
     {
         public string? Name { get; init; }
         public DeviceCategory Category { get; init; }

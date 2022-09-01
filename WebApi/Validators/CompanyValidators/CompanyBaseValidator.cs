@@ -1,9 +1,9 @@
-﻿using Core.ViewModels.CompanyViewModels;
+﻿using Core.Dtos.CompanyDtos;
 using FluentValidation;
 
 namespace WebApi.Validators.CompanyValidators
 {
-    public class CompanyBaseValidator : AbstractValidator<CompanyBaseViewModel>
+    public class CompanyBaseValidator : AbstractValidator<CompanyBaseDto>
     {
         public CompanyBaseValidator()
         {

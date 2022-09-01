@@ -1,7 +1,7 @@
-﻿using Core.Entities;
+﻿using Core.Dtos;
+using Core.Dtos.UserDtos;
+using Core.Entities;
 using Core.Models;
-using Core.ViewModels;
-using Core.ViewModels.UserViewModels;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -21,7 +21,7 @@ namespace WebApi.Tests
         }
 
         [Fact]
-        public async Task GetAsync_ValidPageParameters_ReturnsActionResultOfPageViewModelOfUserReadViewModel()
+        public async Task GetAsync_ValidPageParameters_ReturnsActionResultOfPageDtoOfUserReadDto()
         {
             // Arrange
             _fixture.MockUserService
@@ -29,21 +29,21 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.UserPaginatedList);
 
             _fixture.MockMapper
-                .Setup(m => m.Map<PageViewModel<UserReadViewModel>>(It.IsAny<PaginatedList<User>>()))
-                .Returns(_fixture.UserPageViewModel);
+                .Setup(m => m.Map<PageDto<UserReadDto>>(It.IsAny<PaginatedList<User>>()))
+                .Returns(_fixture.UserPageDto);
 
             // Act
             var result = await _fixture.MockUsersController.GetAsync(_fixture.PageParameters);
-            var pageViewModel = result.Result.As<OkObjectResult>().Value.As<PageViewModel<UserReadViewModel>>();
+            var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<UserReadDto>>();
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<PageViewModel<UserReadViewModel>>>();
-            pageViewModel.Entities.Should().NotBeEmpty();
+            result.Should().BeOfType<ActionResult<PageDto<UserReadDto>>>();
+            pageDto.Entities.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task GetAsync_ExistingUser_ReturnsActionResultOfUserReadViewModel()
+        public async Task GetAsync_ExistingUser_ReturnsActionResultOfUserReadDto()
         {
             // Arrange
             _fixture.MockUserService
@@ -51,57 +51,57 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.User);
 
             _fixture.MockMapper
-                .Setup(m => m.Map<UserReadViewModel>(It.IsAny<User>()))
-                .Returns(_fixture.UserReadViewModel);
+                .Setup(m => m.Map<UserReadDto>(It.IsAny<User>()))
+                .Returns(_fixture.UserReadDto);
 
             // Act
             var result = await _fixture.MockUsersController.GetAsync(_fixture.Id);
-            var readViewModel = result.Result.As<OkObjectResult>().Value.As<UserReadViewModel>();
+            var readDto = result.Result.As<OkObjectResult>().Value.As<UserReadDto>();
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<UserReadViewModel>>();
-            readViewModel.Should().NotBeNull();
+            result.Should().BeOfType<ActionResult<UserReadDto>>();
+            readDto.Should().NotBeNull();
         }
 
         [Fact]
-        public async Task RegisterAsync_ValidViewModel_ReturnsActionResultOfUserWithTokenReadViewModel()
+        public async Task RegisterAsync_ValidDto_ReturnsActionResultOfUserWithTokenReadDto()
         {
             // Arrange
             _fixture.MockMapper
-                .Setup(m => m.Map<UserReadViewModel>(It.IsAny<User>()))
-                .Returns(_fixture.UserReadViewModel);
+                .Setup(m => m.Map<UserReadDto>(It.IsAny<User>()))
+                .Returns(_fixture.UserReadDto);
 
             // Act
-            var result = await _fixture.MockUsersController.RegisterAsync(_fixture.UserAuthorizeViewModel);
-            var readViewModel = result.Result.As<CreatedAtActionResult>().Value.As<UserReadViewModel>();
+            var result = await _fixture.MockUsersController.RegisterAsync(_fixture.UserAuthorizeDto);
+            var readDto = result.Result.As<CreatedAtActionResult>().Value.As<UserReadDto>();
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<UserReadViewModel>>();
-            readViewModel.Should().NotBeNull();
+            result.Should().BeOfType<ActionResult<UserReadDto>>();
+            readDto.Should().NotBeNull();
         }
 
         [Fact]
-        public async Task LoginAsync_ValidViewModel_ReturnsActionResultOfUserWithTokenReadViewModel()
+        public async Task LoginAsync_ValidDto_ReturnsActionResultOfUserWithTokenReadDto()
         {
             // Arrange
             _fixture.MockMapper
-                .Setup(m => m.Map<UserWithTokenReadViewModel>(It.IsAny<User>()))
-                .Returns(_fixture.UserWithTokenReadViewModel);
+                .Setup(m => m.Map<UserWithTokenReadDto>(It.IsAny<User>()))
+                .Returns(_fixture.UserWithTokenReadDto);
 
             // Act
-            var result = await _fixture.MockUsersController.LoginAsync(_fixture.UserAuthorizeViewModel);
-            var readWithTokenViewModel = result.Result.As<OkObjectResult>().Value.As<UserWithTokenReadViewModel>();
+            var result = await _fixture.MockUsersController.LoginAsync(_fixture.UserAuthorizeDto);
+            var readWithTokenDto = result.Result.As<OkObjectResult>().Value.As<UserWithTokenReadDto>();
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<UserWithTokenReadViewModel>>();
-            readWithTokenViewModel.Should().NotBeNull();
+            result.Should().BeOfType<ActionResult<UserWithTokenReadDto>>();
+            readWithTokenDto.Should().NotBeNull();
         }
 
         [Fact]
-        public async Task UpdateAsync_ExistingUserValidViewModel_ReturnsNoContentResult()
+        public async Task UpdateAsync_ExistingUserValidDto_ReturnsNoContentResult()
         {
             // Arrange
             _fixture.MockUserService
@@ -109,7 +109,7 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.User);
 
             // Act
-            var result = await _fixture.MockUsersController.UpdateAsync(_fixture.Id, _fixture.UserBaseViewModel);
+            var result = await _fixture.MockUsersController.UpdateAsync(_fixture.Id, _fixture.UserBaseDto);
 
             // Assert
             result.Should().NotBeNull();
@@ -130,7 +130,7 @@ namespace WebApi.Tests
 
             // Act
             var result = await _fixture.MockUsersController
-                .ChangePasswordAsync(_fixture.Id, _fixture.UserChangePasswordViewModel);
+                .ChangePasswordAsync(_fixture.Id, _fixture.UserChangePasswordDto);
             var readToken = result.Result.As<OkObjectResult>().Value.As<string>();
 
             // Assert
@@ -148,7 +148,7 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.User);
 
             // Act
-            var result = await _fixture.MockUsersController.ChangeRoleAsync(_fixture.Id, _fixture.UserChangeRoleViewModel);
+            var result = await _fixture.MockUsersController.ChangeRoleAsync(_fixture.Id, _fixture.UserChangeRoleDto);
 
             // Assert
             result.Should().NotBeNull();

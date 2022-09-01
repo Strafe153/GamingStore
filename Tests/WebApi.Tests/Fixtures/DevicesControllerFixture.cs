@@ -1,12 +1,12 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoMapper;
+using Core.Dtos;
+using Core.Dtos.DeviceDtos;
 using Core.Entities;
 using Core.Enums;
 using Core.Interfaces.Services;
 using Core.Models;
-using Core.ViewModels;
-using Core.ViewModels.DeviceViewModels;
 using Moq;
 using WebApi.Controllers;
 
@@ -28,11 +28,11 @@ namespace WebApi.Tests.Fixtures
             Id = 1;
             Name = "Device";
             Device = GetDevice();
-            DeviceReadViewModel = GetDeviceReadViewModel();
-            DeviceBaseViewModel = GetDeviceBaseViewModel();
+            DeviceReadDto = GetDeviceReadDto();
+            DeviceBaseDto = GetDeviceBaseDto();
             PageParameters = GetPageParameters();
             DevicePaginatedList = GetDevicePaginatedList();
-            DevicePageViewModel = GetDevicePageViewModel();
+            DevicePageDto = GetDevicePageDto();
         }
 
         public DevicesController MockDevicesController { get; }
@@ -42,11 +42,11 @@ namespace WebApi.Tests.Fixtures
         public int Id { get; }
         public string Name { get; }
         public Device Device { get; }
-        public DeviceReadViewModel DeviceReadViewModel { get; }
-        public DeviceBaseViewModel DeviceBaseViewModel { get; }
+        public DeviceReadDto DeviceReadDto { get; }
+        public DeviceBaseDto DeviceBaseDto { get; }
         public PageParameters PageParameters { get; }
         public PaginatedList<Device> DevicePaginatedList { get; }
-        public PageViewModel<DeviceReadViewModel> DevicePageViewModel { get; }
+        public PageDto<DeviceReadDto> DevicePageDto { get; }
 
         private Device GetDevice()
         {
@@ -84,9 +84,9 @@ namespace WebApi.Tests.Fixtures
             return new PaginatedList<Device>(GetDevices(), 6, 1, 5);
         }
 
-        private DeviceReadViewModel GetDeviceReadViewModel()
+        private DeviceReadDto GetDeviceReadDto()
         {
-            return new DeviceReadViewModel()
+            return new DeviceReadDto()
             {
                 Id = Id,
                 Name = Name,
@@ -97,9 +97,9 @@ namespace WebApi.Tests.Fixtures
             };
         }
 
-        private DeviceBaseViewModel GetDeviceBaseViewModel()
+        private DeviceBaseDto GetDeviceBaseDto()
         {
-            return new DeviceBaseViewModel()
+            return new DeviceBaseDto()
             {
                 Name = Name,
                 Category = DeviceCategory.Mouse,
@@ -109,18 +109,18 @@ namespace WebApi.Tests.Fixtures
             };
         }
 
-        private List<DeviceReadViewModel> GetDeviceReadViewModels()
+        private List<DeviceReadDto> GetDeviceReadViewModels()
         {
-            return new List<DeviceReadViewModel>()
+            return new List<DeviceReadDto>()
             {
-                DeviceReadViewModel,
-                DeviceReadViewModel
+                DeviceReadDto,
+                DeviceReadDto
             };
         }
 
-        private PageViewModel<DeviceReadViewModel> GetDevicePageViewModel()
+        private PageDto<DeviceReadDto> GetDevicePageDto()
         {
-            return new PageViewModel<DeviceReadViewModel>()
+            return new PageDto<DeviceReadDto>()
             {
                 CurrentPage = 1,
                 TotalPages = 2,
