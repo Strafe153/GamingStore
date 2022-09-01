@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Core.Entities;
 using Core.Enums;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Tests.Fixtures
 {
@@ -17,10 +18,12 @@ namespace Application.Tests.Fixtures
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
             MockConfiguration = fixture.Freeze<Mock<IConfiguration>>();
+            MockLogger = fixture.Freeze<Mock<ILogger<PasswordService>>>();
             MockConfigurationSection = fixture.Freeze<Mock<IConfigurationSection>>();
 
             MockPasswordService = new(
-                MockConfiguration.Object);
+                MockConfiguration.Object,
+                MockLogger.Object);
 
             StringPlaceholder = "SymmetricSecurityKey";
             Bytes = new byte[0];
@@ -30,6 +33,7 @@ namespace Application.Tests.Fixtures
 
         public PasswordService MockPasswordService { get; }
         public Mock<IConfiguration> MockConfiguration { get; }
+        public Mock<ILogger<PasswordService>> MockLogger { get; }
         public Mock<IConfigurationSection> MockConfigurationSection { get; }
 
         public string? StringPlaceholder { get; }
