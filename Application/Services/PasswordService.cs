@@ -2,6 +2,7 @@
 using Core.Exceptions;
 using Core.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,10 +14,14 @@ namespace Application.Services
     public class PasswordService : IPasswordService
     {
         private readonly IConfiguration _configuration;
+        private readonly ILogger<PasswordService> _logger;
 
-        public PasswordService(IConfiguration configuration)
+        public PasswordService(
+            IConfiguration configuration,
+            ILogger<PasswordService> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
@@ -59,8 +64,11 @@ namespace Application.Services
 
                 if (!computedHash.SequenceEqual(passwordHash))
                 {
+                    _logger.LogWarning("User failed to log in due to providing an incorrect password");
                     throw new IncorrectPasswordException("Incorrect password");
                 }
+
+                _logger.LogInformation("User successfully logged in");
             }
         }
     }
