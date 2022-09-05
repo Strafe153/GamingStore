@@ -9,6 +9,7 @@ namespace Core.Entities
         public DeviceCategory Category { get; set; }
         public decimal Price { get; set; }
         public int InStock { get; set; }
+        public string? Picture { get; set; }
 
         public int CompanyId { get; set; }
         public Company? Company { get; set; }

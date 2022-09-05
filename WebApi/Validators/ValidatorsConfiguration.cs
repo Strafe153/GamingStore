@@ -14,6 +14,8 @@ namespace WebApi.Validators
         {
             // User validators
             services.AddScoped<IValidator<UserBaseDto>, UserBaseValidator<UserBaseDto>>();
+            services.AddScoped<IValidator<UserRegisterDto>, UserBaseValidator<UserRegisterDto>>();
+            services.AddScoped<IValidator<UserLoginDto>, UserLoginValidator>();
             services.AddScoped<IValidator<UserChangeRoleDto>, UserChangeRoleValidator>();
             services.AddScoped<IValidator<UserChangePasswordDto>, UserChangePasswordValidator>();
 

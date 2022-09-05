@@ -56,7 +56,7 @@ namespace WebApi.Tests.Fixtures
         public User User { get; }
         public UserBaseDto UserBaseDto { get; }
         public UserReadDto UserReadDto { get; }
-        public UserAuthorizeDto UserAuthorizeDto { get; }
+        public UserRegisterDto UserAuthorizeDto { get; }
         public UserChangeRoleDto UserChangeRoleDto { get; }
         public UserChangePasswordDto UserChangePasswordDto { get; }
         public UserWithTokenReadDto UserWithTokenReadDto { get; }
@@ -128,9 +128,9 @@ namespace WebApi.Tests.Fixtures
             };
         }
 
-        private UserAuthorizeDto GetUserAuthorizeDto()
+        private UserRegisterDto GetUserAuthorizeDto()
         {
-            return new UserAuthorizeDto()
+            return new UserRegisterDto()
             {
                 Username = Username,
                 Password = Username

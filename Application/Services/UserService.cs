@@ -6,22 +6,25 @@ using Core.Interfaces.Services;
 using Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Drawing;
 using System.Security.Claims;
 using System.Security.Principal;
-using System.Xml.Linq;
 
 namespace Application.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
+        private readonly IPictureService _pictureService;
         private readonly ILogger<UserService> _logger;
 
         public UserService(
             IUserRepository repository,
+            IPictureService pictureService,
             ILogger<UserService> logger)
         {
             _repository = repository;
+            _pictureService = pictureService;
             _logger = logger;
         }
 
@@ -45,6 +48,7 @@ namespace Application.Services
         {
             _repository.Delete(entity);
             await _repository.SaveChangesAsync();
+            await _pictureService.DeleteAsync(entity.ProfilePicture!);
 
             _logger.LogInformation($"Succesfully deleted a user with id {entity.Id}");
         }
@@ -78,11 +82,11 @@ namespace Application.Services
 
             if (user is null)
             {
-                _logger.LogWarning($"Failed to retrieve a user with name {name}");
-                throw new NullReferenceException($"User with name {name} not found");
+                _logger.LogWarning($"Failed to retrieve a user with username {name}");
+                throw new NullReferenceException($"User with username {name} not found");
             }
 
-            _logger.LogInformation($"Successfully retrieved a user with name {name}");
+            _logger.LogInformation($"Successfully retrieved a user with username {name}");
 
             return user;
         }
@@ -95,15 +99,17 @@ namespace Application.Services
             _logger.LogInformation($"Successfully updated a user with id {entity.Id}");
         }
 
-        public User ConstructUser(string name, byte[] passwordHash, byte[] passwordSalt)
+        public async Task<User> ConstructUserAsync(string username, byte[] passwordHash, byte[] passwordSalt, string? profilePicture)
         {
             User user = new()
             {
-                Username = name,
+                Username = username,
                 Role = UserRole.User,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };
+
+            user.ProfilePicture = await GetProfilePicture(profilePicture, user.Username);
 
             return user;
         }
@@ -121,6 +127,29 @@ namespace Application.Services
             {
                 _logger.LogWarning($"User '{performer.Name}' failed to perform an operation due to insufficient access rights");
                 throw new NotEnoughRightsException("Not enough rights to perform the operation");
+            }
+        }
+
+        private async Task<string?> GetProfilePicture(string? profilePicture, string username)
+        {
+            byte[]? bytes;
+
+            if (profilePicture is not null)
+            {
+                bytes = await File.ReadAllBytesAsync(profilePicture);
+            }
+            else
+            {
+                string defaultProfilePicPath = "../Application/Assets/Images/default_profile_pic.jpg";
+                bytes = await File.ReadAllBytesAsync(defaultProfilePicPath);
+            }
+
+            using (MemoryStream ms = new(bytes))
+            {
+                var image = Image.FromStream(ms);
+                var profilePictureLink = await _pictureService.UploadAsync(image, "userProfilePictures", username, "jpg");
+
+                return profilePictureLink;
             }
         }
     }

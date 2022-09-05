@@ -1,4 +1,5 @@
 using Application;
+using Azure.Storage.Blobs;
 using DataAccess;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,7 +41,10 @@ builder.Services
 
 // Add database connection
 builder.Services.AddDbContext<GamingStoreContext>(options => options.UseSqlServer(
-    builder.Configuration.GetConnectionString("DefaultConnection")));
+    builder.Configuration.GetConnectionString("DatabaseConnection")));
+
+// Add BlobStorage.
+builder.Services.AddScoped(_ => new BlobServiceClient(builder.Configuration.GetConnectionString("BlobStorageConnection")));
 
 // Add JWT-token authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

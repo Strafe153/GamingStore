@@ -1,6 +1,6 @@
 ﻿namespace Core.Dtos.UserDtos
 {
-    public record UserAuthorizeDto : UserBaseDto
+    public record UserRegisterDto : UserBaseDto
     {
         public string? Password { get; init; }
     }
