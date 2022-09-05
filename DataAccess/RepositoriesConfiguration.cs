@@ -12,6 +12,7 @@ namespace DataAccess
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRepository<Company>, CompanyRepository>();
             services.AddScoped<IRepository<Device>, DeviceRepository>();
+            services.AddScoped<IPictureRepository, PictureRepository>();
         }
     }
 }

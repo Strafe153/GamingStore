@@ -13,6 +13,7 @@ namespace Application
             services.AddScoped<IService<Company>, CompanyService>();
             services.AddScoped<IDeviceService, DeviceService>();
             services.AddScoped<IPasswordService, PasswordService>();
+            services.AddScoped<IPictureService, PictureService>();
         }
     }
 }

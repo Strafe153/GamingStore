@@ -49,11 +49,11 @@ namespace WebApi.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<ActionResult<UserReadDto>> RegisterAsync([FromBody] UserAuthorizeDto authorizeDto)
+        public async Task<ActionResult<UserReadDto>> RegisterAsync([FromBody] UserRegisterDto registerDto)
         {
-            _passwordService.CreatePasswordHash(authorizeDto.Password!, out byte[] hash, out byte[] salt);
+            _passwordService.CreatePasswordHash(registerDto.Password!, out byte[] hash, out byte[] salt);
 
-            User user = _userService.ConstructUser(authorizeDto.Username!, hash, salt);
+            User user = await _userService.ConstructUserAsync(registerDto.Username!, hash, salt, registerDto.ProfilePicture);
             await _userService.CreateAsync(user);
 
             var readDto = _mapper.Map<UserReadDto>(user);
@@ -63,10 +63,10 @@ namespace WebApi.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<UserWithTokenReadDto>> LoginAsync([FromBody] UserAuthorizeDto authorizeDto)
+        public async Task<ActionResult<UserWithTokenReadDto>> LoginAsync([FromBody] UserLoginDto loginDto)
         {
-            var user = await _userService.GetByNameAsync(authorizeDto.Username!);
-            _passwordService.VerifyPasswordHash(authorizeDto.Password!, user.PasswordHash!, user.PasswordSalt!);
+            var user = await _userService.GetByNameAsync(loginDto.Username!);
+            _passwordService.VerifyPasswordHash(loginDto.Password!, user.PasswordHash!, user.PasswordSalt!);
 
             string token = _passwordService.CreateToken(user);
             var readDto = _mapper.Map<UserWithTokenReadDto>(user) with { Token = token };

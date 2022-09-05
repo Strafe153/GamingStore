@@ -1,8 +1,8 @@
 ﻿namespace Core.Dtos.UserDtos
 {
-    public record UserBaseDto
+    public record UserLoginDto
     {
         public string? Username { get; init; }
-        public string? ProfilePicture { get; init; }
+        public string? Password { get; init; }
     }
 }
