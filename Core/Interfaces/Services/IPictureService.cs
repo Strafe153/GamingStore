@@ -4,7 +4,7 @@ namespace Core.Interfaces.Services
 {
     public interface IPictureService
     {
-        Task<string> UploadAsync(Image image, string folderName, string identifier, string imageFormat);
+        Task<string> UploadAsync(string? picturePath, string blobFolder, string identifier);
         Task DeleteAsync(string imageLink);
     }
 }

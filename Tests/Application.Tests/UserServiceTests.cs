@@ -137,7 +137,7 @@ namespace Application.Tests
         public void ConstructUser_ValidParameters_ReturnsUser()
         {
             // Act
-            var result = _fixture.MockUserService.ConstructUser(_fixture.Name!, _fixture.Bytes, _fixture.Bytes);
+            var result = _fixture.MockUserService.ConstructUser(_fixture.Name!, _fixture.Name, _fixture.Bytes, _fixture.Bytes);
 
             // Assert
             result.Should().NotBeNull();

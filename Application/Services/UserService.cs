@@ -6,7 +6,6 @@ using Core.Interfaces.Services;
 using Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Drawing;
 using System.Security.Claims;
 using System.Security.Principal;
 
@@ -99,17 +98,16 @@ namespace Application.Services
             _logger.LogInformation($"Successfully updated a user with id {entity.Id}");
         }
 
-        public async Task<User> ConstructUserAsync(string username, byte[] passwordHash, byte[] passwordSalt, string? profilePicture)
+        public User ConstructUser(string username, string? profilePicture, byte[] passwordHash, byte[] passwordSalt)
         {
             User user = new()
             {
                 Username = username,
                 Role = UserRole.User,
+                ProfilePicture = profilePicture,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };
-
-            user.ProfilePicture = await GetProfilePicture(profilePicture, user.Username);
 
             return user;
         }
@@ -127,29 +125,6 @@ namespace Application.Services
             {
                 _logger.LogWarning($"User '{performer.Name}' failed to perform an operation due to insufficient access rights");
                 throw new NotEnoughRightsException("Not enough rights to perform the operation");
-            }
-        }
-
-        private async Task<string?> GetProfilePicture(string? profilePicture, string username)
-        {
-            byte[]? bytes;
-
-            if (profilePicture is not null)
-            {
-                bytes = await File.ReadAllBytesAsync(profilePicture);
-            }
-            else
-            {
-                string defaultProfilePicPath = "../Application/Assets/Images/default_profile_pic.jpg";
-                bytes = await File.ReadAllBytesAsync(defaultProfilePicPath);
-            }
-
-            using (MemoryStream ms = new(bytes))
-            {
-                var image = Image.FromStream(ms);
-                var profilePictureLink = await _pictureService.UploadAsync(image, "userProfilePictures", username, "jpg");
-
-                return profilePictureLink;
             }
         }
     }

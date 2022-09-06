@@ -16,16 +16,21 @@ namespace WebApi.Controllers
     {
         private readonly IUserService _userService;
         private readonly IPasswordService _passwordService;
+        private readonly IPictureService _pictureService;
         private readonly IMapper _mapper;
+        private readonly string _blobFolder;
 
         public UsersController(
             IUserService userService,
             IPasswordService passwordService,
+            IPictureService pictureService,
             IMapper mapper)
         {
             _userService = userService;
             _passwordService = passwordService;
+            _pictureService = pictureService;
             _mapper = mapper;
+            _blobFolder = "user-profile-pictures";
         }
 
         [HttpGet]
@@ -53,7 +58,8 @@ namespace WebApi.Controllers
         {
             _passwordService.CreatePasswordHash(registerDto.Password!, out byte[] hash, out byte[] salt);
 
-            User user = await _userService.ConstructUserAsync(registerDto.Username!, hash, salt, registerDto.ProfilePicture);
+            string? pictureLink = await _pictureService.UploadAsync(registerDto.ProfilePicture, _blobFolder, registerDto.Username!);
+            User user = _userService.ConstructUser(registerDto.Username!, pictureLink, hash, salt);
             await _userService.CreateAsync(user);
 
             var readDto = _mapper.Map<UserReadDto>(user);
@@ -81,6 +87,7 @@ namespace WebApi.Controllers
 
             _userService.VerifyUserAccessRights(user, User.Identity!, User.Claims!);
             _mapper.Map(updateDto, user);
+            user.ProfilePicture = await _pictureService.UploadAsync(updateDto.ProfilePicture!, _blobFolder, updateDto.Username!);
             await _userService.UpdateAsync(user);
 
             return NoContent();
@@ -122,6 +129,7 @@ namespace WebApi.Controllers
 
             _userService.VerifyUserAccessRights(user, User.Identity!, User.Claims!);
             await _userService.DeleteAsync(user);
+            await _pictureService.DeleteAsync(user.ProfilePicture!);
 
             return NoContent();
         }

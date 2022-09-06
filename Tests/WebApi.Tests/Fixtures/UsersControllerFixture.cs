@@ -23,11 +23,13 @@ namespace WebApi.Tests.Fixtures
 
             MockUserService = fixture.Freeze<Mock<IUserService>>();
             MockPasswordService = fixture.Freeze<Mock<IPasswordService>>();
+            MockPictureService = fixture.Freeze<Mock<IPictureService>>();
             MockMapper = fixture.Freeze<Mock<IMapper>>();
 
             MockUsersController = new(
                 MockUserService.Object,
                 MockPasswordService.Object,
+                MockPictureService.Object,
                 MockMapper.Object);
 
             Id = 1;
@@ -36,7 +38,8 @@ namespace WebApi.Tests.Fixtures
             User = GetUser();
             UserBaseDto = GetUserBaseDto();
             UserReadDto = GetUserReadDto();
-            UserAuthorizeDto = GetUserAuthorizeDto();
+            UserRegisterDto = GetUserRegisterDto();
+            UserLoginDto = GetUserLoginDto();
             UserChangeRoleDto = GetUserChangeRoleDto();
             UserChangePasswordDto = GetUserChangePasswordDto();
             UserWithTokenReadDto = GetUserWithTokenReadDto();
@@ -48,6 +51,7 @@ namespace WebApi.Tests.Fixtures
         public UsersController MockUsersController { get; }
         public Mock<IUserService> MockUserService { get; }
         public Mock<IPasswordService> MockPasswordService { get; }
+        public Mock<IPictureService> MockPictureService { get; }
         public Mock<IMapper> MockMapper { get; }
 
         public int Id { get; }
@@ -56,7 +60,8 @@ namespace WebApi.Tests.Fixtures
         public User User { get; }
         public UserBaseDto UserBaseDto { get; }
         public UserReadDto UserReadDto { get; }
-        public UserRegisterDto UserAuthorizeDto { get; }
+        public UserRegisterDto UserRegisterDto { get; }
+        public UserLoginDto UserLoginDto { get; }
         public UserChangeRoleDto UserChangeRoleDto { get; }
         public UserChangePasswordDto UserChangePasswordDto { get; }
         public UserWithTokenReadDto UserWithTokenReadDto { get; }
@@ -128,9 +133,18 @@ namespace WebApi.Tests.Fixtures
             };
         }
 
-        private UserRegisterDto GetUserAuthorizeDto()
+        private UserRegisterDto GetUserRegisterDto()
         {
             return new UserRegisterDto()
+            {
+                Username = Username,
+                Password = Username
+            };
+        }
+
+        private UserLoginDto GetUserLoginDto()
+        {
+            return new UserLoginDto()
             {
                 Username = Username,
                 Password = Username

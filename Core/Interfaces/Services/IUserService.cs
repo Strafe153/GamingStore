@@ -7,7 +7,7 @@ namespace Core.Interfaces.Services
     public interface IUserService : IService<User>
     {
         Task<User> GetByNameAsync(string name);
-        Task<User> ConstructUserAsync(string username, byte[] passwordHash, byte[] passwordSalt, string? profilePicture);
+        User ConstructUser(string username, string? profilePicture, byte[] passwordHash, byte[] passwordSalt);
         void ChangePasswordData(User user, byte[] passwordHash, byte[] passwordSalt);
         void VerifyUserAccessRights(User performedOn, IIdentity performer, IEnumerable<Claim> claims);
     }

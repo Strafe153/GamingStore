@@ -4,7 +4,7 @@ namespace Core.Interfaces.Repositories
 {
     public interface IPictureRepository
     {
-        Task<string> UploadAsync(Image image, string folderName, string identifier, string imageFormat);
+        Task<string> UploadAsync(Image image, string blobFolder, string identifier);
         Task DeleteAsync(string imageLink);
     }
 }
