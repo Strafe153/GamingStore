@@ -73,7 +73,7 @@ namespace WebApi.Tests
                 .Returns(_fixture.UserReadDto);
 
             // Act
-            var result = await _fixture.MockUsersController.RegisterAsync(_fixture.UserAuthorizeDto);
+            var result = await _fixture.MockUsersController.RegisterAsync(_fixture.UserRegisterDto);
             var readDto = result.Result.As<CreatedAtActionResult>().Value.As<UserReadDto>();
 
             // Assert
@@ -91,7 +91,7 @@ namespace WebApi.Tests
                 .Returns(_fixture.UserWithTokenReadDto);
 
             // Act
-            var result = await _fixture.MockUsersController.LoginAsync(_fixture.UserAuthorizeDto);
+            var result = await _fixture.MockUsersController.LoginAsync(_fixture.UserLoginDto);
             var readWithTokenDto = result.Result.As<OkObjectResult>().Value.As<UserWithTokenReadDto>();
 
             // Assert

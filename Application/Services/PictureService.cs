@@ -32,21 +32,44 @@ namespace Application.Services
             }
         }
 
-        public async Task<string> UploadAsync(Image image, string folderName, string identifier, string imageFormat)
+        public async Task<string> UploadAsync(string? picturePath, string blobFolder, string identifier)
         {
             string fileName;
 
             try
             {
-                fileName = await _pictureRepository.UploadAsync(image, folderName, identifier, imageFormat);
+                fileName = await GetPictureLinkAsync(picturePath, blobFolder, identifier);
             }
-            catch (Exception)
+            catch (Exception) // RequestFailedException
             {
                 _logger.LogWarning("The image with the provided link could no be uploaded");
                 throw new NullReferenceException("The image with the provided link could no be uploaded");
             }
 
             return fileName;
+        }
+
+        private async Task<string> GetPictureLinkAsync(string? picturePath, string blobFolder, string identifier)
+        {
+            byte[]? bytes;
+
+            if (picturePath is not null)
+            {
+                bytes = await File.ReadAllBytesAsync(picturePath);
+            }
+            else
+            {
+                string defaultProfilePicPath = "../WebApi/Assets/Images/default_profile_pic.jpg";
+                bytes = await File.ReadAllBytesAsync(defaultProfilePicPath);
+            }
+
+            using (MemoryStream ms = new(bytes))
+            {
+                var image = Image.FromStream(ms);
+                string profilePictureLink = await _pictureRepository.UploadAsync(image, blobFolder, identifier);
+
+                return profilePictureLink;
+            }
         }
     }
 }
