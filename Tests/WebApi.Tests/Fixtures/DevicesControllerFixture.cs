@@ -19,10 +19,12 @@ namespace WebApi.Tests.Fixtures
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
             MockDeviceService = fixture.Freeze<Mock<IDeviceService>>();
+            MockPictureService = fixture.Freeze<Mock<IPictureService>>();
             MockMapper = fixture.Freeze<Mock<IMapper>>();
 
             MockDevicesController = new(
                 MockDeviceService.Object,
+                MockPictureService.Object,
                 MockMapper.Object);
 
             Id = 1;
@@ -37,6 +39,7 @@ namespace WebApi.Tests.Fixtures
 
         public DevicesController MockDevicesController { get; }
         public Mock<IDeviceService> MockDeviceService { get; }
+        public Mock<IPictureService> MockPictureService { get; }
         public Mock<IMapper> MockMapper { get; }
 
         public int Id { get; }

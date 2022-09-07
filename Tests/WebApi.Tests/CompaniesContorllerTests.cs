@@ -37,8 +37,7 @@ namespace WebApi.Tests
             var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<CompanyReadDto>>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<PageDto<CompanyReadDto>>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<PageDto<CompanyReadDto>>>();
             pageDto.Entities.Should().NotBeEmpty();
         }
 
@@ -59,8 +58,7 @@ namespace WebApi.Tests
             var readDto = result.Result.As<OkObjectResult>().Value.As<CompanyReadDto>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<CompanyReadDto>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<CompanyReadDto>>();
             readDto.Should().NotBeNull();
         }
 
@@ -85,8 +83,7 @@ namespace WebApi.Tests
             var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<DeviceReadDto>>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<PageDto<DeviceReadDto>>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<PageDto<DeviceReadDto>>>();
             pageDto.Should().NotBeNull();
         }
 
@@ -107,8 +104,7 @@ namespace WebApi.Tests
             var readDto = result.Result.As<CreatedAtActionResult>().Value.As<CompanyReadDto>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<CompanyReadDto>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<CompanyReadDto>>();
             readDto.Should().NotBeNull();
         }
 
@@ -124,8 +120,7 @@ namespace WebApi.Tests
             var result = await _fixture.MockCompaniesController.UpdateAsync(_fixture.Id, _fixture.CompanyBaseDto);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<NoContentResult>();
+            result.Should().NotBeNull().And.BeOfType<NoContentResult>();
         }
 
         [Fact]
@@ -140,8 +135,7 @@ namespace WebApi.Tests
             var result = await _fixture.MockCompaniesController.DeleteAsync(_fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<NoContentResult>();
+            result.Should().NotBeNull().And.BeOfType<NoContentResult>();
         }
     }
 }

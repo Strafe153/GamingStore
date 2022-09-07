@@ -14,16 +14,13 @@ namespace Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
-        private readonly IPictureService _pictureService;
         private readonly ILogger<UserService> _logger;
 
         public UserService(
             IUserRepository repository,
-            IPictureService pictureService,
             ILogger<UserService> logger)
         {
             _repository = repository;
-            _pictureService = pictureService;
             _logger = logger;
         }
 
@@ -47,7 +44,6 @@ namespace Application.Services
         {
             _repository.Delete(entity);
             await _repository.SaveChangesAsync();
-            await _pictureService.DeleteAsync(entity.ProfilePicture!);
 
             _logger.LogInformation($"Succesfully deleted a user with id {entity.Id}");
         }
@@ -120,8 +116,7 @@ namespace Application.Services
 
         public void VerifyUserAccessRights(User performedOn, IIdentity performer, IEnumerable<Claim> claims)
         {
-            if (performedOn.Username != performer.Name
-                && !claims.Any(c => c.Value == UserRole.Admin.ToString()))
+            if (performedOn.Username != performer.Name && !claims.Any(c => c.Value == UserRole.Admin.ToString()))
             {
                 _logger.LogWarning($"User '{performer.Name}' failed to perform an operation due to insufficient access rights");
                 throw new NotEnoughRightsException("Not enough rights to perform the operation");

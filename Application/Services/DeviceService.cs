@@ -9,7 +9,6 @@ namespace Application.Services
     public class DeviceService : IDeviceService
     {
         private readonly IRepository<Device> _repository;
-        private readonly IPictureService _pictureService;
         private readonly ILogger<DeviceService> _logger;
 
         public DeviceService(
@@ -18,7 +17,6 @@ namespace Application.Services
             ILogger<DeviceService> logger)
         {
             _repository = repository;
-            _pictureService = pictureService;
             _logger = logger;
         }
 
@@ -34,7 +32,6 @@ namespace Application.Services
         {
             _repository.Delete(entity);
             await _repository.SaveChangesAsync();
-            await _pictureService.DeleteAsync(entity.Picture!);
 
             _logger.LogInformation($"Succesfully deleted a device with id {entity.Id}");
         }

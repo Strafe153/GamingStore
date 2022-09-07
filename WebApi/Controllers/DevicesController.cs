@@ -15,14 +15,19 @@ namespace WebApi.Controllers
     public class DevicesController : ControllerBase
     {
         private readonly IDeviceService _deviceService;
+        private readonly IPictureService _pictureService;
         private readonly IMapper _mapper;
+        private readonly string _blobFolder;
 
         public DevicesController(
             IDeviceService deviceService,
+            IPictureService pictureService,
             IMapper mapper)
         {
             _deviceService = deviceService;
+            _pictureService = pictureService;
             _mapper = mapper;
+            _blobFolder = "device-pictures";
         }
 
         [HttpGet]
@@ -49,6 +54,8 @@ namespace WebApi.Controllers
         public async Task<ActionResult<DeviceReadDto>> CreateAsync([FromBody] DeviceBaseDto createDto)
         {
             var device = _mapper.Map<Device>(createDto);
+
+            device.Picture = await _pictureService.UploadAsync(createDto.Picture, _blobFolder, createDto.Name!);
             await _deviceService.CreateAsync(device);
 
             var readDto = _mapper.Map<DeviceReadDto>(device);
@@ -62,6 +69,7 @@ namespace WebApi.Controllers
             var device = await _deviceService.GetByIdAsync(id);
 
             _mapper.Map(updateDto, device);
+            device.Picture = await _pictureService.UploadAsync(updateDto.Picture, _blobFolder, updateDto.Name!);
             await _deviceService.UpdateAsync(device);
 
             return NoContent();
@@ -71,7 +79,9 @@ namespace WebApi.Controllers
         public async Task<ActionResult> DeleteAsync([FromRoute] int id)
         {
             var device = await _deviceService.GetByIdAsync(id);
+
             await _deviceService.DeleteAsync(device);
+            await _pictureService.DeleteAsync(device.Picture!);
 
             return NoContent();
         }
