@@ -36,8 +36,7 @@ namespace WebApi.Tests
             var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<DeviceReadDto>>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<PageDto<DeviceReadDto>>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<PageDto<DeviceReadDto>>>();
             pageDto.Entities.Should().NotBeEmpty();
         }
 
@@ -58,8 +57,7 @@ namespace WebApi.Tests
             var readDto = result.Result.As<OkObjectResult>().Value.As<DeviceReadDto>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<DeviceReadDto>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<DeviceReadDto>>();
             readDto.Should().NotBeNull();
         }
 
@@ -80,8 +78,7 @@ namespace WebApi.Tests
             var readDto = result.Result.As<CreatedAtActionResult>().Value.As<DeviceReadDto>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<DeviceReadDto>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<DeviceReadDto>>();
             readDto.Should().NotBeNull();
         }
 
@@ -97,8 +94,7 @@ namespace WebApi.Tests
             var result = await _fixture.MockDevicesController.UpdateAsync(_fixture.Id, _fixture.DeviceBaseDto);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<NoContentResult>();
+            result.Should().NotBeNull().And.BeOfType<NoContentResult>();
         }
 
         [Fact]
@@ -113,8 +109,7 @@ namespace WebApi.Tests
             var result = await _fixture.MockDevicesController.DeleteAsync(_fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<NoContentResult>();
+            result.Should().NotBeNull().And.BeOfType<NoContentResult>();
         }
     }
 }

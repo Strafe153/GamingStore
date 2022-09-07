@@ -17,16 +17,21 @@ namespace WebApi.Controllers
     {
         private readonly IService<Company> _companyService;
         private readonly IDeviceService _deviceService;
+        private readonly IPictureService _pictureService;
         private readonly IMapper _mapper;
+        private readonly string _blobFolder;
 
         public CompaniesController(
             IService<Company> companyService,
             IDeviceService deviceService,
+            IPictureService pictureService,
             IMapper mapper)
         {
             _companyService = companyService;
             _deviceService = deviceService;
+            _pictureService = pictureService;
             _mapper = mapper;
+            _blobFolder = "company-pictures";
         }
 
         [HttpGet]
@@ -66,6 +71,8 @@ namespace WebApi.Controllers
         public async Task<ActionResult<CompanyReadDto>> CreateAsync([FromBody] CompanyBaseDto createDto)
         {
             var company = _mapper.Map<Company>(createDto);
+
+            company.Picture = await _pictureService.UploadAsync(createDto.Picture, _blobFolder, createDto.Name!);
             await _companyService.CreateAsync(company);
 
             var readDto = _mapper.Map<CompanyReadDto>(company);
@@ -79,6 +86,7 @@ namespace WebApi.Controllers
             var company = await _companyService.GetByIdAsync(id);
 
             _mapper.Map(updateDto, company);
+            company.Picture = await _pictureService.UploadAsync(updateDto.Picture, _blobFolder, updateDto.Name!);
             await _companyService.UpdateAsync(company);
 
             return NoContent();
@@ -88,7 +96,9 @@ namespace WebApi.Controllers
         public async Task<ActionResult> DeleteAsync([FromRoute] int id)
         {
             var company = await _companyService.GetByIdAsync(id);
+
             await _companyService.DeleteAsync(company);
+            await _pictureService.DeleteAsync(company.Picture);
 
             return NoContent();
         }

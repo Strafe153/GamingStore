@@ -9,16 +9,13 @@ namespace Application.Services
     public class CompanyService : IService<Company>
     {
         private readonly IRepository<Company> _repository;
-        private readonly IPictureService _pictureService;
         private readonly ILogger<CompanyService> _logger;
 
         public CompanyService(
             IRepository<Company> repository,
-            IPictureService pictureService,
             ILogger<CompanyService> logger)
         {
             _repository = repository;
-            _pictureService = pictureService;
             _logger = logger;
         }
 
@@ -34,7 +31,6 @@ namespace Application.Services
         {
             _repository.Delete(entity);
             await _repository.SaveChangesAsync();
-            await _pictureService.DeleteAsync(entity.Picture!);
 
             _logger.LogInformation($"Succesfully deleted a company with id {entity.Id}");
         }

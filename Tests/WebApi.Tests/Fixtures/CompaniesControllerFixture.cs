@@ -21,11 +21,13 @@ namespace WebApi.Tests.Fixtures
 
             MockCompanyService = fixture.Freeze<Mock<IService<Company>>>();
             MockDeviceService = fixture.Freeze<Mock<IDeviceService>>();
+            MockPictureService = fixture.Freeze<Mock<IPictureService>>();
             MockMapper = fixture.Freeze<Mock<IMapper>>();
 
             MockCompaniesController = new(
                 MockCompanyService.Object,
                 MockDeviceService.Object,
+                MockPictureService.Object,
                 MockMapper.Object);
 
             Id = 1;
@@ -43,6 +45,7 @@ namespace WebApi.Tests.Fixtures
         public CompaniesController MockCompaniesController { get; }
         public Mock<IService<Company>> MockCompanyService { get; }
         public Mock<IDeviceService> MockDeviceService { get; }
+        public Mock<IPictureService> MockPictureService { get; }
         public Mock<IMapper> MockMapper { get; }
 
         public int Id { get; }
