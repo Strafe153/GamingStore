@@ -98,7 +98,7 @@ namespace WebApi.Controllers
             var company = await _companyService.GetByIdAsync(id);
 
             await _companyService.DeleteAsync(company);
-            await _pictureService.DeleteAsync(company.Picture);
+            await _pictureService.DeleteAsync(company.Picture!);
 
             return NoContent();
         }

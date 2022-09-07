@@ -37,8 +37,7 @@ namespace WebApi.Tests
             var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<UserReadDto>>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<PageDto<UserReadDto>>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<PageDto<UserReadDto>>>();
             pageDto.Entities.Should().NotBeEmpty();
         }
 
@@ -59,8 +58,7 @@ namespace WebApi.Tests
             var readDto = result.Result.As<OkObjectResult>().Value.As<UserReadDto>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<UserReadDto>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<UserReadDto>>();
             readDto.Should().NotBeNull();
         }
 
@@ -77,8 +75,7 @@ namespace WebApi.Tests
             var readDto = result.Result.As<CreatedAtActionResult>().Value.As<UserReadDto>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<UserReadDto>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<UserReadDto>>();
             readDto.Should().NotBeNull();
         }
 
@@ -95,8 +92,7 @@ namespace WebApi.Tests
             var readWithTokenDto = result.Result.As<OkObjectResult>().Value.As<UserWithTokenReadDto>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<UserWithTokenReadDto>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<UserWithTokenReadDto>>();
             readWithTokenDto.Should().NotBeNull();
         }
 
@@ -112,8 +108,7 @@ namespace WebApi.Tests
             var result = await _fixture.MockUsersController.UpdateAsync(_fixture.Id, _fixture.UserBaseDto);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<NoContentResult>();
+            result.Should().NotBeNull().And.BeOfType<NoContentResult>();
         }
 
         [Fact]
@@ -129,13 +124,11 @@ namespace WebApi.Tests
                 .Returns(_fixture.Username);
 
             // Act
-            var result = await _fixture.MockUsersController
-                .ChangePasswordAsync(_fixture.Id, _fixture.UserChangePasswordDto);
+            var result = await _fixture.MockUsersController.ChangePasswordAsync(_fixture.Id, _fixture.UserChangePasswordDto);
             var readToken = result.Result.As<OkObjectResult>().Value.As<string>();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ActionResult<string>>();
+            result.Should().NotBeNull().And.BeOfType<ActionResult<string>>();
             readToken.Should().NotBeNull();
         }
 
@@ -151,8 +144,7 @@ namespace WebApi.Tests
             var result = await _fixture.MockUsersController.ChangeRoleAsync(_fixture.Id, _fixture.UserChangeRoleDto);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<NoContentResult>();
+            result.Should().NotBeNull().And.BeOfType<NoContentResult>();
         }
 
         [Fact]
@@ -167,8 +159,7 @@ namespace WebApi.Tests
             var result = await _fixture.MockUsersController.DeleteAsync(_fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<NoContentResult>();
+            result.Should().NotBeNull().And.BeOfType<NoContentResult>();
         }
     }
 }

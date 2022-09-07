@@ -32,9 +32,7 @@ namespace Application.Tests
             var result = await _fixture.MockDeviceService.GetAllAsync(_fixture.Id, _fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().NotBeEmpty();
-            result.Should().BeOfType<PaginatedList<Device>>();
+            result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<Device>>();
         }
 
         [Fact]
@@ -49,8 +47,7 @@ namespace Application.Tests
             var result = await _fixture.MockDeviceService.GetByIdAsync(_fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<Device>();
+            result.Should().NotBeNull().And.BeOfType<Device>();
         }
 
         [Fact]
@@ -65,7 +62,6 @@ namespace Application.Tests
             var result = async () => await _fixture.MockDeviceService.GetByIdAsync(_fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
             await result.Should().ThrowAsync<NullReferenceException>();
         }
 
@@ -84,9 +80,7 @@ namespace Application.Tests
             var result = await _fixture.MockDeviceService.GetByCompanyAsync(_fixture.Id, _fixture.Id, _fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().NotBeEmpty();
-            result.Should().BeOfType<PaginatedList<Device>>();
+            result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<Device>>();
         }
 
         [Fact]

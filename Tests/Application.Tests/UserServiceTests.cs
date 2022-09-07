@@ -5,7 +5,6 @@ using Core.Models;
 using FluentAssertions;
 using Moq;
 using System.Linq.Expressions;
-using System.Numerics;
 using Xunit;
 
 namespace Application.Tests
@@ -34,9 +33,7 @@ namespace Application.Tests
             var result = await _fixture.MockUserService.GetAllAsync(_fixture.Id, _fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().NotBeEmpty();
-            result.Should().BeOfType<PaginatedList<User>>();
+            result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<User>>();
         }
 
         [Fact]
@@ -51,8 +48,7 @@ namespace Application.Tests
             var result = await _fixture.MockUserService.GetByIdAsync(_fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<User>();
+            result.Should().NotBeNull().And.BeOfType<User>();
         }
 
         [Fact]
@@ -67,7 +63,6 @@ namespace Application.Tests
             var result = async () => await _fixture.MockUserService.GetByIdAsync(_fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
             await result.Should().ThrowAsync<NullReferenceException>();
         }
 
@@ -83,8 +78,7 @@ namespace Application.Tests
             var result = await _fixture.MockUserService.GetByNameAsync(_fixture.Name);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<User>();
+            result.Should().NotBeNull().And.BeOfType<User>();
         }
 
         [Fact]
@@ -99,7 +93,6 @@ namespace Application.Tests
             var result = async() => await _fixture.MockUserService.GetByNameAsync(_fixture.Name);
 
             // Assert
-            result.Should().NotBeNull();
             await result.Should().ThrowAsync<NullReferenceException>();
         }
 
@@ -140,8 +133,7 @@ namespace Application.Tests
             var result = _fixture.MockUserService.ConstructUser(_fixture.Name!, _fixture.Name, _fixture.Bytes, _fixture.Bytes);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<User>();
+            result.Should().NotBeNull().And.BeOfType<User>();
         }
 
         [Fact]
@@ -174,7 +166,6 @@ namespace Application.Tests
                 .VerifyUserAccessRights(_fixture.User, _fixture.IIdentity, _fixture.InsufficientClaims);
 
             // Assert
-            result.Should().NotBeNull();
             result.Should().Throw<NotEnoughRightsException>();
         }
     }
