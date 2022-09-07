@@ -1,13 +1,13 @@
 ﻿using Application.Services;
-using AutoFixture.AutoMoq;
 using AutoFixture;
+using AutoFixture.AutoMoq;
+using Core.Entities;
+using Core.Enums;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System.Security.Cryptography;
 using System.Text;
-using Core.Entities;
-using Core.Enums;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Tests.Fixtures
 {

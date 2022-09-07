@@ -32,9 +32,7 @@ namespace Application.Tests
             var result = await _fixture.MockCompanyService.GetAllAsync(_fixture.Id, _fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().NotBeEmpty();
-            result.Should().BeOfType<PaginatedList<Company>>();
+            result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<Company>>();
         }
 
         [Fact]
@@ -49,8 +47,7 @@ namespace Application.Tests
             var result = await _fixture.MockCompanyService.GetByIdAsync(_fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<Company>();
+            result.Should().NotBeNull().And.BeOfType<Company>();
         }
 
         [Fact]
@@ -65,7 +62,6 @@ namespace Application.Tests
             var result = async () => await _fixture.MockCompanyService.GetByIdAsync(_fixture.Id);
 
             // Assert
-            result.Should().NotBeNull();
             await result.Should().ThrowAsync<NullReferenceException>();
         }
 

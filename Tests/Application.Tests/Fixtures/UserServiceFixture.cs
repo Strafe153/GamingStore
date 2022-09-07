@@ -4,7 +4,6 @@ using AutoFixture.AutoMoq;
 using Core.Entities;
 using Core.Enums;
 using Core.Interfaces.Repositories;
-using Core.Interfaces.Services;
 using Core.Models;
 using Microsoft.Extensions.Logging;
 using Moq;

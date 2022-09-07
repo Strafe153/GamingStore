@@ -1,13 +1,12 @@
-﻿using AutoFixture.AutoMoq;
+﻿using Application.Services;
 using AutoFixture;
+using AutoFixture.AutoMoq;
 using Core.Entities;
+using Core.Enums;
 using Core.Interfaces.Repositories;
 using Core.Models;
-using Moq;
-using Application.Services;
-using Core.Enums;
 using Microsoft.Extensions.Logging;
-using Core.Interfaces.Services;
+using Moq;
 
 namespace Application.Tests.Fixtures
 {
@@ -18,12 +17,10 @@ namespace Application.Tests.Fixtures
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
             MockDeviceRepository = fixture.Freeze<Mock<IRepository<Device>>>();
-            MockPictureService = fixture.Freeze<Mock<IPictureService>>();
             MockLogger = fixture.Freeze<Mock<ILogger<DeviceService>>>();
 
             MockDeviceService = new(
                 MockDeviceRepository.Object,
-                MockPictureService.Object,
                 MockLogger.Object);
 
             Id = 1;
@@ -33,7 +30,6 @@ namespace Application.Tests.Fixtures
 
         public DeviceService MockDeviceService { get; }
         public Mock<IRepository<Device>> MockDeviceRepository { get; }
-        public Mock<IPictureService> MockPictureService { get; }
         public Mock<ILogger<DeviceService>> MockLogger { get; }
 
         public int Id { get; }

@@ -3,7 +3,6 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using Core.Entities;
 using Core.Interfaces.Repositories;
-using Core.Interfaces.Services;
 using Core.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -17,12 +16,10 @@ namespace Application.Tests.Fixtures
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
             MockCompanyRepository = fixture.Freeze<Mock<IRepository<Company>>>();
-            MockPictureService = fixture.Freeze<Mock<IPictureService>>();
             MockLogger = fixture.Freeze<Mock<ILogger<CompanyService>>>();
 
             MockCompanyService = new(
                 MockCompanyRepository.Object,
-                MockPictureService.Object,
                 MockLogger.Object);
 
             Id = 1;
@@ -32,7 +29,6 @@ namespace Application.Tests.Fixtures
 
         public CompanyService MockCompanyService { get; }
         public Mock<IRepository<Company>> MockCompanyRepository { get; }
-        public Mock<IPictureService> MockPictureService { get; }
         public Mock<ILogger<CompanyService>> MockLogger { get; }
 
         public int Id { get; }

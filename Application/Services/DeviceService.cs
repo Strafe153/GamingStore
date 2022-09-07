@@ -13,7 +13,6 @@ namespace Application.Services
 
         public DeviceService(
             IRepository<Device> repository,
-            IPictureService pictureService,
             ILogger<DeviceService> logger)
         {
             _repository = repository;
