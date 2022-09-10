@@ -2,7 +2,7 @@
 using Azure;
 using FluentAssertions;
 using Moq;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using Xunit;
 
 namespace Application.Tests
