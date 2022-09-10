@@ -40,10 +40,10 @@ namespace Application.Services
             {
                 fileName = await GetPictureLinkAsync(picturePath, blobFolder, identifier);
             }
-            catch (Exception) // RequestFailedException
+            catch (RequestFailedException)
             {
-                _logger.LogWarning("The image with the provided link could no be uploaded");
-                throw new NullReferenceException("The image with the provided link could no be uploaded");
+                _logger.LogWarning("The image with the provided path could no be uploaded");
+                throw new NullReferenceException("The image with the provided path could no be uploaded");
             }
 
             return fileName;
@@ -59,7 +59,7 @@ namespace Application.Services
             }
             else
             {
-                string defaultProfilePicPath = "../WebApi/Assets/Images/default_profile_pic.jpg";
+                string defaultProfilePicPath = "../Application/Assets/Images/default_profile_pic.jpg";
                 bytes = await File.ReadAllBytesAsync(defaultProfilePicPath);
             }
 
