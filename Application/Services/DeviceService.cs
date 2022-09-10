@@ -35,20 +35,27 @@ namespace Application.Services
             _logger.LogInformation($"Succesfully deleted a device with id {entity.Id}");
         }
 
-        public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize, string? companyName)
         {
-            var devices = await _repository.GetAllAsync(pageNumber, pageSize);
-            _logger.LogInformation("Successfully retrieved all devices");
+            PaginatedList<Device> devices;
+
+            if (companyName is null)
+            {
+                devices = await _repository.GetAllAsync(pageNumber, pageSize);
+                _logger.LogInformation("Successfully retrieved all devices");
+            }
+            else
+            {
+                devices = await _repository.GetAllAsync(pageNumber, pageSize, d => d.Company!.Name == companyName);
+                _logger.LogInformation($"Successfully retrieved all devices of the '{companyName}' company");
+            }
 
             return devices;
         }
 
-        public async Task<PaginatedList<Device>> GetByCompanyAsync(int companyId, int pageNumber, int pageSize)
+        public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize)
         {
-            var devices = await _repository.GetAllAsync(pageNumber, pageSize, q => q.CompanyId == companyId);
-            _logger.LogInformation($"Successfully retrieved all devices of the company with id {companyId}");
-
-            return devices;
+            return await GetAllAsync(pageNumber, pageSize, null);
         }
 
         public async Task<Device> GetByIdAsync(int id)

@@ -47,7 +47,7 @@ namespace WebApi.Tests.Fixtures
         public Device Device { get; }
         public DeviceReadDto DeviceReadDto { get; }
         public DeviceBaseDto DeviceBaseDto { get; }
-        public PageParameters PageParameters { get; }
+        public DevicePageParameters PageParameters { get; }
         public PaginatedList<Device> DevicePaginatedList { get; }
         public PageDto<DeviceReadDto> DevicePageDto { get; }
 
@@ -73,12 +73,13 @@ namespace WebApi.Tests.Fixtures
             };
         }
 
-        private PageParameters GetPageParameters()
+        private DevicePageParameters GetPageParameters()
         {
-            return new PageParameters()
+            return new DevicePageParameters()
             {
                 PageNumber = 1,
-                PageSize = 5
+                PageSize = 5,
+                Company = Name
             };
         }
 

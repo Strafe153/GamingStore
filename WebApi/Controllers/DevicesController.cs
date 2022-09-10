@@ -32,9 +32,9 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<PageDto<DeviceReadDto>>> GetAsync([FromQuery] PageParameters pageParams)
+        public async Task<ActionResult<PageDto<DeviceReadDto>>> GetAsync([FromQuery] DevicePageParameters pageParams)
         {
-            var devices = await _deviceService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize);
+            var devices = await _deviceService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize, pageParams.Company);
             var pageDto = _mapper.Map<PageDto<DeviceReadDto>>(devices);
 
             return Ok(pageDto);

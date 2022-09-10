@@ -63,31 +63,6 @@ namespace WebApi.Tests
         }
 
         [Fact]
-        public async Task GetDevicesAsync_ExistingCompany_ReturnsActionResultOfPageDtoOfDeviceReadDto()
-        {
-            // Arrange
-            _fixture.MockCompanyService
-                .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(_fixture.Company);
-
-            _fixture.MockDeviceService
-                .Setup(s => s.GetByCompanyAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync(_fixture.DevicePaginatedList);
-
-            _fixture.MockMapper
-                .Setup(m => m.Map<PageDto<DeviceReadDto>>(It.IsAny<PaginatedList<Device>>()))
-                .Returns(_fixture.DevicePageDto);
-
-            // Act
-            var result = await _fixture.MockCompaniesController.GetDevicesAsync(_fixture.Id, _fixture.PageParameters);
-            var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<DeviceReadDto>>();
-
-            // Assert
-            result.Should().NotBeNull().And.BeOfType<ActionResult<PageDto<DeviceReadDto>>>();
-            pageDto.Should().NotBeNull();
-        }
-
-        [Fact]
         public async Task CreateAsync_ValidDto_ReturnsActionResultOfCompanyReadDto()
         {
             // Arrange
