@@ -24,7 +24,7 @@ namespace WebApi.Tests
         {
             // Arrange
             _fixture.MockDeviceService
-                .Setup(s => s.GetAllAsync(It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(s => s.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
                 .ReturnsAsync(_fixture.DevicePaginatedList);
 
             _fixture.MockMapper

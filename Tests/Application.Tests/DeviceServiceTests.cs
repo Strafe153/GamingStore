@@ -29,7 +29,7 @@ namespace Application.Tests
                 .ReturnsAsync(_fixture.PaginatedList);
 
             // Act
-            var result = await _fixture.MockDeviceService.GetAllAsync(_fixture.Id, _fixture.Id);
+            var result = await _fixture.MockDeviceService.GetAllAsync(_fixture.Id, _fixture.Id, _fixture.Name);
 
             // Assert
             result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<Device>>();
@@ -63,24 +63,6 @@ namespace Application.Tests
 
             // Assert
             await result.Should().ThrowAsync<NullReferenceException>();
-        }
-
-        [Fact]
-        public async Task GetByCompanyAsync_ExistingCompany_ReturnsPaginatedListOfDevice()
-        {
-            // Arrange
-            _fixture.MockDeviceRepository
-                .Setup(r => r.GetAllAsync(
-                    It.IsAny<int>(),
-                    It.IsAny<int>(),
-                    It.IsAny<Expression<Func<Device, bool>>>()))
-                .ReturnsAsync(_fixture.PaginatedList);
-
-            // Act
-            var result = await _fixture.MockDeviceService.GetByCompanyAsync(_fixture.Id, _fixture.Id, _fixture.Id);
-
-            // Assert
-            result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<Device>>();
         }
 
         [Fact]

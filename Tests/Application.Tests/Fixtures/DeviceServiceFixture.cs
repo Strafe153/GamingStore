@@ -24,6 +24,7 @@ namespace Application.Tests.Fixtures
                 MockLogger.Object);
 
             Id = 1;
+            Name = "Name";
             Device = GetDevice();
             PaginatedList = GetPaginatedList();
         }
@@ -33,6 +34,7 @@ namespace Application.Tests.Fixtures
         public Mock<ILogger<DeviceService>> MockLogger { get; }
 
         public int Id { get; }
+        public string Name { get; }
         public Device Device { get; }
         public PaginatedList<Device> PaginatedList { get; }
 
@@ -41,7 +43,7 @@ namespace Application.Tests.Fixtures
             return new Device()
             {
                 Id = Id,
-                Name = "Name",
+                Name = Name,
                 Category = DeviceCategory.Mouse,
                 Price = Id,
                 InStock = Id,

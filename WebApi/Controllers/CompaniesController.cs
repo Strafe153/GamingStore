@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Core.Dtos;
 using Core.Dtos.CompanyDtos;
-using Core.Dtos.DeviceDtos;
 using Core.Entities;
 using Core.Interfaces.Services;
 using Core.Models;
@@ -16,19 +15,16 @@ namespace WebApi.Controllers
     public class CompaniesController : ControllerBase
     {
         private readonly IService<Company> _companyService;
-        private readonly IDeviceService _deviceService;
         private readonly IPictureService _pictureService;
         private readonly IMapper _mapper;
         private readonly string _blobFolder;
 
         public CompaniesController(
             IService<Company> companyService,
-            IDeviceService deviceService,
             IPictureService pictureService,
             IMapper mapper)
         {
             _companyService = companyService;
-            _deviceService = deviceService;
             _pictureService = pictureService;
             _mapper = mapper;
             _blobFolder = "company-pictures";
@@ -52,19 +48,6 @@ namespace WebApi.Controllers
             var readDto = _mapper.Map<CompanyReadDto>(company);
 
             return Ok(readDto);
-        }
-
-        [HttpGet("{id:int:min(1)}/devices")]
-        [AllowAnonymous]
-        public async Task<ActionResult<PageDto<DeviceReadDto>>> GetDevicesAsync(
-            [FromRoute] int id,
-            [FromQuery] PageParameters pageParams)
-        {
-            var company = await _companyService.GetByIdAsync(id);
-            var devices = await _deviceService.GetByCompanyAsync(company.Id, pageParams.PageNumber, pageParams.PageSize);
-            var pageDto = _mapper.Map<PageDto<DeviceReadDto>>(devices);
-
-            return Ok(pageDto);
         }
 
         [HttpPost]
