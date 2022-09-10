@@ -2,7 +2,7 @@
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Microsoft.Extensions.Logging;
-using System.Drawing;
+using SixLabors.ImageSharp;
 
 namespace Application.Services
 {
@@ -65,7 +65,7 @@ namespace Application.Services
 
             using (MemoryStream ms = new(bytes))
             {
-                var image = Image.FromStream(ms);
+                var image = Image.Load(ms);
                 string profilePictureLink = await _pictureRepository.UploadAsync(image, blobFolder, identifier);
 
                 return profilePictureLink;

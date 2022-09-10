@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Core.Interfaces.Repositories;
 using Microsoft.Extensions.Configuration;
-using System.Drawing;
+using SixLabors.ImageSharp;
 
 namespace DataAccess.Repositories
 {
@@ -34,7 +34,7 @@ namespace DataAccess.Repositories
 
             using (MemoryStream ms = new())
             {
-                image.Save(ms, image.RawFormat);
+                image.SaveAsJpeg(ms);
                 ms.Position = 0;
 
                 await _blobContainerClient.UploadBlobAsync(fileName, ms);
