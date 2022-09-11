@@ -1,9 +1,9 @@
 using Application;
-using Azure.Storage.Blobs;
 using DataAccess;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Serilog;
@@ -23,12 +23,12 @@ var logger = new LoggerConfiguration()
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 
-// Add custom validators, repositories, services and mappers
+// Add custom validators, repositories, services and mappers.
 builder.Services.AddApplicationValidators();
 builder.Services.AddApplicationRepositories();
 builder.Services.AddApplicationServices();
 
-// Add, configure controllers
+// Add, configure controllers.
 builder.Services
     .AddControllers(options =>
     {
@@ -43,10 +43,7 @@ builder.Services
 builder.Services.AddDbContext<GamingStoreContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DatabaseConnection")));
 
-// Add BlobStorage.
-builder.Services.AddScoped(_ => new BlobServiceClient(builder.Configuration.GetConnectionString("BlobStorageConnection")));
-
-// Add JWT-token authentication
+// Add JWT-token authentication.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -61,6 +58,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Add AuthorizationPolicy.
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
@@ -76,6 +74,13 @@ builder.Services
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Add BlobServiceClient.
+builder.Services.AddAzureClients(clientBuilder =>
+{
+    clientBuilder.AddBlobServiceClient(builder.Configuration["BlobStorageConnection:blob"], preferMsi: true);
+    clientBuilder.AddQueueServiceClient(builder.Configuration["BlobStorageConnection:queue"], preferMsi: true);
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

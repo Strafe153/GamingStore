@@ -11,7 +11,7 @@ namespace WebApi.AutoMapperProfiles
         public DeviceProfile()
         {
             CreateMap<PaginatedList<Device>, PageDto<DeviceReadDto>>()
-                .ForMember(pvm => pvm.Entities, opt => opt.MapFrom(pl => pl));
+                .ForMember(rd => rd.Entities, opt => opt.MapFrom(pl => pl));
 
             CreateMap<Device, DeviceReadDto>();
             CreateMap<DeviceBaseDto, Device>();

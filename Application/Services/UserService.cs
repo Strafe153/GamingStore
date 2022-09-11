@@ -88,10 +88,18 @@ namespace Application.Services
 
         public async Task UpdateAsync(User entity)
         {
-            _repository.Update(entity);
-            await _repository.SaveChangesAsync();
+            try
+            {
+                _repository.Update(entity);
+                await _repository.SaveChangesAsync();
 
-            _logger.LogInformation($"Successfully updated a user with id {entity.Id}");
+                _logger.LogInformation($"Successfully updated a user with id {entity.Id}");
+            }
+            catch (DbUpdateException)
+            {
+                _logger.LogWarning($"Failed to update the user with id {entity.Id}. The username '{entity.Username}' is already taken");
+                throw new UsernameNotUniqueException($"Username '{entity.Username}' is already taken");
+            }
         }
 
         public User ConstructUser(string username, string? profilePicture, byte[] passwordHash, byte[] passwordSalt)
