@@ -24,7 +24,7 @@ namespace DataAccess.Repositories
 
         public async Task<string> UploadAsync(Image image, string blobFolder, string identifier)
         {
-            var fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.jpg";
+            var fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.png";
             var blobItems = _blobContainerClient.GetBlobs(prefix: $"{blobFolder}/{identifier}");
 
             if (blobItems.Any())
@@ -34,7 +34,7 @@ namespace DataAccess.Repositories
 
             using (MemoryStream ms = new())
             {
-                image.SaveAsJpeg(ms);
+                image.SaveAsPng(ms);
                 ms.Position = 0;
 
                 await _blobContainerClient.UploadBlobAsync(fileName, ms);

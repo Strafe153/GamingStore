@@ -1,7 +1,9 @@
 ﻿using Core.Entities;
+using Core.Exceptions;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Core.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services
@@ -21,10 +23,18 @@ namespace Application.Services
 
         public async Task CreateAsync(Company entity)
         {
-            _repository.Create(entity);
-            await _repository.SaveChangesAsync();
+            try
+            {
+                _repository.Create(entity);
+                await _repository.SaveChangesAsync();
 
-            _logger.LogInformation("Succesfully created a company");
+                _logger.LogInformation("Succesfully created a company");
+            }
+            catch (DbUpdateException)
+            {
+                _logger.LogWarning($"Failed to create a company. The name '{entity.Name}' is already taken");
+                throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
+            }
         }
 
         public async Task DeleteAsync(Company entity)
@@ -60,10 +70,18 @@ namespace Application.Services
 
         public async Task UpdateAsync(Company entity)
         {
-            _repository.Update(entity);
-            await _repository.SaveChangesAsync();
+            try
+            {
+                _repository.Update(entity);
+                await _repository.SaveChangesAsync();
 
-            _logger.LogInformation($"Successfully updated a company with id {entity.Id}");
+                _logger.LogInformation($"Successfully updated a company with id {entity.Id}");
+            }
+            catch (DbUpdateException)
+            {
+                _logger.LogWarning($"Failed to update the company with id {entity.Id}. The name '{entity.Name}' is already taken");
+                throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
+            }
         }
     }
 }
