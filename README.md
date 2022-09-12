@@ -1,7 +1,5 @@
 # GamingStore
-ASP.NET Core REST API serving as an online shop of various types of gaming peripherals.
-
-### The API is the implementation of a typical RPG game with player accounts, characters, items such as weapons, spells and mounts.
+###ASP.NET Core REST API serving as an online shop of various types of gaming peripherals.
 
 ## What Can It Do?
 * Authentication and authorization
