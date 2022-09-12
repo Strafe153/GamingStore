@@ -19,8 +19,8 @@
 * `FluentAssertions` for assertions
 
 ## How To Use?
-1. Sign in as a new user
-2. Log in
+1. Sign Up
+2. Log In
 3. Try things out
 
 > **NOTE!** To see advanced features, log in with "admin" as username and "qwerty" as password.
