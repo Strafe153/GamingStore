@@ -1,5 +1,6 @@
 using Application;
 using DataAccess;
+using DataAccess.Extensions;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
