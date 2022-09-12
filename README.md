@@ -8,7 +8,7 @@
 * Devices management
 
 ## Dependencies
-* `Azure.Storage.Blobs` for storing images in a blob
+* `Azure.Storage.Blobs` for storing images in a blob storage
 * `SixLabors.ImageSharp` for images manipulation
 * `AutoMapper` for DTO mapping
 * `FluentValidation` for DTO validation
