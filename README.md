@@ -19,7 +19,7 @@
 * `FluentAssertions` for assertions
 
 ## How To Use?
-1. Register as a new user
+1. Sign in as a new user
 2. Log in
 3. Try things out
 
