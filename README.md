@@ -23,4 +23,4 @@
 2. Log in
 3. Try things out
 
-**NOTE!** To see advanced features, log in with "admin" as username and "qwerty" as password.
+> **NOTE!** To see advanced features, log in with "admin" as username and "qwerty" as password.
