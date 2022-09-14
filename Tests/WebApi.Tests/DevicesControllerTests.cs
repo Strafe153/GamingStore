@@ -74,7 +74,7 @@ namespace WebApi.Tests
                 .Returns(_fixture.DeviceReadDto);
 
             // Act
-            var result = await _fixture.MockDevicesController.CreateAsync(_fixture.DeviceBaseDto);
+            var result = await _fixture.MockDevicesController.CreateAsync(_fixture.DeviceCreateUpdateDto);
             var readDto = result.Result.As<CreatedAtActionResult>().Value.As<DeviceReadDto>();
 
             // Assert
@@ -91,7 +91,7 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.Device);
 
             // Act
-            var result = await _fixture.MockDevicesController.UpdateAsync(_fixture.Id, _fixture.DeviceBaseDto);
+            var result = await _fixture.MockDevicesController.UpdateAsync(_fixture.Id, _fixture.DeviceCreateUpdateDto);
 
             // Assert
             result.Should().NotBeNull().And.BeOfType<NoContentResult>();

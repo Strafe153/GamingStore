@@ -54,7 +54,7 @@ namespace WebApi.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<ActionResult<UserReadDto>> RegisterAsync([FromBody] UserRegisterDto registerDto)
+        public async Task<ActionResult<UserReadDto>> RegisterAsync([FromForm] UserRegisterDto registerDto)
         {
             _passwordService.CreatePasswordHash(registerDto.Password!, out byte[] hash, out byte[] salt);
 
@@ -81,13 +81,13 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromBody] UserBaseDto updateDto)
+        public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromForm] UserUpdateDto updateDto)
         {
             var user = await _userService.GetByIdAsync(id);
 
             _userService.VerifyUserAccessRights(user, User.Identity!, User.Claims!);
             _mapper.Map(updateDto, user);
-            user.ProfilePicture = await _pictureService.UploadAsync(updateDto.ProfilePicture!, _blobFolder, updateDto.Username!);
+            user.ProfilePicture = await _pictureService.UploadAsync(updateDto.ProfilePicture, _blobFolder, updateDto.Username!);
             await _userService.UpdateAsync(user);
 
             return NoContent();

@@ -51,7 +51,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CompanyReadDto>> CreateAsync([FromBody] CompanyBaseDto createDto)
+        public async Task<ActionResult<CompanyReadDto>> CreateAsync([FromForm] CompanyCreateUpdateDto createDto)
         {
             var company = _mapper.Map<Company>(createDto);
 
@@ -64,7 +64,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromBody] CompanyBaseDto updateDto)
+        public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromForm] CompanyCreateUpdateDto updateDto)
         {
             var company = await _companyService.GetByIdAsync(id);
 

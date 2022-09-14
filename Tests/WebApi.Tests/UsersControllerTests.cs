@@ -105,7 +105,7 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.User);
 
             // Act
-            var result = await _fixture.MockUsersController.UpdateAsync(_fixture.Id, _fixture.UserBaseDto);
+            var result = await _fixture.MockUsersController.UpdateAsync(_fixture.Id, _fixture.UserUpdateDto);
 
             // Assert
             result.Should().NotBeNull().And.BeOfType<NoContentResult>();

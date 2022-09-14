@@ -48,7 +48,7 @@ namespace Application.Tests
                 .ReturnsAsync(_fixture.ValidPath);
 
             // Act
-            var result = await _fixture.MockPictureService.UploadAsync(_fixture.ValidPath, _fixture.ValidPath, _fixture.ValidPath);
+            var result = await _fixture.MockPictureService.UploadAsync(_fixture.Picture, _fixture.ValidPath, _fixture.ValidPath);
 
             // Assert
             result.Should().NotBeNull();
@@ -67,7 +67,7 @@ namespace Application.Tests
 
             // Act
             var result = async () => await _fixture.MockPictureService
-                .UploadAsync(_fixture.ValidPath, _fixture.ValidPath, _fixture.ValidPath);
+                .UploadAsync(_fixture.Picture, _fixture.ValidPath, _fixture.ValidPath);
 
             // Assert
             await result.Should().ThrowAsync<NullReferenceException>();

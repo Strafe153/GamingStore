@@ -40,7 +40,7 @@ namespace Application.Tests.Fixtures
 
         private Device GetDevice()
         {
-            return new Device()
+            return new()
             {
                 Id = Id,
                 Name = Name,
@@ -53,7 +53,7 @@ namespace Application.Tests.Fixtures
 
         private List<Device> GetDevices()
         {
-            return new List<Device>()
+            return new()
             {
                 Device,
                 Device
@@ -62,7 +62,7 @@ namespace Application.Tests.Fixtures
 
         private PaginatedList<Device> GetPaginatedList()
         {
-            return new PaginatedList<Device>(GetDevices(), 6, 1, 5);
+            return new(GetDevices(), 6, 1, 5);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Application.Tests.Fixtures
 
         private Company GetCompany()
         {
-            return new Company()
+            return new()
             {
                 Id = Id,
                 Name = "Name"
@@ -46,7 +46,7 @@ namespace Application.Tests.Fixtures
 
         private List<Company> GetCompanies()
         {
-            return new List<Company>()
+            return new()
             {
                 Company,
                 Company
@@ -55,7 +55,7 @@ namespace Application.Tests.Fixtures
 
         private PaginatedList<Company> GetPaginatedList()
         {
-            return new PaginatedList<Company>(GetCompanies(), 6, 1, 5);
+            return new(GetCompanies(), 6, 1, 5);
         }
     }
 }

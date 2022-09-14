@@ -45,14 +45,14 @@ namespace Application.Tests.Fixtures
         {
             using (HMACSHA512 hmac = new(Bytes))
             {
-                var passwordAsByteArray = Encoding.UTF8.GetBytes(StringPlaceholder!);
+                byte[] passwordAsByteArray = Encoding.UTF8.GetBytes(StringPlaceholder!);
                 return hmac.ComputeHash(passwordAsByteArray);
             }
         }
 
         private User GetPlayer()
         {
-            return new User()
+            return new()
             {
                 Id = 1,
                 Username = StringPlaceholder,
