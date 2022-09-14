@@ -7,6 +7,7 @@ using Core.Entities;
 using Core.Enums;
 using Core.Interfaces.Services;
 using Core.Models;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using WebApi.Controllers;
 
@@ -30,8 +31,9 @@ namespace WebApi.Tests.Fixtures
             Id = 1;
             Name = "Device";
             Device = GetDevice();
-            DeviceReadDto = GetDeviceReadDto();
             DeviceBaseDto = GetDeviceBaseDto();
+            DeviceReadDto = GetDeviceReadDto();
+            DeviceCreateUpdateDto = GetDeviceCreateUpdateDto();
             PageParameters = GetPageParameters();
             DevicePaginatedList = GetDevicePaginatedList();
             DevicePageDto = GetDevicePageDto();
@@ -44,16 +46,18 @@ namespace WebApi.Tests.Fixtures
 
         public int Id { get; }
         public string Name { get; }
+        public IFormFile? Picture { get; }
         public Device Device { get; }
         public DeviceReadDto DeviceReadDto { get; }
         public DeviceBaseDto DeviceBaseDto { get; }
+        public DeviceCreateUpdateDto DeviceCreateUpdateDto { get; }
         public DevicePageParameters PageParameters { get; }
         public PaginatedList<Device> DevicePaginatedList { get; }
         public PageDto<DeviceReadDto> DevicePageDto { get; }
 
         private Device GetDevice()
         {
-            return new Device()
+            return new()
             {
                 Id = Id,
                 Name = Name,
@@ -66,7 +70,7 @@ namespace WebApi.Tests.Fixtures
 
         private List<Device> GetDevices()
         {
-            return new List<Device>()
+            return new()
             {
                 GetDevice(),
                 GetDevice()
@@ -75,7 +79,7 @@ namespace WebApi.Tests.Fixtures
 
         private DevicePageParameters GetPageParameters()
         {
-            return new DevicePageParameters()
+            return new()
             {
                 PageNumber = 1,
                 PageSize = 5,
@@ -85,12 +89,12 @@ namespace WebApi.Tests.Fixtures
 
         private PaginatedList<Device> GetDevicePaginatedList()
         {
-            return new PaginatedList<Device>(GetDevices(), 6, 1, 5);
+            return new(GetDevices(), 6, 1, 5);
         }
 
         private DeviceReadDto GetDeviceReadDto()
         {
-            return new DeviceReadDto()
+            return new()
             {
                 Id = Id,
                 Name = Name,
@@ -103,7 +107,7 @@ namespace WebApi.Tests.Fixtures
 
         private DeviceBaseDto GetDeviceBaseDto()
         {
-            return new DeviceBaseDto()
+            return new()
             {
                 Name = Name,
                 Category = DeviceCategory.Mouse,
@@ -113,9 +117,22 @@ namespace WebApi.Tests.Fixtures
             };
         }
 
-        private List<DeviceReadDto> GetDeviceReadViewModels()
+        private DeviceCreateUpdateDto GetDeviceCreateUpdateDto()
         {
-            return new List<DeviceReadDto>()
+            return new()
+            {
+                Name = Name,
+                Category = DeviceCategory.Mouse,
+                Price = Id,
+                InStock = Id,
+                CompanyId = Id,
+                Picture = Picture
+            };
+        }
+
+        private List<DeviceReadDto> GetDeviceReadDtos()
+        {
+            return new()
             {
                 DeviceReadDto,
                 DeviceReadDto
@@ -124,7 +141,7 @@ namespace WebApi.Tests.Fixtures
 
         private PageDto<DeviceReadDto> GetDevicePageDto()
         {
-            return new PageDto<DeviceReadDto>()
+            return new()
             {
                 CurrentPage = 1,
                 TotalPages = 2,
@@ -132,7 +149,7 @@ namespace WebApi.Tests.Fixtures
                 TotalItems = 6,
                 HasPrevious = false,
                 HasNext = true,
-                Entities = GetDeviceReadViewModels()
+                Entities = GetDeviceReadDtos()
             };
         }
     }

@@ -75,7 +75,7 @@ namespace WebApi.Tests
                 .Returns(_fixture.CompanyReadDto);
 
             // Act
-            var result = await _fixture.MockCompaniesController.CreateAsync(_fixture.CompanyBaseDto);
+            var result = await _fixture.MockCompaniesController.CreateAsync(_fixture.CompanyCreateUpdateDto);
             var readDto = result.Result.As<CreatedAtActionResult>().Value.As<CompanyReadDto>();
 
             // Assert
@@ -92,7 +92,7 @@ namespace WebApi.Tests
                 .ReturnsAsync(_fixture.Company);
 
             // Act
-            var result = await _fixture.MockCompaniesController.UpdateAsync(_fixture.Id, _fixture.CompanyBaseDto);
+            var result = await _fixture.MockCompaniesController.UpdateAsync(_fixture.Id, _fixture.CompanyCreateUpdateDto);
 
             // Assert
             result.Should().NotBeNull().And.BeOfType<NoContentResult>();

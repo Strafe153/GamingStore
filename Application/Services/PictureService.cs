@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 
@@ -32,13 +33,14 @@ namespace Application.Services
             }
         }
 
-        public async Task<string> UploadAsync(string? picturePath, string blobFolder, string identifier)
+        public async Task<string> UploadAsync(IFormFile? picture, string blobFolder, string identifier)
         {
             string fileName;
 
             try
             {
-                fileName = await GetPictureLinkAsync(picturePath, blobFolder, identifier);
+                byte[]? pictureAsBase64 = ReadFromIFormFile(picture);
+                fileName = await GetPictureLinkAsync(pictureAsBase64, blobFolder, identifier);
             }
             catch (RequestFailedException)
             {
@@ -49,21 +51,31 @@ namespace Application.Services
             return fileName;
         }
 
-        private async Task<string> GetPictureLinkAsync(string? picturePath, string blobFolder, string identifier)
+        private byte[]? ReadFromIFormFile(IFormFile? formFile)
         {
-            byte[]? bytes;
-
-            if (picturePath is not null)
+            if (formFile is not null)
             {
-                bytes = await File.ReadAllBytesAsync(picturePath);
+                using (var ms = new MemoryStream())
+                {
+                    formFile.CopyTo(ms);
+                    byte[] formFileAsBytes = ms.ToArray();
+
+                    return formFileAsBytes;
+                }
             }
-            else
+
+            return null;
+        }
+
+        private async Task<string> GetPictureLinkAsync(byte[]? formFileAsBytes, string blobFolder, string identifier)
+        {
+            if (formFileAsBytes is null)
             {
                 string defaultProfilePicPath = "../Application/Assets/Images/default_profile_pic.jpg";
-                bytes = await File.ReadAllBytesAsync(defaultProfilePicPath);
+                formFileAsBytes = await File.ReadAllBytesAsync(defaultProfilePicPath);
             }
 
-            using (MemoryStream ms = new(bytes))
+            using (MemoryStream ms = new(formFileAsBytes))
             {
                 var image = Image.Load(ms);
                 string profilePictureLink = await _pictureRepository.UploadAsync(image, blobFolder, identifier);

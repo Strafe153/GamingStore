@@ -40,6 +40,7 @@ namespace WebApi.Tests.Fixtures
             UserReadDto = GetUserReadDto();
             UserRegisterDto = GetUserRegisterDto();
             UserLoginDto = GetUserLoginDto();
+            UserUpdateDto = GetUserUpdateDto();
             UserChangeRoleDto = GetUserChangeRoleDto();
             UserChangePasswordDto = GetUserChangePasswordDto();
             UserWithTokenReadDto = GetUserWithTokenReadDto();
@@ -57,11 +58,13 @@ namespace WebApi.Tests.Fixtures
         public int Id { get; }
         public string Username { get; }
         public byte[] Bytes { get; }
+        public IFormFile? Picture { get; }
         public User User { get; }
         public UserBaseDto UserBaseDto { get; }
         public UserReadDto UserReadDto { get; }
         public UserRegisterDto UserRegisterDto { get; }
         public UserLoginDto UserLoginDto { get; }
+        public UserUpdateDto UserUpdateDto { get; }
         public UserChangeRoleDto UserChangeRoleDto { get; }
         public UserChangePasswordDto UserChangePasswordDto { get; }
         public UserWithTokenReadDto UserWithTokenReadDto { get; }
@@ -71,7 +74,7 @@ namespace WebApi.Tests.Fixtures
 
         public void MockControllerBaseUser()
         {
-            var user = new ClaimsPrincipal(new ClaimsIdentity());
+            ClaimsPrincipal user = new(new ClaimsIdentity());
 
             MockUsersController.ControllerContext = new ControllerContext();
             MockUsersController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -82,7 +85,7 @@ namespace WebApi.Tests.Fixtures
 
         private User GetUser()
         {
-            return new User()
+            return new()
             {
                 Id = Id,
                 Username = Username,
@@ -94,7 +97,7 @@ namespace WebApi.Tests.Fixtures
 
         private List<User> GetUsers()
         {
-            return new List<User>()
+            return new()
             {
                 GetUser(),
                 GetUser()
@@ -103,7 +106,7 @@ namespace WebApi.Tests.Fixtures
 
         private PageParameters GetPageParameters()
         {
-            return new PageParameters()
+            return new()
             {
                 PageNumber = 1,
                 PageSize = 5
@@ -112,12 +115,12 @@ namespace WebApi.Tests.Fixtures
 
         private PaginatedList<User> GetUserPaginatedList()
         {
-            return new PaginatedList<User>(GetUsers(), 6, 1, 5);
+            return new(GetUsers(), 6, 1, 5);
         }
 
         private UserBaseDto GetUserBaseDto()
         {
-            return new UserBaseDto()
+            return new()
             {
                 Username = Username
             };
@@ -125,7 +128,7 @@ namespace WebApi.Tests.Fixtures
 
         private UserReadDto GetUserReadDto()
         {
-            return new UserReadDto()
+            return new()
             {
                 Id = Id,
                 Username = Username,
@@ -135,7 +138,7 @@ namespace WebApi.Tests.Fixtures
 
         private UserRegisterDto GetUserRegisterDto()
         {
-            return new UserRegisterDto()
+            return new()
             {
                 Username = Username,
                 Password = Username
@@ -144,16 +147,25 @@ namespace WebApi.Tests.Fixtures
 
         private UserLoginDto GetUserLoginDto()
         {
-            return new UserLoginDto()
+            return new()
             {
                 Username = Username,
                 Password = Username
             };
         }
 
+        private UserUpdateDto GetUserUpdateDto()
+        {
+            return new()
+            {
+                Username = Username,
+                ProfilePicture = Picture
+            };
+        }
+
         private UserChangeRoleDto GetUserChangeRoleDto()
         {
-            return new UserChangeRoleDto()
+            return new()
             {
                 Role = UserRole.Admin
             };
@@ -161,7 +173,7 @@ namespace WebApi.Tests.Fixtures
 
         private UserChangePasswordDto GetUserChangePasswordDto()
         {
-            return new UserChangePasswordDto()
+            return new()
             {
                 Password = Username
             };
@@ -169,7 +181,7 @@ namespace WebApi.Tests.Fixtures
 
         private UserWithTokenReadDto GetUserWithTokenReadDto()
         {
-            return new UserWithTokenReadDto()
+            return new()
             {
                 Id = Id,
                 Username = Username,
@@ -180,7 +192,7 @@ namespace WebApi.Tests.Fixtures
 
         private List<UserReadDto> GetUserReadViewModels()
         {
-            return new List<UserReadDto>()
+            return new()
             {
                 UserReadDto,
                 UserReadDto
@@ -189,7 +201,7 @@ namespace WebApi.Tests.Fixtures
 
         private PageDto<UserReadDto> GetUserPageDto()
         {
-            return new PageDto<UserReadDto>()
+            return new()
             {
                 CurrentPage = 1,
                 TotalPages = 2,

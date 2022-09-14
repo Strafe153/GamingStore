@@ -51,7 +51,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<DeviceReadDto>> CreateAsync([FromBody] DeviceBaseDto createDto)
+        public async Task<ActionResult<DeviceReadDto>> CreateAsync([FromForm] DeviceCreateUpdateDto createDto)
         {
             var device = _mapper.Map<Device>(createDto);
 
@@ -64,7 +64,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromBody] DeviceBaseDto updateDto)
+        public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromForm] DeviceCreateUpdateDto updateDto)
         {
             var device = await _deviceService.GetByIdAsync(id);
 

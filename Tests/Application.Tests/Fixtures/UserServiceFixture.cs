@@ -50,7 +50,7 @@ namespace Application.Tests.Fixtures
 
         private User GetUser()
         {
-            return new User()
+            return new()
             {
                 Id = Id,
                 Username = Name,
@@ -62,7 +62,7 @@ namespace Application.Tests.Fixtures
 
         private List<User> GetUsers()
         {
-            return new List<User>()
+            return new()
             {
                 User,
                 User
@@ -71,7 +71,7 @@ namespace Application.Tests.Fixtures
 
         private PaginatedList<User> GetPaginatedList()
         {
-            return new PaginatedList<User>(GetUsers(), 6, 1, 5);
+            return new(GetUsers(), 6, 1, 5);
         }
 
         private IIdentity GetClaimsIdentity()

@@ -2,6 +2,7 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Core.Interfaces.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -30,5 +31,6 @@ namespace Application.Tests.Fixtures
 
         public string ValidPath { get; }
         public string? InvalidPath { get; }
+        public IFormFile? Picture { get; }
     }
 }

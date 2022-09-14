@@ -3,6 +3,5 @@
     public record UserBaseDto
     {
         public string? Username { get; init; }
-        public string? ProfilePicture { get; init; }
     }
 }
