@@ -3,6 +3,7 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -23,6 +24,7 @@ namespace Application.Tests.Fixtures
 
             ValidPath = "../../../../../Application/Assets/Images/default_profile_pic.jpg";
             InvalidPath = null;
+            Picture = GetFormFile().Result;
         }
 
         public PictureService MockPictureService { get; }
@@ -32,5 +34,11 @@ namespace Application.Tests.Fixtures
         public string ValidPath { get; }
         public string? InvalidPath { get; }
         public IFormFile? Picture { get; }
+
+        private async Task<IFormFile> GetFormFile()
+        {
+            byte[] pictureAsBytes = await File.ReadAllBytesAsync(ValidPath);
+            return new FormFile(new MemoryStream(pictureAsBytes), 0, pictureAsBytes.Length, "Picture", "picture.jpg");
+        }
     }
 }
