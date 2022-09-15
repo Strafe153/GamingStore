@@ -58,8 +58,8 @@ namespace WebApi.Controllers
         {
             _passwordService.CreatePasswordHash(registerDto.Password!, out byte[] hash, out byte[] salt);
 
-            string? pictureLink = await _pictureService.UploadAsync(registerDto.ProfilePicture, _blobFolder, registerDto.Username!);
-            User user = _userService.ConstructUser(registerDto.Username!, pictureLink, hash, salt);
+            string? pictureLink = await _pictureService.UploadAsync(registerDto.ProfilePicture, _blobFolder, registerDto.Email!);
+            User user = _userService.ConstructUser(registerDto.Username!, registerDto.Email!, pictureLink, hash, salt);
             await _userService.CreateAsync(user);
 
             var readDto = _mapper.Map<UserReadDto>(user);
@@ -71,7 +71,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<UserWithTokenReadDto>> LoginAsync([FromBody] UserLoginDto loginDto)
         {
-            var user = await _userService.GetByNameAsync(loginDto.Username!);
+            var user = await _userService.GetByEmailAsync(loginDto.Email!);
             _passwordService.VerifyPasswordHash(loginDto.Password!, user.PasswordHash!, user.PasswordSalt!);
 
             string token = _passwordService.CreateToken(user);
@@ -87,7 +87,7 @@ namespace WebApi.Controllers
 
             _userService.VerifyUserAccessRights(user, User.Identity!, User.Claims!);
             _mapper.Map(updateDto, user);
-            user.ProfilePicture = await _pictureService.UploadAsync(updateDto.ProfilePicture, _blobFolder, updateDto.Username!);
+            user.ProfilePicture = await _pictureService.UploadAsync(updateDto.ProfilePicture, _blobFolder, user.Email!);
             await _userService.UpdateAsync(user);
 
             return NoContent();

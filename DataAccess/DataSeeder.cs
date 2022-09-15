@@ -14,6 +14,7 @@ namespace DataAccess
             {
                 Id = 1,
                 Username = "Admin",
+                Email = "admin@gmail.com",
                 Role = UserRole.Admin
             };
 

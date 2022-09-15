@@ -13,7 +13,7 @@ namespace DataAccess.EntityConfigurations
                 .HasKey(u => u.Id);
 
             builder
-                .HasIndex(u => u.Username)
+                .HasIndex(u => u.Email)
                 .IsUnique();
 
             builder

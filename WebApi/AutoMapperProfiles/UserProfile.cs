@@ -16,6 +16,7 @@ namespace WebApi.AutoMapperProfiles
             CreateMap<User, UserReadDto>();
             CreateMap<User, UserWithTokenReadDto>();
             CreateMap<UserBaseDto, User>();
+            CreateMap<UserUpdateDto, User>();
             CreateMap<UserChangeRoleDto, User>();
         }
     }
