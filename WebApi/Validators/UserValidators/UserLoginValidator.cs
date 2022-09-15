@@ -7,7 +7,7 @@ namespace WebApi.Validators.UserValidators
     {
         public UserLoginValidator()
         {
-            RuleFor(u => u.Username)
+            RuleFor(u => u.Email)
                 .MinimumLength(2)
                 .WithMessage("Username must be at least 2 characters long")
                 .MaximumLength(30)

@@ -149,7 +149,7 @@ namespace WebApi.Tests.Fixtures
         {
             return new()
             {
-                Username = Username,
+                Email = Username,
                 Password = Username
             };
         }

@@ -35,8 +35,8 @@ namespace Application.Services
             } 
             catch (DbUpdateException)
             {
-                _logger.LogWarning($"Failed to register a user. The username '{entity.Username}' is already taken");
-                throw new UsernameNotUniqueException($"Username '{entity.Username}' is already taken");
+                _logger.LogWarning($"Failed to register a user. The email '{entity.Email}' is already taken");
+                throw new UsernameNotUniqueException($"Email '{entity.Email}' is already taken");
             }
         }
 
@@ -71,17 +71,17 @@ namespace Application.Services
             return user;
         }
 
-        public async Task<User> GetByNameAsync(string name)
+        public async Task<User> GetByEmailAsync(string email)
         {
-            var user = await _repository.GetByNameAsync(name);
+            var user = await _repository.GetByEmailAsync(email);
 
             if (user is null)
             {
-                _logger.LogWarning($"Failed to retrieve a user with username {name}");
-                throw new NullReferenceException($"User with username {name} not found");
+                _logger.LogWarning($"Failed to retrieve a user with username {email}");
+                throw new NullReferenceException($"User with email {email} not found");
             }
 
-            _logger.LogInformation($"Successfully retrieved a user with username {name}");
+            _logger.LogInformation($"Successfully retrieved a user with username {email}");
 
             return user;
         }
@@ -102,11 +102,12 @@ namespace Application.Services
             }
         }
 
-        public User ConstructUser(string username, string? profilePicture, byte[] passwordHash, byte[] passwordSalt)
+        public User ConstructUser(string username, string email, string? profilePicture, byte[] passwordHash, byte[] passwordSalt)
         {
             User user = new()
             {
                 Username = username,
+                Email = email,
                 Role = UserRole.User,
                 ProfilePicture = profilePicture,
                 PasswordHash = passwordHash,

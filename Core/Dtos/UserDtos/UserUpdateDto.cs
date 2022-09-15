@@ -2,8 +2,9 @@
 
 namespace Core.Dtos.UserDtos
 {
-    public record UserUpdateDto : UserBaseDto
+    public record UserUpdateDto
     {
+        public string? Username { get; init; }
         public IFormFile? ProfilePicture { get; init; }
     }
 }

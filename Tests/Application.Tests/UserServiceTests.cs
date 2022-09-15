@@ -71,11 +71,11 @@ namespace Application.Tests
         {
             // Arrange
             _fixture.MockUserRepository
-                .Setup(r => r.GetByNameAsync(It.IsAny<string>()))
+                .Setup(r => r.GetByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(_fixture.User);
 
             // Act
-            var result = await _fixture.MockUserService.GetByNameAsync(_fixture.Name);
+            var result = await _fixture.MockUserService.GetByEmailAsync(_fixture.Name);
 
             // Assert
             result.Should().NotBeNull().And.BeOfType<User>();
@@ -86,11 +86,11 @@ namespace Application.Tests
         {
             // Arrange
             _fixture.MockUserRepository
-                .Setup(r => r.GetByNameAsync(It.IsAny<string>()))
+                .Setup(r => r.GetByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync((User)null!);
 
             // Act
-            var result = async() => await _fixture.MockUserService.GetByNameAsync(_fixture.Name);
+            var result = async() => await _fixture.MockUserService.GetByEmailAsync(_fixture.Name);
 
             // Assert
             await result.Should().ThrowAsync<NullReferenceException>();
@@ -130,7 +130,8 @@ namespace Application.Tests
         public void ConstructUser_ValidParameters_ReturnsUser()
         {
             // Act
-            var result = _fixture.MockUserService.ConstructUser(_fixture.Name!, _fixture.Name, _fixture.Bytes, _fixture.Bytes);
+            var result = _fixture.MockUserService.ConstructUser(
+                _fixture.Name, _fixture.Name, _fixture.Name, _fixture.Bytes, _fixture.Bytes);
 
             // Assert
             result.Should().NotBeNull().And.BeOfType<User>();
