@@ -63,7 +63,7 @@ namespace Application.Tests
                     It.IsAny<Image>(),
                     It.IsAny<string>(),
                     It.IsAny<string>()))
-                .ThrowsAsync(new RequestFailedException(It.IsAny<string>()));
+                .ThrowsAsync(new RequestFailedException(_fixture.ValidPath));
 
             // Act
             var result = async () => await _fixture.MockPictureService
