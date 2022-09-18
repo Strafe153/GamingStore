@@ -43,6 +43,10 @@ namespace Application.Tests
                 .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(_fixture.Company);
 
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<Company>(It.IsAny<string>()))
+                .ReturnsAsync((Company)null!);
+
             // Act
             var result = await _fixture.MockCompanyService.GetByIdAsync(_fixture.Id);
 
@@ -56,6 +60,10 @@ namespace Application.Tests
             // Arrange
             _fixture.MockCompanyRepository
                 .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync((Company)null!);
+
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<Company>(It.IsAny<string>()))
                 .ReturnsAsync((Company)null!);
 
             // Act

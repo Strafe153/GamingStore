@@ -11,13 +11,16 @@ namespace Application.Services
     public class DeviceService : IDeviceService
     {
         private readonly IRepository<Device> _repository;
+        private readonly ICacheService _cacheService;
         private readonly ILogger<DeviceService> _logger;
 
         public DeviceService(
             IRepository<Device> repository,
+            ICacheService cacheService,
             ILogger<DeviceService> logger)
         {
             _repository = repository;
+            _cacheService = cacheService;
             _logger = logger;
         }
 
@@ -70,15 +73,22 @@ namespace Application.Services
 
         public async Task<Device> GetByIdAsync(int id)
         {
-            var device = await _repository.GetByIdAsync(id);
+            string key = $"device:{id}";
+            var device = await _cacheService.GetAsync<Device>(key);
 
             if (device is null)
             {
-                _logger.LogWarning($"Failed to retrieve a device with id {id}");
-                throw new NullReferenceException($"Device with id {id} not found");
-            }
+                device = await _repository.GetByIdAsync(id);
 
-            _logger.LogInformation($"Successfully retrieved a device with id {id}");
+                if (device is null)
+                {
+                    _logger.LogWarning($"Failed to retrieve a device with id {id}");
+                    throw new NullReferenceException($"Device with id {id} not found");
+                }
+
+                await _cacheService.SetAsync(key, device);
+                _logger.LogInformation($"Successfully retrieved a device with id {id}");
+            }
 
             return device;
         }

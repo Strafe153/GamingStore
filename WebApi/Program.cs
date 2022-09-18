@@ -41,9 +41,17 @@ builder.Services
         options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     });
 
-// Add database connection
-builder.Services.AddDbContext<GamingStoreContext>(options => options.UseSqlServer(
-    builder.Configuration.GetConnectionString("DatabaseConnection")));
+// Add database connection.
+builder.Services.AddDbContext<GamingStoreContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"));
+});
+
+// Add Redis cache.
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+});
 
 // Add JWT-token authentication.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
