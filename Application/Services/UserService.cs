@@ -14,13 +14,16 @@ namespace Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
+        private readonly ICacheService _cacheService;
         private readonly ILogger<UserService> _logger;
 
         public UserService(
             IUserRepository repository,
+            ICacheService cacheService,
             ILogger<UserService> logger)
         {
             _repository = repository;
+            _cacheService = cacheService;
             _logger = logger;
         }
 
@@ -58,15 +61,22 @@ namespace Application.Services
 
         public async Task<User> GetByIdAsync(int id)
         {
-            var user = await _repository.GetByIdAsync(id);
+            string key = $"user:{id}";
+            var user = await _cacheService.GetAsync<User>(key);
 
             if (user is null)
             {
-                _logger.LogWarning($"Failed to retrieve a user with id {id}");
-                throw new NullReferenceException($"User with id {id} not found");
-            }
+                user = await _repository.GetByIdAsync(id);
 
-            _logger.LogInformation($"Successfully retrieved a user with id {id}");
+                if (user is null)
+                {
+                    _logger.LogWarning($"Failed to retrieve a user with id {id}");
+                    throw new NullReferenceException($"User with id {id} not found");
+                }
+
+                await _cacheService.SetAsync(key, user);
+                _logger.LogInformation($"Successfully retrieved a user with id {id}");
+            }
 
             return user;
         }

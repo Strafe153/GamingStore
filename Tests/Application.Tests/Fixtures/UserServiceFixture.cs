@@ -4,6 +4,7 @@ using AutoFixture.AutoMoq;
 using Core.Entities;
 using Core.Enums;
 using Core.Interfaces.Repositories;
+using Core.Interfaces.Services;
 using Core.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -19,10 +20,12 @@ namespace Application.Tests.Fixtures
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
             MockUserRepository = fixture.Freeze<Mock<IUserRepository>>();
+            MockCacheService = fixture.Freeze<Mock<ICacheService>>();
             MockLogger = fixture.Freeze<Mock<ILogger<UserService>>>();
 
             MockUserService = new(
                 MockUserRepository.Object,
+                MockCacheService.Object,
                 MockLogger.Object);
 
             Id = 1;
@@ -37,6 +40,7 @@ namespace Application.Tests.Fixtures
 
         public UserService MockUserService { get; }
         public Mock<IUserRepository> MockUserRepository { get; }
+        public Mock<ICacheService> MockCacheService { get; }
         public Mock<ILogger<UserService>> MockLogger { get; }
 
         public int Id { get; }

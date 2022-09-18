@@ -43,6 +43,10 @@ namespace Application.Tests
                 .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(_fixture.Device);
 
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<Device>(It.IsAny<string>()))
+                .ReturnsAsync((Device)null!);
+
             // Act
             var result = await _fixture.MockDeviceService.GetByIdAsync(_fixture.Id);
 
@@ -56,6 +60,10 @@ namespace Application.Tests
             // Arrange
             _fixture.MockDeviceRepository
                 .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync((Device)null!);
+
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<Device>(It.IsAny<string>()))
                 .ReturnsAsync((Device)null!);
 
             // Act

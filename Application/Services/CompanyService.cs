@@ -11,13 +11,16 @@ namespace Application.Services
     public class CompanyService : IService<Company>
     {
         private readonly IRepository<Company> _repository;
+        private readonly ICacheService _cacheService;
         private readonly ILogger<CompanyService> _logger;
 
         public CompanyService(
             IRepository<Company> repository,
+            ICacheService cacheService,
             ILogger<CompanyService> logger)
         {
             _repository = repository;
+            _cacheService = cacheService;
             _logger = logger;
         }
 
@@ -55,15 +58,22 @@ namespace Application.Services
 
         public async Task<Company> GetByIdAsync(int id)
         {
-            var company = await _repository.GetByIdAsync(id);
+            string key = $"company:{id}";
+            var company = await _cacheService.GetAsync<Company>(key);
 
             if (company is null)
             {
-                _logger.LogWarning($"Failed to retrieve a company with id {id}");
-                throw new NullReferenceException($"Company with id {id} not found");
-            }
+                company = await _repository.GetByIdAsync(id);
 
-            _logger.LogInformation($"Successfully retrieved a company with id {id}");
+                if (company is null)
+                {
+                    _logger.LogWarning($"Failed to retrieve a company with id {id}");
+                    throw new NullReferenceException($"Company with id {id} not found");
+                }
+
+                await _cacheService.SetAsync(key, company);
+                _logger.LogInformation($"Successfully retrieved a company with id {id}");
+            }
 
             return company;
         }
