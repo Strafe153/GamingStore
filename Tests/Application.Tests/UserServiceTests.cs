@@ -19,19 +19,19 @@ namespace Application.Tests
         }
 
         [Fact]
-        public async Task GetAllAsync_ValidParameters_ReturnsPaginatedListOfUser()
+        public async Task GetAllAsync_ValidParametersDataFromRepository_ReturnsPaginatedListOfUser()
         {
             // Arrange
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<List<User>>(It.IsAny<string>()))
+                .ReturnsAsync((List<User>)null!);
+
             _fixture.MockUserRepository
                 .Setup(r => r.GetAllAsync(
                     It.IsAny<int>(), 
                     It.IsAny<int>(), 
                     It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(_fixture.PaginatedList);
-
-            _fixture.MockCacheService
-                .Setup(s => s.GetAsync<List<User>>(It.IsAny<string>()))
-                .ReturnsAsync((List<User>)null!);
 
             // Act
             var result = await _fixture.MockUserService.GetAllAsync(_fixture.Id, _fixture.Id);
@@ -41,16 +41,46 @@ namespace Application.Tests
         }
 
         [Fact]
-        public async Task GetByIdAsync_ExistingUser_ReturnsUser()
+        public async Task GetAllAsync_ValidParametersDataFromCache_ReturnsPaginatedListOfUser()
         {
             // Arrange
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<List<User>>(It.IsAny<string>()))
+                .ReturnsAsync(_fixture.PaginatedList);
+
+            // Act
+            var result = await _fixture.MockUserService.GetAllAsync(_fixture.Id, _fixture.Id);
+
+            // Assert
+            result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<User>>();
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_ExistingUserInRepository_ReturnsUser()
+        {
+            // Arrange
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<User>(It.IsAny<string>()))
+                .ReturnsAsync((User)null!);
+
             _fixture.MockUserRepository
                 .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(_fixture.User);
 
+            // Act
+            var result = await _fixture.MockUserService.GetByIdAsync(_fixture.Id);
+
+            // Assert
+            result.Should().NotBeNull().And.BeOfType<User>();
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_ExistingUserInCache_ReturnsUser()
+        {
+            // Arrange
             _fixture.MockCacheService
                 .Setup(s => s.GetAsync<User>(It.IsAny<string>()))
-                .ReturnsAsync((User)null!);
+                .ReturnsAsync(_fixture.User);
 
             // Act
             var result = await _fixture.MockUserService.GetByIdAsync(_fixture.Id);
