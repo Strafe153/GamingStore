@@ -22,9 +22,9 @@ namespace DataAccess.Repositories
             _blobContainerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
         }
 
-        public async Task<string> UploadAsync(Image image, string blobFolder, string identifier)
+        public async Task<string> UploadAsync(Image image, string blobFolder, string identifier, string extension)
         {
-            var fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.png";
+            var fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.{extension}";
             var blobItems = _blobContainerClient.GetBlobs(prefix: $"{blobFolder}/{identifier}");
 
             if (blobItems.Any())
