@@ -18,19 +18,19 @@ namespace Application.Tests
         }
 
         [Fact]
-        public async Task GetAllAsync_ValidParameters_ReturnsPaginatedListOfCompany()
+        public async Task GetAllAsync_ValidParametersDataFromRepository_ReturnsPaginatedListOfCompany()
         {
             // Arrange
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<List<Company>>(It.IsAny<string>()))
+                .ReturnsAsync((List<Company>)null!);
+
             _fixture.MockCompanyRepository
                 .Setup(r => r.GetAllAsync(
                     It.IsAny<int>(), 
                     It.IsAny<int>(),
                     It.IsAny<Expression<Func<Company, bool>>>()))
                 .ReturnsAsync(_fixture.PaginatedList);
-
-            _fixture.MockCacheService
-                .Setup(s => s.GetAsync<List<Company>>(It.IsAny<string>()))
-                .ReturnsAsync((List<Company>)null!);
 
             // Act
             var result = await _fixture.MockCompanyService.GetAllAsync(_fixture.Id, _fixture.Id);
@@ -40,16 +40,46 @@ namespace Application.Tests
         }
 
         [Fact]
-        public async Task GetByIdAsync_ExistingCompany_ReturnsCompany()
+        public async Task GetAllAsync_ValidParametersDataFromCache_ReturnsPaginatedListOfCompany()
         {
             // Arrange
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<List<Company>>(It.IsAny<string>()))
+                .ReturnsAsync(_fixture.PaginatedList);
+
+            // Act
+            var result = await _fixture.MockCompanyService.GetAllAsync(_fixture.Id, _fixture.Id);
+
+            // Assert
+            result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<Company>>();
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_ExistingCompanyInRepository_ReturnsCompany()
+        {
+            // Arrange
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<Company>(It.IsAny<string>()))
+                .ReturnsAsync((Company)null!);
+
             _fixture.MockCompanyRepository
                 .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(_fixture.Company);
 
+            // Act
+            var result = await _fixture.MockCompanyService.GetByIdAsync(_fixture.Id);
+
+            // Assert
+            result.Should().NotBeNull().And.BeOfType<Company>();
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_ExistingCompanyInCache_ReturnsCompany()
+        {
+            // Arrange
             _fixture.MockCacheService
                 .Setup(s => s.GetAsync<Company>(It.IsAny<string>()))
-                .ReturnsAsync((Company)null!);
+                .ReturnsAsync(_fixture.Company);
 
             // Act
             var result = await _fixture.MockCompanyService.GetByIdAsync(_fixture.Id);
@@ -62,12 +92,12 @@ namespace Application.Tests
         public async Task GetByIdAsync_NonexistingCompany_ThrowsNullReferenceException()
         {
             // Arrange
-            _fixture.MockCompanyRepository
-                .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync((Company)null!);
-
             _fixture.MockCacheService
                 .Setup(s => s.GetAsync<Company>(It.IsAny<string>()))
+                .ReturnsAsync((Company)null!);
+
+            _fixture.MockCompanyRepository
+                .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync((Company)null!);
 
             // Act
