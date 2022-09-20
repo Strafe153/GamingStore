@@ -37,6 +37,11 @@ public class ExceptionsMiddleware
             await HandleExceptionAsync(context, HttpStatusCode.BadRequest,
                 $"{ex.Message}. Path:{context.Request.Path}.");
         }
+        catch (IncorrectExtensionException ex)
+        {
+            await HandleExceptionAsync(context, HttpStatusCode.BadRequest,
+                $"{ex.Message}. Path:{context.Request.Path}.");
+        }
         catch (Exception ex)
         {
             await HandleExceptionAsync(context, HttpStatusCode.InternalServerError,

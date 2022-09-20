@@ -1,9 +1,11 @@
 ﻿using Azure;
+using Core.Exceptions;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace Application.Services
 {
@@ -11,6 +13,10 @@ namespace Application.Services
     {
         private readonly IPictureRepository _pictureRepository;
         private readonly ILogger<PictureService> _logger;
+        private readonly string[] _imageExtensions = new[]
+        {
+            "jpg", "jpeg", "png", "gif", "webp", "tif", "tiff"
+        };
 
         public PictureService(
             IPictureRepository pictureRepository,
@@ -39,8 +45,8 @@ namespace Application.Services
 
             try
             {
-                byte[]? pictureAsBase64 = ReadFromIFormFile(picture);
-                fileName = await GetPictureLinkAsync(pictureAsBase64, blobFolder, identifier);
+                (byte[]? pictureAsBase64, string extension) = ReadFromIFormFile(picture);
+                fileName = await GetPictureLinkAsync(pictureAsBase64, blobFolder, identifier, extension);
             }
             catch (RequestFailedException)
             {
@@ -51,23 +57,39 @@ namespace Application.Services
             return fileName;
         }
 
-        private byte[]? ReadFromIFormFile(IFormFile? formFile)
+        private string VerifyFileExtension(IFormFile formFile)
+        {
+            string extension = formFile.ContentType.Split('/').Last();
+
+            if (!_imageExtensions.Contains(extension))
+            {
+                _logger.LogWarning($"The file with the extension '.{extension}' could not be uploaded");
+                throw new IncorrectExtensionException($"The file with the extension '.{extension}' could not be uploaded");
+            }
+
+            return extension;
+        }
+
+        private (byte[]?, string) ReadFromIFormFile(IFormFile? formFile)
         {
             if (formFile is not null)
             {
+                string extension = VerifyFileExtension(formFile);
+
                 using (var ms = new MemoryStream())
                 {
                     formFile.CopyTo(ms);
                     byte[] formFileAsBytes = ms.ToArray();
 
-                    return formFileAsBytes;
+                    return (formFileAsBytes, extension);
                 }
             }
 
-            return null;
+            return (null, "png");
         }
 
-        private async Task<string> GetPictureLinkAsync(byte[]? formFileAsBytes, string blobFolder, string identifier)
+        private async Task<string> GetPictureLinkAsync(
+            byte[]? formFileAsBytes, string blobFolder, string identifier, string extension)
         {
             if (formFileAsBytes is null)
             {
@@ -78,9 +100,9 @@ namespace Application.Services
             using (MemoryStream ms = new(formFileAsBytes))
             {
                 var image = Image.Load(ms);
-                string profilePictureLink = await _pictureRepository.UploadAsync(image, blobFolder, identifier);
+                string pictureLink = await _pictureRepository.UploadAsync(image, blobFolder, identifier, extension);
 
-                return profilePictureLink;
+                return pictureLink;
             }
         }
     }

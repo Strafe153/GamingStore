@@ -6,5 +6,6 @@ namespace Core.Dtos.UserDtos
     {
         public int Id { get; init; }
         public UserRole Role { get; init; }
+        public string? ProfilePicture { get; init; }
     }
 }
