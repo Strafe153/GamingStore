@@ -28,6 +28,10 @@ namespace Application.Tests
                     It.IsAny<Expression<Func<Device, bool>>>()))
                 .ReturnsAsync(_fixture.PaginatedList);
 
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<List<Device>>(It.IsAny<string>()))
+                .ReturnsAsync((List<Device>)null!);
+
             // Act
             var result = await _fixture.MockDeviceService.GetAllAsync(_fixture.Id, _fixture.Id, _fixture.Name);
 

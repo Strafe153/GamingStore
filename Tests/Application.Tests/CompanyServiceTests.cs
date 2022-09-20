@@ -28,6 +28,10 @@ namespace Application.Tests
                     It.IsAny<Expression<Func<Company, bool>>>()))
                 .ReturnsAsync(_fixture.PaginatedList);
 
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<List<Company>>(It.IsAny<string>()))
+                .ReturnsAsync((List<Company>)null!);
+
             // Act
             var result = await _fixture.MockCompanyService.GetAllAsync(_fixture.Id, _fixture.Id);
 

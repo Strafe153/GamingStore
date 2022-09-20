@@ -29,6 +29,10 @@ namespace Application.Tests
                     It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(_fixture.PaginatedList);
 
+            _fixture.MockCacheService
+                .Setup(s => s.GetAsync<List<User>>(It.IsAny<string>()))
+                .ReturnsAsync((List<User>)null!);
+
             // Act
             var result = await _fixture.MockUserService.GetAllAsync(_fixture.Id, _fixture.Id);
 
