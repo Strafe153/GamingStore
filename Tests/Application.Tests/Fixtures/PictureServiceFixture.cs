@@ -38,7 +38,12 @@ namespace Application.Tests.Fixtures
         private async Task<IFormFile> GetFormFile()
         {
             byte[] pictureAsBytes = await File.ReadAllBytesAsync(ValidPath);
-            return new FormFile(new MemoryStream(pictureAsBytes), 0, pictureAsBytes.Length, "Picture", "picture.jpg");
+
+            return new FormFile(new MemoryStream(pictureAsBytes), 0, pictureAsBytes.Length, "Picture", "picture.jpg")
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image/jpeg"
+            };
         }
     }
 }

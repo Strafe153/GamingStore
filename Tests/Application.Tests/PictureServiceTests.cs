@@ -44,6 +44,7 @@ namespace Application.Tests
                 .Setup(r => r.UploadAsync(
                     It.IsAny<Image>(),
                     It.IsAny<string>(),
+                    It.IsAny<string>(),
                     It.IsAny<string>()))
                 .ReturnsAsync(_fixture.ValidPath);
 
@@ -61,6 +62,7 @@ namespace Application.Tests
             _fixture.MockPictureRepository
                 .Setup(r => r.UploadAsync(
                     It.IsAny<Image>(),
+                    It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>()))
                 .ThrowsAsync(new RequestFailedException(_fixture.ValidPath));
