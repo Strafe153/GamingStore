@@ -50,19 +50,30 @@ namespace Application.Services
 
         public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize, string? companyName)
         {
+            string key = $"devices:{companyName ?? "all"}";
+            var cachedDevices = await _cacheService.GetAsync<List<Device>>(key);
             PaginatedList<Device> devices;
 
-            if (companyName is null)
+            if (cachedDevices is null)
             {
-                devices = await _repository.GetAllAsync(pageNumber, pageSize);
-                _logger.LogInformation("Successfully retrieved all devices");
+                if (companyName is null)
+                {
+                    devices = await _repository.GetAllAsync(pageNumber, pageSize);
+                    _logger.LogInformation("Successfully retrieved all devices");
+                }
+                else
+                {
+                    devices = await _repository.GetAllAsync(pageNumber, pageSize, d => d.Company!.Name == companyName);
+                    _logger.LogInformation($"Successfully retrieved all devices of the '{companyName}' company");
+                }
+
+                await _cacheService.SetAsync(key, devices);
             }
             else
             {
-                devices = await _repository.GetAllAsync(pageNumber, pageSize, d => d.Company!.Name == companyName);
-                _logger.LogInformation($"Successfully retrieved all devices of the '{companyName}' company");
+                devices = new(cachedDevices, cachedDevices.Count, pageNumber, pageSize);
             }
-
+            
             return devices;
         }
 

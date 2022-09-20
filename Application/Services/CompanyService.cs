@@ -50,7 +50,20 @@ namespace Application.Services
 
         public async Task<PaginatedList<Company>> GetAllAsync(int pageNumber, int pageSize)
         {
-            var companies = await _repository.GetAllAsync(pageNumber, pageSize);
+            string key = "companies";
+            var cachedCompanies = await _cacheService.GetAsync<List<Company>>(key);
+            PaginatedList<Company> companies;
+
+            if (cachedCompanies is null)
+            {
+                companies = await _repository.GetAllAsync(pageNumber, pageSize);
+                await _cacheService.SetAsync(key, companies);
+            }
+            else
+            {
+                companies = new(cachedCompanies, cachedCompanies.Count, pageNumber, pageSize);
+            }
+
             _logger.LogInformation("Successfully retrieved all companies");
 
             return companies;
