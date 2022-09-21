@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces.Services;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -9,11 +10,16 @@ namespace Application.Services
     public class CacheService : ICacheService
     {
         private readonly IDistributedCache _cache;
+        private readonly ILogger<CacheService> _logger;
         private readonly JsonSerializerOptions _serializerOptions;
 
-        public CacheService(IDistributedCache cache)
+        public CacheService(
+            IDistributedCache cache,
+            ILogger<CacheService> logger)
         {
             _cache = cache;
+            _logger = logger;
+
             _serializerOptions = new()
             {
                 ReferenceHandler = ReferenceHandler.IgnoreCycles
@@ -29,8 +35,12 @@ namespace Application.Services
                 string serializedData = Encoding.UTF8.GetString(cachedData);
                 var result = JsonSerializer.Deserialize<T>(serializedData)!;
 
+                _logger.LogInformation("Successfully retrieved cached data of type '{Type}'", typeof(T));
+
                 return result;
             }
+
+            _logger.LogInformation("Cached data of type '{Type}' does not exist", typeof(T));
 
             return default;
         }
@@ -45,6 +55,8 @@ namespace Application.Services
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(2),
                 SlidingExpiration = TimeSpan.FromMinutes(3)
             });
+
+            _logger.LogInformation("Successfully cached data of type '{Type}'", typeof(T));
         }
     }
 }

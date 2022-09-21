@@ -35,7 +35,7 @@ namespace Application.Services
             }
             catch (DbUpdateException)
             {
-                _logger.LogWarning($"Failed to create a company. The name '{entity.Name}' is already taken");
+                _logger.LogWarning("Failed to create a company. The name '{Name}' is already taken", entity.Name);
                 throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
             }
         }
@@ -45,7 +45,7 @@ namespace Application.Services
             _repository.Delete(entity);
             await _repository.SaveChangesAsync();
 
-            _logger.LogInformation($"Succesfully deleted a company with id {entity.Id}");
+            _logger.LogInformation("Succesfully deleted a company with id {Id}", entity.Id);
         }
 
         public async Task<PaginatedList<Company>> GetAllAsync(int pageNumber, int pageSize)
@@ -80,13 +80,14 @@ namespace Application.Services
 
                 if (company is null)
                 {
-                    _logger.LogWarning($"Failed to retrieve a company with id {id}");
+                    _logger.LogWarning("Failed to retrieve a company with id {Id}", id);
                     throw new NullReferenceException($"Company with id {id} not found");
                 }
 
                 await _cacheService.SetAsync(key, company);
-                _logger.LogInformation($"Successfully retrieved a company with id {id}");
             }
+
+            _logger.LogInformation("Successfully retrieved a company with id {Id}", id);
 
             return company;
         }
@@ -98,11 +99,12 @@ namespace Application.Services
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
 
-                _logger.LogInformation($"Successfully updated a company with id {entity.Id}");
+                _logger.LogInformation("Successfully updated a company with id {Id}", entity.Id);
             }
             catch (DbUpdateException)
             {
-                _logger.LogWarning($"Failed to update the company with id {entity.Id}. The name '{entity.Name}' is already taken");
+                _logger.LogWarning("Failed to update the company with id {Id}. The name '{Name}' is already taken", 
+                    entity.Id, entity.Name);
                 throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
             }
         }

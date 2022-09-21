@@ -38,7 +38,7 @@ namespace Application.Services
             } 
             catch (DbUpdateException)
             {
-                _logger.LogWarning($"Failed to register a user. The email '{entity.Email}' is already taken");
+                _logger.LogWarning("Failed to register a user. The email '{Email}' is already taken", entity.Email);
                 throw new UsernameNotUniqueException($"Email '{entity.Email}' is already taken");
             }
         }
@@ -48,7 +48,7 @@ namespace Application.Services
             _repository.Delete(entity);
             await _repository.SaveChangesAsync();
 
-            _logger.LogInformation($"Succesfully deleted a user with id {entity.Id}");
+            _logger.LogInformation("Succesfully deleted a user with id {Id}", entity.Id);
         }
 
         public async Task<PaginatedList<User>> GetAllAsync(int pageNumber, int pageSize)
@@ -83,13 +83,14 @@ namespace Application.Services
 
                 if (user is null)
                 {
-                    _logger.LogWarning($"Failed to retrieve a user with id {id}");
+                    _logger.LogWarning("Failed to retrieve a user with id {Id}", id);
                     throw new NullReferenceException($"User with id {id} not found");
                 }
 
                 await _cacheService.SetAsync(key, user);
-                _logger.LogInformation($"Successfully retrieved a user with id {id}");
             }
+
+            _logger.LogInformation("Successfully retrieved a user with id {Id}", id);
 
             return user;
         }
@@ -100,11 +101,11 @@ namespace Application.Services
 
             if (user is null)
             {
-                _logger.LogWarning($"Failed to retrieve a user with username {email}");
+                _logger.LogWarning("Failed to retrieve a user with username {Email}", email);
                 throw new NullReferenceException($"User with email {email} not found");
             }
 
-            _logger.LogInformation($"Successfully retrieved a user with username {email}");
+            _logger.LogInformation("Successfully retrieved a user with username {Email}", email);
 
             return user;
         }
@@ -116,11 +117,12 @@ namespace Application.Services
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
 
-                _logger.LogInformation($"Successfully updated a user with id {entity.Id}");
+                _logger.LogInformation("Successfully updated a user with id {Id}", entity.Id);
             }
             catch (DbUpdateException)
             {
-                _logger.LogWarning($"Failed to update the user with id {entity.Id}. The username '{entity.Username}' is already taken");
+                _logger.LogWarning("Failed to update the user with id {Id}. The username '{Username}' is already taken",
+                    entity.Id, entity.Username);
                 throw new UsernameNotUniqueException($"Username '{entity.Username}' is already taken");
             }
         }
@@ -150,7 +152,7 @@ namespace Application.Services
         {
             if (performedOn.Username != performer.Name && !claims.Any(c => c.Value == UserRole.Admin.ToString()))
             {
-                _logger.LogWarning($"User '{performer.Name}' failed to perform an operation due to insufficient access rights");
+                _logger.LogWarning("User '{Name}' failed to perform an operation due to insufficient access rights", performer.Name);
                 throw new NotEnoughRightsException("Not enough rights to perform the operation");
             }
         }
