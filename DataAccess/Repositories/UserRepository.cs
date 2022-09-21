@@ -5,61 +5,60 @@ using DataAccess.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace DataAccess.Repositories
+namespace DataAccess.Repositories;
+
+public class UserRepository : IUserRepository
 {
-    public class UserRepository : IUserRepository
+    private readonly GamingStoreContext _context;
+
+    public UserRepository(GamingStoreContext context)
     {
-        private readonly GamingStoreContext _context;
+        _context = context;
+    }
 
-        public UserRepository(GamingStoreContext context)
-        {
-            _context = context;
-        }
+    public void Create(User entity)
+    {
+        _context.Users.Add(entity);
+    }
 
-        public void Create(User entity)
-        {
-            _context.Users.Add(entity);
-        }
+    public void Delete(User entity)
+    {
+        _context.Users.Remove(entity);
+    }
 
-        public void Delete(User entity)
-        {
-            _context.Users.Remove(entity);
-        }
+    public async Task<PaginatedList<User>> GetAllAsync(
+        int pageNumber, 
+        int pageSize,
+        Expression<Func<User, bool>>? filter = null)
+    {
+        var query = filter is null
+            ? _context.Users
+            : _context.Users.Where(filter);
 
-        public async Task<PaginatedList<User>> GetAllAsync(
-            int pageNumber, 
-            int pageSize,
-            Expression<Func<User, bool>>? filter = null)
-        {
-            var query = filter is null
-                ? _context.Users
-                : _context.Users.Where(filter);
+        var users = await query.ToPaginatedList(pageNumber, pageSize);
 
-            var users = await query.ToPaginatedList(pageNumber, pageSize);
+        return users;
+    }
 
-            return users;
-        }
+    public async Task<User?> GetByIdAsync(int id)
+    {
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
+        return user;
+    }
 
-        public async Task<User?> GetByIdAsync(int id)
-        {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
-            return user;
-        }
+    public async Task<User?> GetByEmailAsync(string email)
+    {
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+        return user;
+    }
 
-        public async Task<User?> GetByEmailAsync(string email)
-        {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
-            return user;
-        }
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
 
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
-
-        public void Update(User entity)
-        {
-            _context.Users.Update(entity);
-        }
+    public void Update(User entity)
+    {
+        _context.Users.Update(entity);
     }
 }

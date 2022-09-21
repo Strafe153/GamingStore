@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Core.Interfaces.Services
+namespace Core.Interfaces.Services;
+
+public interface IPictureService
 {
-    public interface IPictureService
-    {
-        Task<string> UploadAsync(IFormFile? picture, string blobFolder, string identifier);
-        Task DeleteAsync(string imageLink);
-    }
+    Task<string> UploadAsync(IFormFile? picture, string blobFolder, string identifier);
+    Task DeleteAsync(string imageLink);
 }

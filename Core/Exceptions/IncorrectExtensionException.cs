@@ -1,10 +1,9 @@
-﻿namespace Core.Exceptions
+﻿namespace Core.Exceptions;
+
+public class IncorrectExtensionException : ApplicationException
 {
-    public class IncorrectExtensionException : ApplicationException
+    public IncorrectExtensionException(string message)
+        : base(message)
     {
-        public IncorrectExtensionException(string message)
-            : base(message)
-        {
-        }
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace Core.Dtos.CompanyDtos
+﻿namespace Core.Dtos.CompanyDtos;
+
+public record CompanyBaseDto
 {
-    public record CompanyBaseDto
-    {
-        public string? Name { get; init; }
-    }
+    public string? Name { get; init; }
 }

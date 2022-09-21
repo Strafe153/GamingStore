@@ -1,7 +1,6 @@
-﻿namespace Core.Dtos.UserDtos
+﻿namespace Core.Dtos.UserDtos;
+
+public record UserWithTokenReadDto : UserReadDto
 {
-    public record UserWithTokenReadDto : UserReadDto
-    {
-        public string? Token { get; init; }
-    }
+    public string? Token { get; init; }
 }
