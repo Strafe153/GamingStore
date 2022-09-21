@@ -42,7 +42,7 @@ namespace Application.Services
 
             await _cache.SetAsync(key, dataAsBytes, new DistributedCacheEntryOptions()
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1),
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(2),
                 SlidingExpiration = TimeSpan.FromMinutes(3)
             });
         }
