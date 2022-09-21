@@ -1,10 +1,9 @@
 ﻿using Core.Entities;
 
-namespace Core.Dtos.CompanyDtos
+namespace Core.Dtos.CompanyDtos;
+
+public record CompanyReadDto : CompanyBaseDto
 {
-    public record CompanyReadDto : CompanyBaseDto
-    {
-        public int Id { get; init; }
-        public ICollection<Device>? Devices { get; init; }
-    }
+    public int Id { get; init; }
+    public ICollection<Device>? Devices { get; init; }
 }

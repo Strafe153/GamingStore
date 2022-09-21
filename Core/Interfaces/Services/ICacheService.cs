@@ -1,8 +1,7 @@
-﻿namespace Core.Interfaces.Services
+﻿namespace Core.Interfaces.Services;
+
+public interface ICacheService
 {
-    public interface ICacheService
-    {
-        Task<T?> GetAsync<T>(string key);
-        Task SetAsync<T>(string key, T data);
-    }
+    Task<T?> GetAsync<T>(string key);
+    Task SetAsync<T>(string key, T data);
 }

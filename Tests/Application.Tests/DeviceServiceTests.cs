@@ -6,135 +6,134 @@ using Moq;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace Application.Tests
+namespace Application.Tests;
+
+public class DeviceServiceTests : IClassFixture<DeviceServiceFixture>
 {
-    public class DeviceServiceTests : IClassFixture<DeviceServiceFixture>
+    private readonly DeviceServiceFixture _fixture;
+
+    public DeviceServiceTests(DeviceServiceFixture fixture)
     {
-        private readonly DeviceServiceFixture _fixture;
+        _fixture = fixture;
+    }
 
-        public DeviceServiceTests(DeviceServiceFixture fixture)
-        {
-            _fixture = fixture;
-        }
+    [Fact]
+    public async Task GetAllAsync_ValidParametersDataFromRepository_ReturnsPaginatedListOfDevice()
+    {
+        // Arrange
+        _fixture.MockCacheService
+            .Setup(s => s.GetAsync<List<Device>>(It.IsAny<string>()))
+            .ReturnsAsync((List<Device>)null!);
 
-        [Fact]
-        public async Task GetAllAsync_ValidParametersDataFromRepository_ReturnsPaginatedListOfDevice()
-        {
-            // Arrange
-            _fixture.MockCacheService
-                .Setup(s => s.GetAsync<List<Device>>(It.IsAny<string>()))
-                .ReturnsAsync((List<Device>)null!);
+        _fixture.MockDeviceRepository
+            .Setup(r => r.GetAllAsync(
+                It.IsAny<int>(), 
+                It.IsAny<int>(), 
+                It.IsAny<Expression<Func<Device, bool>>>()))
+            .ReturnsAsync(_fixture.PaginatedList);
 
-            _fixture.MockDeviceRepository
-                .Setup(r => r.GetAllAsync(
-                    It.IsAny<int>(), 
-                    It.IsAny<int>(), 
-                    It.IsAny<Expression<Func<Device, bool>>>()))
-                .ReturnsAsync(_fixture.PaginatedList);
+        // Act
+        var result = await _fixture.MockDeviceService.GetAllAsync(_fixture.Id, _fixture.Id, _fixture.Name);
 
-            // Act
-            var result = await _fixture.MockDeviceService.GetAllAsync(_fixture.Id, _fixture.Id, _fixture.Name);
+        // Assert
+        result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<Device>>();
+    }
 
-            // Assert
-            result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<Device>>();
-        }
+    [Fact]
+    public async Task GetAllAsync_ValidParametersDataFromCache_ReturnsPaginatedListOfDevice()
+    {
+        // Arrange
+        _fixture.MockCacheService
+            .Setup(s => s.GetAsync<List<Device>>(It.IsAny<string>()))
+            .ReturnsAsync(_fixture.PaginatedList);
 
-        [Fact]
-        public async Task GetAllAsync_ValidParametersDataFromCache_ReturnsPaginatedListOfDevice()
-        {
-            // Arrange
-            _fixture.MockCacheService
-                .Setup(s => s.GetAsync<List<Device>>(It.IsAny<string>()))
-                .ReturnsAsync(_fixture.PaginatedList);
+        // Act
+        var result = await _fixture.MockDeviceService.GetAllAsync(_fixture.Id, _fixture.Id, _fixture.Name);
 
-            // Act
-            var result = await _fixture.MockDeviceService.GetAllAsync(_fixture.Id, _fixture.Id, _fixture.Name);
+        // Assert
+        result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<Device>>();
+    }
 
-            // Assert
-            result.Should().NotBeNull().And.NotBeEmpty().And.BeOfType<PaginatedList<Device>>();
-        }
+    [Fact]
+    public async Task GetByIdAsync_ExistingDeviceInRepository_ReturnsDevice()
+    {
+        // Arrange
+        _fixture.MockCacheService
+            .Setup(s => s.GetAsync<Device>(It.IsAny<string>()))
+            .ReturnsAsync((Device)null!);
 
-        [Fact]
-        public async Task GetByIdAsync_ExistingDeviceInRepository_ReturnsDevice()
-        {
-            // Arrange
-            _fixture.MockCacheService
-                .Setup(s => s.GetAsync<Device>(It.IsAny<string>()))
-                .ReturnsAsync((Device)null!);
+        _fixture.MockDeviceRepository
+            .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(_fixture.Device);
 
-            _fixture.MockDeviceRepository
-                .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(_fixture.Device);
+        // Act
+        var result = await _fixture.MockDeviceService.GetByIdAsync(_fixture.Id);
 
-            // Act
-            var result = await _fixture.MockDeviceService.GetByIdAsync(_fixture.Id);
+        // Assert
+        result.Should().NotBeNull().And.BeOfType<Device>();
+    }
 
-            // Assert
-            result.Should().NotBeNull().And.BeOfType<Device>();
-        }
+    [Fact]
+    public async Task GetByIdAsync_ExistingDeviceInCache_ReturnsDevice()
+    {
+        // Arrange
+        _fixture.MockCacheService
+            .Setup(s => s.GetAsync<Device>(It.IsAny<string>()))
+            .ReturnsAsync(_fixture.Device);
 
-        [Fact]
-        public async Task GetByIdAsync_ExistingDeviceInCache_ReturnsDevice()
-        {
-            // Arrange
-            _fixture.MockCacheService
-                .Setup(s => s.GetAsync<Device>(It.IsAny<string>()))
-                .ReturnsAsync(_fixture.Device);
+        // Act
+        var result = await _fixture.MockDeviceService.GetByIdAsync(_fixture.Id);
 
-            // Act
-            var result = await _fixture.MockDeviceService.GetByIdAsync(_fixture.Id);
+        // Assert
+        result.Should().NotBeNull().And.BeOfType<Device>();
+    }
 
-            // Assert
-            result.Should().NotBeNull().And.BeOfType<Device>();
-        }
+    [Fact]
+    public async Task GetByIdAsync_NonexistingDevice_ThrowsNullReferenceException()
+    {
+        // Arrange
+        _fixture.MockDeviceRepository
+            .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync((Device)null!);
 
-        [Fact]
-        public async Task GetByIdAsync_NonexistingDevice_ThrowsNullReferenceException()
-        {
-            // Arrange
-            _fixture.MockDeviceRepository
-                .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync((Device)null!);
+        _fixture.MockCacheService
+            .Setup(s => s.GetAsync<Device>(It.IsAny<string>()))
+            .ReturnsAsync((Device)null!);
 
-            _fixture.MockCacheService
-                .Setup(s => s.GetAsync<Device>(It.IsAny<string>()))
-                .ReturnsAsync((Device)null!);
+        // Act
+        var result = async () => await _fixture.MockDeviceService.GetByIdAsync(_fixture.Id);
 
-            // Act
-            var result = async () => await _fixture.MockDeviceService.GetByIdAsync(_fixture.Id);
+        // Assert
+        await result.Should().ThrowAsync<NullReferenceException>();
+    }
 
-            // Assert
-            await result.Should().ThrowAsync<NullReferenceException>();
-        }
+    [Fact]
+    public void CreateAsync_ValidDevice_ReturnsTask()
+    {
+        // Act
+        var result = _fixture.MockDeviceService.CreateAsync(_fixture.Device);
 
-        [Fact]
-        public void CreateAsync_ValidDevice_ReturnsTask()
-        {
-            // Act
-            var result = _fixture.MockDeviceService.CreateAsync(_fixture.Device);
+        // Assert
+        result.Should().NotBeNull();
+    }
 
-            // Assert
-            result.Should().NotBeNull();
-        }
+    [Fact]
+    public void UpdateAsync_ValidDevice_ReturnsTask()
+    {
+        // Act
+        var result = _fixture.MockDeviceService.UpdateAsync(_fixture.Device);
 
-        [Fact]
-        public void UpdateAsync_ValidDevice_ReturnsTask()
-        {
-            // Act
-            var result = _fixture.MockDeviceService.UpdateAsync(_fixture.Device);
+        // Assert
+        result.Should().NotBeNull();
+    }
 
-            // Assert
-            result.Should().NotBeNull();
-        }
+    [Fact]
+    public void DeleteAsync_ValidDevice_ReturnsTask()
+    {
+        // Act
+        var result = _fixture.MockDeviceService.DeleteAsync(_fixture.Device);
 
-        [Fact]
-        public void DeleteAsync_ValidDevice_ReturnsTask()
-        {
-            // Act
-            var result = _fixture.MockDeviceService.DeleteAsync(_fixture.Device);
-
-            // Assert
-            result.Should().NotBeNull();
-        }
+        // Assert
+        result.Should().NotBeNull();
     }
 }

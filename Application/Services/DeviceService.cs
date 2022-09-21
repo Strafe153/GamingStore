@@ -6,120 +6,119 @@ using Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Services
+namespace Application.Services;
+
+public class DeviceService : IDeviceService
 {
-    public class DeviceService : IDeviceService
+    private readonly IRepository<Device> _repository;
+    private readonly ICacheService _cacheService;
+    private readonly ILogger<DeviceService> _logger;
+
+    public DeviceService(
+        IRepository<Device> repository,
+        ICacheService cacheService,
+        ILogger<DeviceService> logger)
     {
-        private readonly IRepository<Device> _repository;
-        private readonly ICacheService _cacheService;
-        private readonly ILogger<DeviceService> _logger;
+        _repository = repository;
+        _cacheService = cacheService;
+        _logger = logger;
+    }
 
-        public DeviceService(
-            IRepository<Device> repository,
-            ICacheService cacheService,
-            ILogger<DeviceService> logger)
+    public async Task CreateAsync(Device entity)
+    {
+        try
         {
-            _repository = repository;
-            _cacheService = cacheService;
-            _logger = logger;
-        }
-
-        public async Task CreateAsync(Device entity)
-        {
-            try
-            {
-                _repository.Create(entity);
-                await _repository.SaveChangesAsync();
-
-                _logger.LogInformation("Succesfully created a device");
-            }
-            catch (DbUpdateException)
-            {
-                _logger.LogWarning("Failed to create a device. The name '{Name}' is already taken", entity.Name);
-                throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
-            }
-        }
-
-        public async Task DeleteAsync(Device entity)
-        {
-            _repository.Delete(entity);
+            _repository.Create(entity);
             await _repository.SaveChangesAsync();
 
-            _logger.LogInformation("Succesfully deleted a device with id {Id}", entity.Id);
+            _logger.LogInformation("Succesfully created a device");
         }
-
-        public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize, string? companyName)
+        catch (DbUpdateException)
         {
-            string key = $"devices:{companyName ?? "all"}";
-            var cachedDevices = await _cacheService.GetAsync<List<Device>>(key);
-            PaginatedList<Device> devices;
+            _logger.LogWarning("Failed to create a device. The name '{Name}' is already taken", entity.Name);
+            throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
+        }
+    }
 
-            if (cachedDevices is null)
+    public async Task DeleteAsync(Device entity)
+    {
+        _repository.Delete(entity);
+        await _repository.SaveChangesAsync();
+
+        _logger.LogInformation("Succesfully deleted a device with id {Id}", entity.Id);
+    }
+
+    public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize, string? companyName)
+    {
+        string key = $"devices:{companyName ?? "all"}";
+        var cachedDevices = await _cacheService.GetAsync<List<Device>>(key);
+        PaginatedList<Device> devices;
+
+        if (cachedDevices is null)
+        {
+            if (companyName is null)
             {
-                if (companyName is null)
-                {
-                    devices = await _repository.GetAllAsync(pageNumber, pageSize);
-                    _logger.LogInformation("Successfully retrieved all devices");
-                }
-                else
-                {
-                    devices = await _repository.GetAllAsync(pageNumber, pageSize, d => d.Company!.Name == companyName);
-                    _logger.LogInformation("Successfully retrieved all devices of the '{CompanyName}' company", companyName);
-                }
-
-                await _cacheService.SetAsync(key, devices);
+                devices = await _repository.GetAllAsync(pageNumber, pageSize);
+                _logger.LogInformation("Successfully retrieved all devices");
             }
             else
             {
-                devices = new(cachedDevices, cachedDevices.Count, pageNumber, pageSize);
+                devices = await _repository.GetAllAsync(pageNumber, pageSize, d => d.Company!.Name == companyName);
+                _logger.LogInformation("Successfully retrieved all devices of the '{CompanyName}' company", companyName);
             }
 
-            return devices;
+            await _cacheService.SetAsync(key, devices);
+        }
+        else
+        {
+            devices = new(cachedDevices, cachedDevices.Count, pageNumber, pageSize);
         }
 
-        public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize)
-        {
-            return await GetAllAsync(pageNumber, pageSize, null);
-        }
+        return devices;
+    }
 
-        public async Task<Device> GetByIdAsync(int id)
+    public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize)
+    {
+        return await GetAllAsync(pageNumber, pageSize, null);
+    }
+
+    public async Task<Device> GetByIdAsync(int id)
+    {
+        string key = $"device:{id}";
+        var device = await _cacheService.GetAsync<Device>(key);
+
+        if (device is null)
         {
-            string key = $"device:{id}";
-            var device = await _cacheService.GetAsync<Device>(key);
+            device = await _repository.GetByIdAsync(id);
 
             if (device is null)
             {
-                device = await _repository.GetByIdAsync(id);
-
-                if (device is null)
-                {
-                    _logger.LogWarning("Failed to retrieve a device with id {Id}", id);
-                    throw new NullReferenceException($"Device with id {id} not found");
-                }
-
-                await _cacheService.SetAsync(key, device);
+                _logger.LogWarning("Failed to retrieve a device with id {Id}", id);
+                throw new NullReferenceException($"Device with id {id} not found");
             }
 
-            _logger.LogInformation("Successfully retrieved a device with id {Id}", id);
-
-            return device;
+            await _cacheService.SetAsync(key, device);
         }
 
-        public async Task UpdateAsync(Device entity)
-        {
-            try
-            {
-                _repository.Update(entity);
-                await _repository.SaveChangesAsync();
+        _logger.LogInformation("Successfully retrieved a device with id {Id}", id);
 
-                _logger.LogInformation("Successfully updated a device with id {Id}", entity.Id);
-            }
-            catch (DbUpdateException)
-            {
-                _logger.LogWarning("Failed to update the device wiht id {Id}. The name '{Name}' is already taken", 
-                    entity.Id, entity.Name);
-                throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
-            }
+        return device;
+    }
+
+    public async Task UpdateAsync(Device entity)
+    {
+        try
+        {
+            _repository.Update(entity);
+            await _repository.SaveChangesAsync();
+
+            _logger.LogInformation("Successfully updated a device with id {Id}", entity.Id);
+        }
+        catch (DbUpdateException)
+        {
+            _logger.LogWarning("Failed to update the device wiht id {Id}. The name '{Name}' is already taken", 
+                entity.Id, entity.Name);
+            throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
         }
     }
 }

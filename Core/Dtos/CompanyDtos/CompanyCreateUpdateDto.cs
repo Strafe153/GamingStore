@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Core.Dtos.CompanyDtos
+namespace Core.Dtos.CompanyDtos;
+
+public record CompanyCreateUpdateDto : CompanyBaseDto
 {
-    public record CompanyCreateUpdateDto : CompanyBaseDto
-    {
-        public IFormFile? Picture { get; init; }
-    }
+    public IFormFile? Picture { get; init; }
 }

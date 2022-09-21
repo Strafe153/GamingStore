@@ -1,14 +1,13 @@
-﻿namespace Core.Enums
+﻿namespace Core.Enums;
+
+public enum DeviceCategory
 {
-    public enum DeviceCategory
-    {
-        Mouse,
-        Keyboard,
-        Headphones,
-        Earphones,
-        Mat,
-        Headset,
-        CableHolder,
-        Gamepad
-    }
+    Mouse,
+    Keyboard,
+    Headphones,
+    Earphones,
+    Mat,
+    Headset,
+    CableHolder,
+    Gamepad
 }

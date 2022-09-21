@@ -3,58 +3,57 @@ using Core.Interfaces.Repositories;
 using Microsoft.Extensions.Configuration;
 using SixLabors.ImageSharp;
 
-namespace DataAccess.Repositories
+namespace DataAccess.Repositories;
+
+public class PictureRepository : IPictureRepository
 {
-    public class PictureRepository : IPictureRepository
+    private readonly IConfiguration _configuration;
+    private readonly BlobServiceClient _blobServiceClient;
+    private readonly string _containerName;
+    private readonly BlobContainerClient _blobContainerClient;
+
+    public PictureRepository(
+        IConfiguration configuration,
+        BlobServiceClient blobServiceClient)
     {
-        private readonly IConfiguration _configuration;
-        private readonly BlobServiceClient _blobServiceClient;
-        private readonly string _containerName;
-        private readonly BlobContainerClient _blobContainerClient;
+        _configuration = configuration;
+        _blobServiceClient = blobServiceClient;
+        _containerName = _configuration["Azure:ContainerName"];
+        _blobContainerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+    }
 
-        public PictureRepository(
-            IConfiguration configuration,
-            BlobServiceClient blobServiceClient)
+    public async Task<string> UploadAsync(Image image, string blobFolder, string identifier, string extension)
+    {
+        var fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.{extension}";
+        var blobItems = _blobContainerClient.GetBlobs(prefix: $"{blobFolder}/{identifier}");
+
+        if (blobItems.Any())
         {
-            _configuration = configuration;
-            _blobServiceClient = blobServiceClient;
-            _containerName = _configuration["Azure:ContainerName"];
-            _blobContainerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+            await DeleteAsync(blobItems.First().Name);
         }
 
-        public async Task<string> UploadAsync(Image image, string blobFolder, string identifier, string extension)
+        using (MemoryStream ms = new())
         {
-            var fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.{extension}";
-            var blobItems = _blobContainerClient.GetBlobs(prefix: $"{blobFolder}/{identifier}");
+            image.SaveAsPng(ms);
+            ms.Position = 0;
 
-            if (blobItems.Any())
-            {
-                await DeleteAsync(blobItems.First().Name);
-            }
-
-            using (MemoryStream ms = new())
-            {
-                image.SaveAsPng(ms);
-                ms.Position = 0;
-
-                await _blobContainerClient.UploadBlobAsync(fileName, ms);
-            }
-
-            fileName = $"{_configuration["Azure:ContainerLink"]}/{_containerName}/{fileName}";
-
-            return fileName;
+            await _blobContainerClient.UploadBlobAsync(fileName, ms);
         }
 
-        public async Task DeleteAsync(string imageLink)
+        fileName = $"{_configuration["Azure:ContainerLink"]}/{_containerName}/{fileName}";
+
+        return fileName;
+    }
+
+    public async Task DeleteAsync(string imageLink)
+    {
+        if (imageLink.Contains(_containerName))
         {
-            if (imageLink.Contains(_containerName))
-            {
-                imageLink = imageLink.Split(_containerName)[1];
-            }
-
-            var blobClient = _blobContainerClient.GetBlobClient(imageLink);
-
-            await blobClient.DeleteAsync();
+            imageLink = imageLink.Split(_containerName)[1];
         }
+
+        var blobClient = _blobContainerClient.GetBlobClient(imageLink);
+
+        await blobClient.DeleteAsync();
     }
 }

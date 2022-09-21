@@ -2,27 +2,26 @@
 using Core.Dtos.UserDtos;
 using FluentValidation;
 
-namespace WebApi.Validators.UserValidators
+namespace WebApi.Validators.UserValidators;
+
+public class UserChangeRoleValidator : AbstractValidator<UserChangeRoleDto>
 {
-    public class UserChangeRoleValidator : AbstractValidator<UserChangeRoleDto>
+    public UserChangeRoleValidator()
     {
-        public UserChangeRoleValidator()
+        RuleFor(p => p.Role)
+            .Must(BeInRange)
+            .WithMessage("Role must be in the range from 0 to 1 inclusive");
+    }
+
+    private bool BeInRange(UserRole role)
+    {
+        int roleAsInt = (int)role;
+
+        if ((roleAsInt > -1) && (roleAsInt < 2))
         {
-            RuleFor(p => p.Role)
-                .Must(BeInRange)
-                .WithMessage("Role must be in the range from 0 to 1 inclusive");
+            return true;
         }
 
-        private bool BeInRange(UserRole role)
-        {
-            int roleAsInt = (int)role;
-
-            if ((roleAsInt > -1) && (roleAsInt < 2))
-            {
-                return true;
-            }
-
-            return false;
-        }
+        return false;
     }
 }

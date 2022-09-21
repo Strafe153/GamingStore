@@ -13,204 +13,203 @@ using Moq;
 using System.Security.Claims;
 using WebApi.Controllers;
 
-namespace WebApi.Tests.Fixtures
+namespace WebApi.Tests.Fixtures;
+
+public class UsersControllerFixture
 {
-    public class UsersControllerFixture
+    public UsersControllerFixture()
     {
-        public UsersControllerFixture()
+        var fixture = new Fixture().Customize(new AutoMoqCustomization());
+
+        MockUserService = fixture.Freeze<Mock<IUserService>>();
+        MockPasswordService = fixture.Freeze<Mock<IPasswordService>>();
+        MockPictureService = fixture.Freeze<Mock<IPictureService>>();
+        MockMapper = fixture.Freeze<Mock<IMapper>>();
+
+        MockUsersController = new(
+            MockUserService.Object,
+            MockPasswordService.Object,
+            MockPictureService.Object,
+            MockMapper.Object);
+
+        Id = 1;
+        Username = "Username";
+        Bytes = new byte[0];
+        User = GetUser();
+        UserBaseDto = GetUserBaseDto();
+        UserReadDto = GetUserReadDto();
+        UserRegisterDto = GetUserRegisterDto();
+        UserLoginDto = GetUserLoginDto();
+        UserUpdateDto = GetUserUpdateDto();
+        UserChangeRoleDto = GetUserChangeRoleDto();
+        UserChangePasswordDto = GetUserChangePasswordDto();
+        UserWithTokenReadDto = GetUserWithTokenReadDto();
+        PageParameters = GetPageParameters();
+        UserPaginatedList = GetUserPaginatedList();
+        UserPageDto = GetUserPageDto();
+    }
+
+    public UsersController MockUsersController { get; }
+    public Mock<IUserService> MockUserService { get; }
+    public Mock<IPasswordService> MockPasswordService { get; }
+    public Mock<IPictureService> MockPictureService { get; }
+    public Mock<IMapper> MockMapper { get; }
+
+    public int Id { get; }
+    public string Username { get; }
+    public byte[] Bytes { get; }
+    public IFormFile? Picture { get; }
+    public User User { get; }
+    public UserBaseDto UserBaseDto { get; }
+    public UserReadDto UserReadDto { get; }
+    public UserRegisterDto UserRegisterDto { get; }
+    public UserLoginDto UserLoginDto { get; }
+    public UserUpdateDto UserUpdateDto { get; }
+    public UserChangeRoleDto UserChangeRoleDto { get; }
+    public UserChangePasswordDto UserChangePasswordDto { get; }
+    public UserWithTokenReadDto UserWithTokenReadDto { get; }
+    public PageParameters PageParameters { get; }
+    public PaginatedList<User> UserPaginatedList { get; }
+    public PageDto<UserReadDto> UserPageDto { get; }
+
+    public void MockControllerBaseUser()
+    {
+        ClaimsPrincipal user = new(new ClaimsIdentity());
+
+        MockUsersController.ControllerContext = new ControllerContext();
+        MockUsersController.ControllerContext.HttpContext = new DefaultHttpContext()
         {
-            var fixture = new Fixture().Customize(new AutoMoqCustomization());
+            User = user
+        };
+    }
 
-            MockUserService = fixture.Freeze<Mock<IUserService>>();
-            MockPasswordService = fixture.Freeze<Mock<IPasswordService>>();
-            MockPictureService = fixture.Freeze<Mock<IPictureService>>();
-            MockMapper = fixture.Freeze<Mock<IMapper>>();
-
-            MockUsersController = new(
-                MockUserService.Object,
-                MockPasswordService.Object,
-                MockPictureService.Object,
-                MockMapper.Object);
-
-            Id = 1;
-            Username = "Username";
-            Bytes = new byte[0];
-            User = GetUser();
-            UserBaseDto = GetUserBaseDto();
-            UserReadDto = GetUserReadDto();
-            UserRegisterDto = GetUserRegisterDto();
-            UserLoginDto = GetUserLoginDto();
-            UserUpdateDto = GetUserUpdateDto();
-            UserChangeRoleDto = GetUserChangeRoleDto();
-            UserChangePasswordDto = GetUserChangePasswordDto();
-            UserWithTokenReadDto = GetUserWithTokenReadDto();
-            PageParameters = GetPageParameters();
-            UserPaginatedList = GetUserPaginatedList();
-            UserPageDto = GetUserPageDto();
-        }
-
-        public UsersController MockUsersController { get; }
-        public Mock<IUserService> MockUserService { get; }
-        public Mock<IPasswordService> MockPasswordService { get; }
-        public Mock<IPictureService> MockPictureService { get; }
-        public Mock<IMapper> MockMapper { get; }
-
-        public int Id { get; }
-        public string Username { get; }
-        public byte[] Bytes { get; }
-        public IFormFile? Picture { get; }
-        public User User { get; }
-        public UserBaseDto UserBaseDto { get; }
-        public UserReadDto UserReadDto { get; }
-        public UserRegisterDto UserRegisterDto { get; }
-        public UserLoginDto UserLoginDto { get; }
-        public UserUpdateDto UserUpdateDto { get; }
-        public UserChangeRoleDto UserChangeRoleDto { get; }
-        public UserChangePasswordDto UserChangePasswordDto { get; }
-        public UserWithTokenReadDto UserWithTokenReadDto { get; }
-        public PageParameters PageParameters { get; }
-        public PaginatedList<User> UserPaginatedList { get; }
-        public PageDto<UserReadDto> UserPageDto { get; }
-
-        public void MockControllerBaseUser()
+    private User GetUser()
+    {
+        return new()
         {
-            ClaimsPrincipal user = new(new ClaimsIdentity());
+            Id = Id,
+            Username = Username,
+            Role = UserRole.User,
+            PasswordHash = Bytes,
+            PasswordSalt = Bytes
+        };
+    }
 
-            MockUsersController.ControllerContext = new ControllerContext();
-            MockUsersController.ControllerContext.HttpContext = new DefaultHttpContext()
-            {
-                User = user
-            };
-        }
-
-        private User GetUser()
+    private List<User> GetUsers()
+    {
+        return new()
         {
-            return new()
-            {
-                Id = Id,
-                Username = Username,
-                Role = UserRole.User,
-                PasswordHash = Bytes,
-                PasswordSalt = Bytes
-            };
-        }
+            GetUser(),
+            GetUser()
+        };
+    }
 
-        private List<User> GetUsers()
+    private PageParameters GetPageParameters()
+    {
+        return new()
         {
-            return new()
-            {
-                GetUser(),
-                GetUser()
-            };
-        }
+            PageNumber = 1,
+            PageSize = 5
+        };
+    }
 
-        private PageParameters GetPageParameters()
-        {
-            return new()
-            {
-                PageNumber = 1,
-                PageSize = 5
-            };
-        }
+    private PaginatedList<User> GetUserPaginatedList()
+    {
+        return new(GetUsers(), 6, 1, 5);
+    }
 
-        private PaginatedList<User> GetUserPaginatedList()
+    private UserBaseDto GetUserBaseDto()
+    {
+        return new()
         {
-            return new(GetUsers(), 6, 1, 5);
-        }
+            Username = Username
+        };
+    }
 
-        private UserBaseDto GetUserBaseDto()
+    private UserReadDto GetUserReadDto()
+    {
+        return new()
         {
-            return new()
-            {
-                Username = Username
-            };
-        }
+            Id = Id,
+            Username = Username,
+            Role = UserRole.User
+        };
+    }
 
-        private UserReadDto GetUserReadDto()
+    private UserRegisterDto GetUserRegisterDto()
+    {
+        return new()
         {
-            return new()
-            {
-                Id = Id,
-                Username = Username,
-                Role = UserRole.User
-            };
-        }
+            Username = Username,
+            Password = Username
+        };
+    }
 
-        private UserRegisterDto GetUserRegisterDto()
+    private UserLoginDto GetUserLoginDto()
+    {
+        return new()
         {
-            return new()
-            {
-                Username = Username,
-                Password = Username
-            };
-        }
+            Email = Username,
+            Password = Username
+        };
+    }
 
-        private UserLoginDto GetUserLoginDto()
+    private UserUpdateDto GetUserUpdateDto()
+    {
+        return new()
         {
-            return new()
-            {
-                Email = Username,
-                Password = Username
-            };
-        }
+            Username = Username,
+            ProfilePicture = Picture
+        };
+    }
 
-        private UserUpdateDto GetUserUpdateDto()
+    private UserChangeRoleDto GetUserChangeRoleDto()
+    {
+        return new()
         {
-            return new()
-            {
-                Username = Username,
-                ProfilePicture = Picture
-            };
-        }
+            Role = UserRole.Admin
+        };
+    }
 
-        private UserChangeRoleDto GetUserChangeRoleDto()
+    private UserChangePasswordDto GetUserChangePasswordDto()
+    {
+        return new()
         {
-            return new()
-            {
-                Role = UserRole.Admin
-            };
-        }
+            Password = Username
+        };
+    }
 
-        private UserChangePasswordDto GetUserChangePasswordDto()
+    private UserWithTokenReadDto GetUserWithTokenReadDto()
+    {
+        return new()
         {
-            return new()
-            {
-                Password = Username
-            };
-        }
+            Id = Id,
+            Username = Username,
+            Role = UserRole.User,
+            Token = Username
+        };
+    }
 
-        private UserWithTokenReadDto GetUserWithTokenReadDto()
+    private List<UserReadDto> GetUserReadViewModels()
+    {
+        return new()
         {
-            return new()
-            {
-                Id = Id,
-                Username = Username,
-                Role = UserRole.User,
-                Token = Username
-            };
-        }
+            UserReadDto,
+            UserReadDto
+        };
+    }
 
-        private List<UserReadDto> GetUserReadViewModels()
+    private PageDto<UserReadDto> GetUserPageDto()
+    {
+        return new()
         {
-            return new()
-            {
-                UserReadDto,
-                UserReadDto
-            };
-        }
-
-        private PageDto<UserReadDto> GetUserPageDto()
-        {
-            return new()
-            {
-                CurrentPage = 1,
-                TotalPages = 2,
-                PageSize = 5,
-                TotalItems = 6,
-                HasPrevious = false,
-                HasNext = true,
-                Entities = GetUserReadViewModels()
-            };
-        }
+            CurrentPage = 1,
+            TotalPages = 2,
+            PageSize = 5,
+            TotalItems = 6,
+            HasPrevious = false,
+            HasNext = true,
+            Entities = GetUserReadViewModels()
+        };
     }
 }

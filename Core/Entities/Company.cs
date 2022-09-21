@@ -1,11 +1,10 @@
-﻿namespace Core.Entities
-{
-    public class Company
-    {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Picture { get; set; }
+﻿namespace Core.Entities;
 
-        public ICollection<Device> Devices { get; set; } = new List<Device>();
-    }
+public class Company
+{
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public string? Picture { get; set; }
+
+    public ICollection<Device> Devices { get; set; } = new List<Device>();
 }

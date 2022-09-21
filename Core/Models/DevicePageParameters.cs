@@ -1,7 +1,6 @@
-﻿namespace Core.Models
+﻿namespace Core.Models;
+
+public class DevicePageParameters : PageParameters
 {
-    public class DevicePageParameters : PageParameters
-    {
-        public string? Company { get; set; }
-    }
+    public string? Company { get; set; }
 }

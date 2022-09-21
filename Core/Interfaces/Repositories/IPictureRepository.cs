@@ -1,10 +1,9 @@
 ﻿using SixLabors.ImageSharp;
 
-namespace Core.Interfaces.Repositories
+namespace Core.Interfaces.Repositories;
+
+public interface IPictureRepository
 {
-    public interface IPictureRepository
-    {
-        Task<string> UploadAsync(Image image, string blobFolder, string identifier, string extension);
-        Task DeleteAsync(string imageLink);
-    }
+    Task<string> UploadAsync(Image image, string blobFolder, string identifier, string extension);
+    Task DeleteAsync(string imageLink);
 }

@@ -1,10 +1,9 @@
-﻿namespace Core.Exceptions
+﻿namespace Core.Exceptions;
+
+public class UsernameNotUniqueException : ApplicationException
 {
-    public class UsernameNotUniqueException : ApplicationException
+    public UsernameNotUniqueException(string message)
+        : base(message)
     {
-        public UsernameNotUniqueException(string message)
-            : base(message)
-        {
-        }
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace Core.Dtos.UserDtos
+﻿namespace Core.Dtos.UserDtos;
+
+public record UserChangePasswordDto
 {
-    public record UserChangePasswordDto
-    {
-        public string? Password { get; init; }
-    }
+    public string? Password { get; init; }
 }
