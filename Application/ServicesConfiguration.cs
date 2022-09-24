@@ -14,6 +14,6 @@ public static class ServicesConfiguration
         services.AddScoped<IDeviceService, DeviceService>();
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IPictureService, PictureService>();
-        services.AddScoped<ICacheService, CacheService>();
+        services.AddSingleton<ICacheService, CacheService>();
     }
 }
