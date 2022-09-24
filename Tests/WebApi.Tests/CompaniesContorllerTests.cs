@@ -1,6 +1,5 @@
 ﻿using Core.Dtos;
 using Core.Dtos.CompanyDtos;
-using Core.Dtos.DeviceDtos;
 using Core.Entities;
 using Core.Models;
 using FluentAssertions;
@@ -34,10 +33,12 @@ public class CompaniesContorllerTests : IClassFixture<CompaniesControllerFixture
 
         // Act
         var result = await _fixture.MockCompaniesController.GetAsync(_fixture.PageParameters);
-        var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<CompanyReadDto>>();
+        var objectResult = result.Result.As<OkObjectResult>();
+        var pageDto = objectResult.Value.As<PageDto<CompanyReadDto>>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<PageDto<CompanyReadDto>>>();
+        objectResult.StatusCode.Should().Be(200);
         pageDto.Entities.Should().NotBeEmpty();
     }
 
@@ -55,10 +56,12 @@ public class CompaniesContorllerTests : IClassFixture<CompaniesControllerFixture
 
         // Act
         var result = await _fixture.MockCompaniesController.GetAsync(_fixture.Id);
-        var readDto = result.Result.As<OkObjectResult>().Value.As<CompanyReadDto>();
+        var objectResult = result.Result.As<OkObjectResult>();
+        var readDto = objectResult.Value.As<CompanyReadDto>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<CompanyReadDto>>();
+        objectResult.StatusCode.Should().Be(200);
         readDto.Should().NotBeNull();
     }
 
@@ -76,10 +79,12 @@ public class CompaniesContorllerTests : IClassFixture<CompaniesControllerFixture
 
         // Act
         var result = await _fixture.MockCompaniesController.CreateAsync(_fixture.CompanyCreateUpdateDto);
-        var readDto = result.Result.As<CreatedAtActionResult>().Value.As<CompanyReadDto>();
+        var objectResult = result.Result.As<CreatedAtActionResult>();
+        var readDto = objectResult.Value.As<CompanyReadDto>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<CompanyReadDto>>();
+        objectResult.StatusCode.Should().Be(201);
         readDto.Should().NotBeNull();
     }
 
@@ -93,9 +98,11 @@ public class CompaniesContorllerTests : IClassFixture<CompaniesControllerFixture
 
         // Act
         var result = await _fixture.MockCompaniesController.UpdateAsync(_fixture.Id, _fixture.CompanyCreateUpdateDto);
+        var objectResult = result.As<NoContentResult>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
+        objectResult.StatusCode.Should().Be(204);
     }
 
     [Fact]
@@ -108,8 +115,10 @@ public class CompaniesContorllerTests : IClassFixture<CompaniesControllerFixture
 
         // Act
         var result = await _fixture.MockCompaniesController.DeleteAsync(_fixture.Id);
+        var objectResult = result.As<NoContentResult>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
+        objectResult.StatusCode.Should().Be(204);
     }
 }

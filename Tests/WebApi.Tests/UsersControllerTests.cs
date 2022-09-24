@@ -34,10 +34,12 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Act
         var result = await _fixture.MockUsersController.GetAsync(_fixture.PageParameters);
-        var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<UserReadDto>>();
+        var objectResult = result.Result.As<OkObjectResult>();
+        var pageDto = objectResult.Value.As<PageDto<UserReadDto>>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<PageDto<UserReadDto>>>();
+        objectResult.StatusCode.Should().Be(200);
         pageDto.Entities.Should().NotBeEmpty();
     }
 
@@ -55,10 +57,12 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Act
         var result = await _fixture.MockUsersController.GetAsync(_fixture.Id);
-        var readDto = result.Result.As<OkObjectResult>().Value.As<UserReadDto>();
+        var objectResult = result.Result.As<OkObjectResult>();
+        var readDto = objectResult.Value.As<UserReadDto>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<UserReadDto>>();
+        objectResult.StatusCode.Should().Be(200);
         readDto.Should().NotBeNull();
     }
 
@@ -72,10 +76,12 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Act
         var result = await _fixture.MockUsersController.RegisterAsync(_fixture.UserRegisterDto);
-        var readDto = result.Result.As<CreatedAtActionResult>().Value.As<UserReadDto>();
+        var objectResult = result.Result.As<CreatedAtActionResult>();
+        var readDto = objectResult.Value.As<UserReadDto>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<UserReadDto>>();
+        objectResult.StatusCode.Should().Be(201);
         readDto.Should().NotBeNull();
     }
 
@@ -89,10 +95,12 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Act
         var result = await _fixture.MockUsersController.LoginAsync(_fixture.UserLoginDto);
-        var readWithTokenDto = result.Result.As<OkObjectResult>().Value.As<UserWithTokenReadDto>();
+        var objectResult = result.Result.As<OkObjectResult>();
+        var readWithTokenDto = objectResult.Value.As<UserWithTokenReadDto>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<UserWithTokenReadDto>>();
+        objectResult.StatusCode.Should().Be(200);
         readWithTokenDto.Should().NotBeNull();
     }
 
@@ -106,9 +114,11 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Act
         var result = await _fixture.MockUsersController.UpdateAsync(_fixture.Id, _fixture.UserUpdateDto);
+        var objectResult = result.As<NoContentResult>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
+        objectResult.StatusCode.Should().Be(204);
     }
 
     [Fact]
@@ -125,10 +135,12 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Act
         var result = await _fixture.MockUsersController.ChangePasswordAsync(_fixture.Id, _fixture.UserChangePasswordDto);
-        var readToken = result.Result.As<OkObjectResult>().Value.As<string>();
+        var objectResult = result.Result.As<OkObjectResult>();
+        var readToken = objectResult.Value.As<string>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<string>>();
+        objectResult.StatusCode.Should().Be(200);
         readToken.Should().NotBeNull();
     }
 
@@ -142,9 +154,11 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Act
         var result = await _fixture.MockUsersController.ChangeRoleAsync(_fixture.Id, _fixture.UserChangeRoleDto);
+        var objectResult = result.As<NoContentResult>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
+        objectResult.StatusCode.Should().Be(204);
     }
 
     [Fact]
@@ -157,8 +171,10 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Act
         var result = await _fixture.MockUsersController.DeleteAsync(_fixture.Id);
+        var objectResult = result.As<NoContentResult>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
+        objectResult.StatusCode.Should().Be(204);
     }
 }
