@@ -33,10 +33,12 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 
         // Act
         var result = await _fixture.MockDevicesController.GetAsync(_fixture.PageParameters);
-        var pageDto = result.Result.As<OkObjectResult>().Value.As<PageDto<DeviceReadDto>>();
+        var objectResult = result.Result.As<OkObjectResult>();
+        var pageDto = objectResult.Value.As<PageDto<DeviceReadDto>>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<PageDto<DeviceReadDto>>>();
+        objectResult.StatusCode.Should().Be(200);
         pageDto.Entities.Should().NotBeEmpty();
     }
 
@@ -54,10 +56,12 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 
         // Act
         var result = await _fixture.MockDevicesController.GetAsync(_fixture.Id);
-        var readDto = result.Result.As<OkObjectResult>().Value.As<DeviceReadDto>();
+        var objectResult = result.Result.As<OkObjectResult>();
+        var readDto = objectResult.Value.As<DeviceReadDto>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<DeviceReadDto>>();
+        objectResult.StatusCode.Should().Be(200);
         readDto.Should().NotBeNull();
     }
 
@@ -75,10 +79,12 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 
         // Act
         var result = await _fixture.MockDevicesController.CreateAsync(_fixture.DeviceCreateUpdateDto);
-        var readDto = result.Result.As<CreatedAtActionResult>().Value.As<DeviceReadDto>();
+        var objectResult = result.Result.As<CreatedAtActionResult>();
+        var readDto = objectResult.Value.As<DeviceReadDto>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<DeviceReadDto>>();
+        objectResult.StatusCode.Should().Be(201);
         readDto.Should().NotBeNull();
     }
 
@@ -92,9 +98,11 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 
         // Act
         var result = await _fixture.MockDevicesController.UpdateAsync(_fixture.Id, _fixture.DeviceCreateUpdateDto);
+        var objectResult = result.As<NoContentResult>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
+        objectResult.StatusCode.Should().Be(204);
     }
 
     [Fact]
@@ -107,8 +115,10 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 
         // Act
         var result = await _fixture.MockDevicesController.DeleteAsync(_fixture.Id);
+        var objectResult = result.As<NoContentResult>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
+        objectResult.StatusCode.Should().Be(204);
     }
 }
