@@ -25,11 +25,11 @@ public class PictureService : IPictureService
         _logger = logger;
     }
 
-    public async Task DeleteAsync(string imageLink)
+    public async Task DeleteAsync(string imagePath)
     {
         try
         {
-            await _pictureRepository.DeleteAsync(imageLink);
+            await _pictureRepository.DeleteAsync(imagePath);
         }
         catch (RequestFailedException)
         {
@@ -62,7 +62,7 @@ public class PictureService : IPictureService
 
         if (!_imageExtensions.Contains(extension))
         {
-            _logger.LogWarning($"The file with the extension '.{extension}' could not be uploaded");
+            _logger.LogWarning("The file with the extension '.{Extension}' could not be uploaded", extension);
             throw new IncorrectExtensionException($"The file with the extension '.{extension}' could not be uploaded");
         }
 

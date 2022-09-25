@@ -25,12 +25,6 @@ public class PictureRepository : IPictureRepository
     public async Task<string> UploadAsync(Image image, string blobFolder, string identifier, string extension)
     {
         var fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.{extension}";
-        var blobItems = _blobContainerClient.GetBlobs(prefix: $"{blobFolder}/{identifier}");
-
-        if (blobItems.Any())
-        {
-            await DeleteAsync(blobItems.First().Name);
-        }
 
         using (MemoryStream ms = new())
         {
@@ -45,14 +39,14 @@ public class PictureRepository : IPictureRepository
         return fileName;
     }
 
-    public async Task DeleteAsync(string imageLink)
+    public async Task DeleteAsync(string imagePath)
     {
-        if (imageLink.Contains(_containerName))
+        if (imagePath.Contains(_containerName))
         {
-            imageLink = imageLink.Split(_containerName)[1];
+            imagePath = imagePath.Split(_containerName)[1];
         }
 
-        var blobClient = _blobContainerClient.GetBlobClient(imageLink);
+        var blobClient = _blobContainerClient.GetBlobClient(imagePath);
 
         await blobClient.DeleteAsync();
     }

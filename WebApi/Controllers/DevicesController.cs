@@ -68,8 +68,11 @@ public class DevicesController : ControllerBase
     {
         var device = await _deviceService.GetByIdAsync(id);
 
+        await _pictureService.DeleteAsync(device.Picture!);
+
         _mapper.Map(updateDto, device);
         device.Picture = await _pictureService.UploadAsync(updateDto.Picture, _blobFolder, updateDto.Name!);
+
         await _deviceService.UpdateAsync(device);
 
         return NoContent();

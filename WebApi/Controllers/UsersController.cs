@@ -56,9 +56,9 @@ public class UsersController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<UserReadDto>> RegisterAsync([FromForm] UserRegisterDto registerDto)
     {
-        _passwordService.CreatePasswordHash(registerDto.Password!, out byte[] hash, out byte[] salt);
-
+        (byte[] hash, byte[] salt) = _passwordService.CreatePasswordHash(registerDto.Password!);
         string? pictureLink = await _pictureService.UploadAsync(registerDto.ProfilePicture, _blobFolder, registerDto.Email!);
+
         User user = _userService.ConstructUser(registerDto.Username!, registerDto.Email!, pictureLink, hash, salt);
         await _userService.CreateAsync(user);
 
@@ -72,6 +72,7 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserWithTokenReadDto>> LoginAsync([FromBody] UserLoginDto loginDto)
     {
         var user = await _userService.GetByEmailAsync(loginDto.Email!);
+
         _passwordService.VerifyPasswordHash(loginDto.Password!, user.PasswordHash!, user.PasswordSalt!);
 
         string token = _passwordService.CreateToken(user);
@@ -86,8 +87,11 @@ public class UsersController : ControllerBase
         var user = await _userService.GetByIdAsync(id);
 
         _userService.VerifyUserAccessRights(user, User.Identity!, User.Claims!);
+        await _pictureService.DeleteAsync(user.ProfilePicture!);
+
         _mapper.Map(updateDto, user);
         user.ProfilePicture = await _pictureService.UploadAsync(updateDto.ProfilePicture, _blobFolder, user.Email!);
+
         await _userService.UpdateAsync(user);
 
         return NoContent();
@@ -101,7 +105,8 @@ public class UsersController : ControllerBase
         var player = await _userService.GetByIdAsync(id);
 
         _userService.VerifyUserAccessRights(player, User.Identity!, User.Claims!);
-        _passwordService.CreatePasswordHash(changePasswordDto.Password!, out byte[] hash, out byte[] salt);
+
+        (byte[] hash, byte[] salt) = _passwordService.CreatePasswordHash(changePasswordDto.Password!);
         _userService.ChangePasswordData(player, hash, salt);
         await _userService.UpdateAsync(player);
 
