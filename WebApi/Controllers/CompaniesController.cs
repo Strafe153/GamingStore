@@ -68,8 +68,11 @@ public class CompaniesController : ControllerBase
     {
         var company = await _companyService.GetByIdAsync(id);
 
+        await _pictureService.DeleteAsync(company.Picture!);
+
         _mapper.Map(updateDto, company);
         company.Picture = await _pictureService.UploadAsync(updateDto.Picture, _blobFolder, updateDto.Name!);
+
         await _companyService.UpdateAsync(company);
 
         return NoContent();
