@@ -50,7 +50,7 @@ public class DeviceService : IDeviceService
 
     public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize, string? companyName)
     {
-        string key = $"devices:{companyName ?? "all"}";
+        string key = $"devices:{pageNumber}:{pageSize}:{companyName ?? "all"}";
         var cachedDevices = await _cacheService.GetAsync<List<Device>>(key);
         PaginatedList<Device> devices;
 
