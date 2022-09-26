@@ -191,7 +191,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
     }
 
     [Fact]
-    public void VerifyUserAccessRights_SufficientRights_ReturnsVoid()
+    public void VerifyUserAccessRights_SufficientClaims_ReturnsVoid()
     {
         // Arrange
         _fixture.MockHttpContextAccessor
@@ -206,7 +206,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
     }
 
     [Fact]
-    public void VerifyUserAccessRights_InsufficientRights_ThrowsNotEnoughRightsException()
+    public void VerifyUserAccessRights_InsufficientClaims_ThrowsNotEnoughRightsException()
     {
         // Arrange
         _fixture.MockHttpContextAccessor
