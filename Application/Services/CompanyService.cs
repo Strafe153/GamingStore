@@ -50,7 +50,7 @@ public class CompanyService : IService<Company>
 
     public async Task<PaginatedList<Company>> GetAllAsync(int pageNumber, int pageSize)
     {
-        string key = "companies";
+        string key = $"companies:{pageNumber}:{pageSize}";
         var cachedCompanies = await _cacheService.GetAsync<List<Company>>(key);
         PaginatedList<Company> companies;
 

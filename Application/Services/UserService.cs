@@ -53,7 +53,7 @@ public class UserService : IUserService
 
     public async Task<PaginatedList<User>> GetAllAsync(int pageNumber, int pageSize)
     {
-        string key = "users";
+        string key = $"users:{pageNumber}:{pageSize}";
         var cachedUsers = await _cacheService.GetAsync<List<User>>(key);
         PaginatedList<User> users;
 
