@@ -4,10 +4,10 @@ using Core.Exceptions;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Core.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
-using System.Security.Principal;
 
 namespace Application.Services;
 
@@ -15,15 +15,18 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _repository;
     private readonly ICacheService _cacheService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger<UserService> _logger;
 
     public UserService(
         IUserRepository repository,
         ICacheService cacheService,
+        IHttpContextAccessor httpContextAccessor,
         ILogger<UserService> logger)
     {
         _repository = repository;
         _cacheService = cacheService;
+        _httpContextAccessor = httpContextAccessor;
         _logger = logger;
     }
 
@@ -148,11 +151,17 @@ public class UserService : IUserService
         user.PasswordSalt = passwordSalt;
     }
 
-    public void VerifyUserAccessRights(User performedOn, IIdentity performer, IEnumerable<Claim> claims)
+    public void VerifyUserAccessRights(User performedOn)
     {
-        if (performedOn.Username != performer.Name && !claims.Any(c => c.Value == UserRole.Admin.ToString()))
+        var context = _httpContextAccessor.HttpContext;
+        var claims = context.User.Claims;
+        string performerEmail = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)!.Value;
+        string performerRole = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!.Value;
+
+        if (performedOn.Email != performerEmail && performerRole != UserRole.Admin.ToString())
         {
-            _logger.LogWarning("User '{Name}' failed to perform an operation due to insufficient access rights", performer.Name);
+            _logger.LogWarning("User '{Name}' failed to perform an operation due to insufficient access rights", 
+                context.User.Identity!.Name);
             throw new NotEnoughRightsException("Not enough rights to perform the operation");
         }
     }

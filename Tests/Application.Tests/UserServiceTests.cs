@@ -193,9 +193,13 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
     [Fact]
     public void VerifyUserAccessRights_SufficientRights_ReturnsVoid()
     {
+        // Arrange
+        _fixture.MockHttpContextAccessor
+            .Setup(a => a.HttpContext)
+            .Returns(_fixture.HttpContextWithSufficientClaims);
+
         // Act
-        var result = () => _fixture.MockUserService
-            .VerifyUserAccessRights(_fixture.User, _fixture.IIdentity, _fixture.SufficientClaims);
+        var result = () => _fixture.MockUserService.VerifyUserAccessRights(_fixture.User);
 
         // Assert
         result.Should().NotBeNull();
@@ -204,9 +208,13 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
     [Fact]
     public void VerifyUserAccessRights_InsufficientRights_ThrowsNotEnoughRightsException()
     {
+        // Arrange
+        _fixture.MockHttpContextAccessor
+            .Setup(a => a.HttpContext)
+            .Returns(_fixture.HttpContextWithInsufficientClaims);
+
         // Act
-        var result = () => _fixture.MockUserService
-            .VerifyUserAccessRights(_fixture.User, _fixture.IIdentity, _fixture.InsufficientClaims);
+        var result = () => _fixture.MockUserService.VerifyUserAccessRights(_fixture.User);
 
         // Assert
         result.Should().Throw<NotEnoughRightsException>();

@@ -86,7 +86,7 @@ public class UsersController : ControllerBase
     {
         var user = await _userService.GetByIdAsync(id);
 
-        _userService.VerifyUserAccessRights(user, User.Identity!, User.Claims!);
+        _userService.VerifyUserAccessRights(user);
         await _pictureService.DeleteAsync(user.ProfilePicture!);
 
         _mapper.Map(updateDto, user);
@@ -102,15 +102,14 @@ public class UsersController : ControllerBase
         [FromRoute] int id,
         [FromBody] UserChangePasswordDto changePasswordDto)
     {
-        var player = await _userService.GetByIdAsync(id);
-
-        _userService.VerifyUserAccessRights(player, User.Identity!, User.Claims!);
+        var user = await _userService.GetByIdAsync(id);
+        _userService.VerifyUserAccessRights(user);
 
         (byte[] hash, byte[] salt) = _passwordService.CreatePasswordHash(changePasswordDto.Password!);
-        _userService.ChangePasswordData(player, hash, salt);
-        await _userService.UpdateAsync(player);
+        _userService.ChangePasswordData(user, hash, salt);
+        await _userService.UpdateAsync(user);
 
-        string token = _passwordService.CreateToken(player);
+        string token = _passwordService.CreateToken(user);
 
         return Ok(token);
     }
@@ -131,8 +130,8 @@ public class UsersController : ControllerBase
     public async Task<ActionResult> DeleteAsync([FromRoute] int id)
     {
         var user = await _userService.GetByIdAsync(id);
+        _userService.VerifyUserAccessRights(user);
 
-        _userService.VerifyUserAccessRights(user, User.Identity!, User.Claims!);
         await _userService.DeleteAsync(user);
         await _pictureService.DeleteAsync(user.ProfilePicture!);
 

@@ -6,6 +6,7 @@ using Core.Enums;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Core.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Security.Claims;
@@ -21,26 +22,29 @@ public class UserServiceFixture
 
         MockUserRepository = fixture.Freeze<Mock<IUserRepository>>();
         MockCacheService = fixture.Freeze<Mock<ICacheService>>();
+        MockHttpContextAccessor = fixture.Freeze<Mock<IHttpContextAccessor>>();
         MockLogger = fixture.Freeze<Mock<ILogger<UserService>>>();
 
         MockUserService = new(
             MockUserRepository.Object,
             MockCacheService.Object,
+            MockHttpContextAccessor.Object,
             MockLogger.Object);
+
 
         Id = 1;
         Name = "Name";
         Bytes = new byte[0];
         User = GetUser();
         PaginatedList = GetPaginatedList();
-        IIdentity = GetClaimsIdentity();
-        SufficientClaims = GetSufficientClaims();
-        InsufficientClaims = GetInsufficientClaims();
+        HttpContextWithSufficientClaims = GetHttpContextWithSufficientClaims();
+        HttpContextWithInsufficientClaims = GetHttpContextWithInsufficientClaims();
     }
 
     public UserService MockUserService { get; }
     public Mock<IUserRepository> MockUserRepository { get; }
     public Mock<ICacheService> MockCacheService { get; }
+    public Mock<IHttpContextAccessor> MockHttpContextAccessor { get; }
     public Mock<ILogger<UserService>> MockLogger { get; }
 
     public int Id { get; }
@@ -48,9 +52,8 @@ public class UserServiceFixture
     public byte[] Bytes { get; }
     public User User { get; }
     public PaginatedList<User> PaginatedList { get; }
-    public IIdentity IIdentity { get; }
-    public IEnumerable<Claim> SufficientClaims { get; }
-    public IEnumerable<Claim> InsufficientClaims { get; }
+    public HttpContext HttpContextWithSufficientClaims { get; }
+    public HttpContext HttpContextWithInsufficientClaims { get; }
 
     private User GetUser()
     {
@@ -78,16 +81,12 @@ public class UserServiceFixture
         return new(GetUsers(), 6, 1, 5);
     }
 
-    private IIdentity GetClaimsIdentity()
-    {
-        return new ClaimsIdentity(Name, Name, Name);
-    }
-
     private IEnumerable<Claim> GetInsufficientClaims()
     {
         return new List<Claim>()
         {
             new Claim(ClaimTypes.Name, Name!),
+            new Claim(ClaimTypes.Email, Name!),
             new Claim(ClaimTypes.Role, Name!)
         };
     }
@@ -96,8 +95,33 @@ public class UserServiceFixture
     {
         return new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, string.Empty),
+            new Claim(ClaimTypes.Name, Name!),
+            new Claim(ClaimTypes.Email, Name!),
             new Claim(ClaimTypes.Role, UserRole.Admin.ToString())
         };
+    }
+
+    private HttpContext GetHttpContextWithSufficientClaims()
+    {
+        ClaimsIdentity identity = new(GetSufficientClaims());
+        ClaimsPrincipal claimsPrincipal = new(identity);
+        DefaultHttpContext context = new()
+        {
+            User = claimsPrincipal
+        };
+
+        return context;
+    }
+
+    private HttpContext GetHttpContextWithInsufficientClaims()
+    {
+        ClaimsIdentity identity = new(GetInsufficientClaims());
+        ClaimsPrincipal claimsPrincipal = new(identity);
+        DefaultHttpContext context = new()
+        {
+            User = claimsPrincipal
+        };
+
+        return context;
     }
 }
