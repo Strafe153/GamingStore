@@ -158,7 +158,7 @@ public class UserService : IUserService
         string performerEmail = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)!.Value;
         string performerRole = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!.Value;
 
-        if (performedOn.Email != performerEmail && performerRole != UserRole.Admin.ToString())
+        if ((performedOn.Email != performerEmail) && (performerRole != UserRole.Admin.ToString()))
         {
             _logger.LogWarning("User '{Name}' failed to perform an operation due to insufficient access rights", 
                 context.User.Identity!.Name);
