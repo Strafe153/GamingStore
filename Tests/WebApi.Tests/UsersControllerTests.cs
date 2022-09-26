@@ -17,7 +17,6 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     public UsersControllerTests(UsersControllerFixture fixture)
     {
         _fixture = fixture;
-        _fixture.MockControllerBaseUser();
     }
 
     [Fact]

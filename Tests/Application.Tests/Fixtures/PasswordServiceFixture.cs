@@ -56,6 +56,7 @@ public class PasswordServiceFixture
         {
             Id = 1,
             Username = StringPlaceholder,
+            Email = StringPlaceholder,
             Role = UserRole.User,
             PasswordHash = Bytes,
             PasswordSalt = Bytes

@@ -72,17 +72,6 @@ public class UsersControllerFixture
     public PaginatedList<User> UserPaginatedList { get; }
     public PageDto<UserReadDto> UserPageDto { get; }
 
-    public void MockControllerBaseUser()
-    {
-        ClaimsPrincipal user = new(new ClaimsIdentity());
-
-        MockUsersController.ControllerContext = new ControllerContext();
-        MockUsersController.ControllerContext.HttpContext = new DefaultHttpContext()
-        {
-            User = user
-        };
-    }
-
     private User GetUser()
     {
         return new()

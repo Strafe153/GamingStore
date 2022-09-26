@@ -40,6 +40,7 @@ public class PasswordService : IPasswordService
         List<Claim> claims = new()
         {
             new Claim(ClaimTypes.Name, user.Username!),
+            new Claim(ClaimTypes.Email, user.Email!),
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 
