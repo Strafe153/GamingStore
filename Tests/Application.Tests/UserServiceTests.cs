@@ -30,6 +30,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
             .Setup(r => r.GetAllAsync(
                 It.IsAny<int>(), 
                 It.IsAny<int>(), 
+                It.IsAny<CancellationToken>(),
                 It.IsAny<Expression<Func<User, bool>>>()))
             .ReturnsAsync(_fixture.PaginatedList);
 
@@ -64,7 +65,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
             .ReturnsAsync((User)null!);
 
         _fixture.MockUserRepository
-            .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
 
         // Act
@@ -94,7 +95,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
     {
         // Arrange
         _fixture.MockUserRepository
-            .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null!);
 
         _fixture.MockCacheService
@@ -109,11 +110,15 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
     }
 
     [Fact]
-    public async Task GetByNameAsync_ExistingUser_ReturnsUser()
+    public async Task GetByEmailAsync_ExistingUserInRepository_ReturnsUser()
     {
         // Arrange
+        _fixture.MockCacheService
+            .Setup(s => s.GetAsync<User>(It.IsAny<string>()))
+            .ReturnsAsync((User)null!);
+
         _fixture.MockUserRepository
-            .Setup(r => r.GetByEmailAsync(It.IsAny<string>()))
+            .Setup(r => r.GetByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
 
         // Act
@@ -124,11 +129,30 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
     }
 
     [Fact]
-    public async Task GetByNameAsync_NonexistingUser_ThrowsNullReferenceException()
+    public async Task GetByEmailAsync_ExistingUserInCache_ReturnsUser()
     {
         // Arrange
+        _fixture.MockCacheService
+            .Setup(s => s.GetAsync<User>(It.IsAny<string>()))
+            .ReturnsAsync(_fixture.User);
+
+        // Act
+        var result = await _fixture.MockUserService.GetByEmailAsync(_fixture.Name);
+
+        // Assert
+        result.Should().NotBeNull().And.BeOfType<User>();
+    }
+
+    [Fact]
+    public async Task GetByEmailAsync_NonexistingUser_ThrowsNullReferenceException()
+    {
+        // Arrange
+        _fixture.MockCacheService
+            .Setup(s => s.GetAsync<User>(It.IsAny<string>()))
+            .ReturnsAsync((User)null!);
+
         _fixture.MockUserRepository
-            .Setup(r => r.GetByEmailAsync(It.IsAny<string>()))
+            .Setup(r => r.GetByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null!);
 
         // Act

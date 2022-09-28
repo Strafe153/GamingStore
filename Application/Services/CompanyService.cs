@@ -48,7 +48,7 @@ public class CompanyService : IService<Company>
         _logger.LogInformation("Succesfully deleted a company with id {Id}", entity.Id);
     }
 
-    public async Task<PaginatedList<Company>> GetAllAsync(int pageNumber, int pageSize)
+    public async Task<PaginatedList<Company>> GetAllAsync(int pageNumber, int pageSize, CancellationToken token = default)
     {
         string key = $"companies:{pageNumber}:{pageSize}";
         var cachedCompanies = await _cacheService.GetAsync<List<Company>>(key);
@@ -56,7 +56,7 @@ public class CompanyService : IService<Company>
 
         if (cachedCompanies is null)
         {
-            companies = await _repository.GetAllAsync(pageNumber, pageSize);
+            companies = await _repository.GetAllAsync(pageNumber, pageSize, token);
             await _cacheService.SetAsync(key, companies);
         }
         else
@@ -69,14 +69,14 @@ public class CompanyService : IService<Company>
         return companies;
     }
 
-    public async Task<Company> GetByIdAsync(int id)
+    public async Task<Company> GetByIdAsync(int id, CancellationToken token = default)
     {
-        string key = $"company:{id}";
+        string key = $"companies:{id}";
         var company = await _cacheService.GetAsync<Company>(key);
 
         if (company is null)
         {
-            company = await _repository.GetByIdAsync(id);
+            company = await _repository.GetByIdAsync(id, token);
 
             if (company is null)
             {

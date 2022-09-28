@@ -24,7 +24,10 @@ public class CompaniesContorllerTests : IClassFixture<CompaniesControllerFixture
     {
         // Arrange
         _fixture.MockCompanyService
-            .Setup(s => s.GetAllAsync(It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(s => s.GetAllAsync(
+                It.IsAny<int>(), 
+                It.IsAny<int>(), 
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.CompanyPaginatedList);
 
         _fixture.MockMapper
@@ -32,7 +35,7 @@ public class CompaniesContorllerTests : IClassFixture<CompaniesControllerFixture
             .Returns(_fixture.CompanyPageDto);
 
         // Act
-        var result = await _fixture.MockCompaniesController.GetAsync(_fixture.PageParameters);
+        var result = await _fixture.MockCompaniesController.GetAsync(_fixture.PageParameters, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var pageDto = objectResult.Value.As<PageDto<CompanyReadDto>>();
 
@@ -47,7 +50,7 @@ public class CompaniesContorllerTests : IClassFixture<CompaniesControllerFixture
     {
         // Arrange
         _fixture.MockCompanyService
-            .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+            .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Company);
 
         _fixture.MockMapper
@@ -55,7 +58,7 @@ public class CompaniesContorllerTests : IClassFixture<CompaniesControllerFixture
             .Returns(_fixture.CompanyReadDto);
 
         // Act
-        var result = await _fixture.MockCompaniesController.GetAsync(_fixture.Id);
+        var result = await _fixture.MockCompaniesController.GetAsync(_fixture.Id, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var readDto = objectResult.Value.As<CompanyReadDto>();
 
@@ -93,7 +96,7 @@ public class CompaniesContorllerTests : IClassFixture<CompaniesControllerFixture
     {
         // Arrange
         _fixture.MockCompanyService
-            .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+            .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Company);
 
         // Act
@@ -110,7 +113,7 @@ public class CompaniesContorllerTests : IClassFixture<CompaniesControllerFixture
     {
         // Arrange
         _fixture.MockCompanyService
-            .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+            .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Company);
 
         // Act

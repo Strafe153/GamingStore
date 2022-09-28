@@ -59,6 +59,7 @@ public class CompaniesControllerFixture
     public PaginatedList<Device> DevicePaginatedList { get; }
     public PageDto<CompanyReadDto> CompanyPageDto { get; }
     public PageDto<DeviceReadDto> DevicePageDto { get; }
+    public CancellationToken CancellationToken { get; }
 
     private Company GetCompany()
     {

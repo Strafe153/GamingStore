@@ -32,9 +32,10 @@ public class DevicesController : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<ActionResult<PageDto<DeviceReadDto>>> GetAsync([FromQuery] DevicePageParameters pageParams)
+    public async Task<ActionResult<PageDto<DeviceReadDto>>> GetAsync(
+        [FromQuery] DevicePageParameters pageParams, CancellationToken token)
     {
-        var devices = await _deviceService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize, pageParams.Company);
+        var devices = await _deviceService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize, pageParams.Company, token);
         var pageDto = _mapper.Map<PageDto<DeviceReadDto>>(devices);
 
         return Ok(pageDto);
@@ -42,9 +43,9 @@ public class DevicesController : ControllerBase
 
     [HttpGet("{id:int:min(1)}")]
     [AllowAnonymous]
-    public async Task<ActionResult<DeviceReadDto>> GetAsync([FromRoute] int id)
+    public async Task<ActionResult<DeviceReadDto>> GetAsync([FromRoute] int id, CancellationToken token)
     {
-        var device = await _deviceService.GetByIdAsync(id);
+        var device = await _deviceService.GetByIdAsync(id, token);
         var readDto = _mapper.Map<DeviceReadDto>(device);
 
         return Ok(readDto);

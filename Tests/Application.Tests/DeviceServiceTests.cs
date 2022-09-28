@@ -28,7 +28,8 @@ public class DeviceServiceTests : IClassFixture<DeviceServiceFixture>
         _fixture.MockDeviceRepository
             .Setup(r => r.GetAllAsync(
                 It.IsAny<int>(), 
-                It.IsAny<int>(), 
+                It.IsAny<int>(),
+                It.IsAny<CancellationToken>(),
                 It.IsAny<Expression<Func<Device, bool>>>()))
             .ReturnsAsync(_fixture.PaginatedList);
 
@@ -63,7 +64,7 @@ public class DeviceServiceTests : IClassFixture<DeviceServiceFixture>
             .ReturnsAsync((Device)null!);
 
         _fixture.MockDeviceRepository
-            .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Device);
 
         // Act
@@ -93,7 +94,7 @@ public class DeviceServiceTests : IClassFixture<DeviceServiceFixture>
     {
         // Arrange
         _fixture.MockDeviceRepository
-            .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Device)null!);
 
         _fixture.MockCacheService

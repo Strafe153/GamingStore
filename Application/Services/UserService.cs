@@ -54,7 +54,7 @@ public class UserService : IUserService
         _logger.LogInformation("Succesfully deleted a user with id {Id}", entity.Id);
     }
 
-    public async Task<PaginatedList<User>> GetAllAsync(int pageNumber, int pageSize)
+    public async Task<PaginatedList<User>> GetAllAsync(int pageNumber, int pageSize, CancellationToken token = default)
     {
         string key = $"users:{pageNumber}:{pageSize}";
         var cachedUsers = await _cacheService.GetAsync<List<User>>(key);
@@ -62,7 +62,7 @@ public class UserService : IUserService
 
         if (cachedUsers is null)
         {
-            users = await _repository.GetAllAsync(pageNumber, pageSize);
+            users = await _repository.GetAllAsync(pageNumber, pageSize, token);
             await _cacheService.SetAsync(key, users);
         }
         else
@@ -75,14 +75,14 @@ public class UserService : IUserService
         return users;
     }
 
-    public async Task<User> GetByIdAsync(int id)
+    public async Task<User> GetByIdAsync(int id, CancellationToken token = default)
     {
-        string key = $"user:{id}";
+        string key = $"users:{id}";
         var user = await _cacheService.GetAsync<User>(key);
 
         if (user is null)
         {
-            user = await _repository.GetByIdAsync(id);
+            user = await _repository.GetByIdAsync(id, token);
 
             if (user is null)
             {
@@ -98,14 +98,22 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<User> GetByEmailAsync(string email)
+    public async Task<User> GetByEmailAsync(string email, CancellationToken token = default)
     {
-        var user = await _repository.GetByEmailAsync(email);
+        string key = $"users:{email}";
+        var user = await _cacheService.GetAsync<User>(key);
 
         if (user is null)
         {
-            _logger.LogWarning("Failed to retrieve a user with username {Email}", email);
-            throw new NullReferenceException($"User with email {email} not found");
+            user = await _repository.GetByEmailAsync(email, token);
+
+            if (user is null)
+            {
+                _logger.LogWarning("Failed to retrieve a user with username {Email}", email);
+                throw new NullReferenceException($"User with email {email} not found");
+            }
+
+            await _cacheService.SetAsync(key, user);
         }
 
         _logger.LogInformation("Successfully retrieved a user with username {Email}", email);

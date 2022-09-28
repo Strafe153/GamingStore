@@ -54,6 +54,7 @@ public class DevicesControllerFixture
     public DevicePageParameters PageParameters { get; }
     public PaginatedList<Device> DevicePaginatedList { get; }
     public PageDto<DeviceReadDto> DevicePageDto { get; }
+    public CancellationToken CancellationToken { get; }
 
     private Device GetDevice()
     {

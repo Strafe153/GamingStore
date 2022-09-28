@@ -29,6 +29,7 @@ public class CompanyRepository : IRepository<Company>
     public async Task<PaginatedList<Company>> GetAllAsync(
         int pageNumber, 
         int pageSize,
+        CancellationToken token = default,
         Expression<Func<Company, bool>>? filter = null)
     {
         var query = filter is null
@@ -37,16 +38,16 @@ public class CompanyRepository : IRepository<Company>
 
         var companies = await query
             .Include(c => c.Devices)
-            .ToPaginatedList(pageNumber, pageSize);
+            .ToPaginatedList(pageNumber, pageSize, token);
 
         return companies;
     }
 
-    public async Task<Company?> GetByIdAsync(int id)
+    public async Task<Company?> GetByIdAsync(int id, CancellationToken token = default)
     {
         var company = await _context.Companies
             .Include(c => c.Devices)
-            .SingleOrDefaultAsync(c => c.Id == id);
+            .SingleOrDefaultAsync(c => c.Id == id, token);
 
         return company;
     }

@@ -1,8 +1,10 @@
 ﻿using Azure;
+using Azure.Storage.Blobs;
 using Core.Exceptions;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 
@@ -10,26 +12,40 @@ namespace Application.Services;
 
 public class PictureService : IPictureService
 {
-    private readonly IPictureRepository _pictureRepository;
+    private readonly IConfiguration _configuration;
     private readonly ILogger<PictureService> _logger;
+    private readonly BlobServiceClient _blobServiceClient;
+    private readonly string _containerName;
+    private readonly BlobContainerClient _blobContainerClient;
     private readonly string[] _imageExtensions = new[]
     {
         "jpg", "jpeg", "png", "gif", "webp", "tif", "tiff"
     };
 
     public PictureService(
-        IPictureRepository pictureRepository,
-        ILogger<PictureService> logger)
+        IConfiguration configuration,
+        ILogger<PictureService> logger,
+        BlobServiceClient blobServiceClient)
     {
-        _pictureRepository = pictureRepository;
+        _configuration = configuration;
         _logger = logger;
+        _blobServiceClient = blobServiceClient;
+        _containerName = _configuration["Azure:ContainerName"];
+        _blobContainerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
     }
 
     public async Task DeleteAsync(string imagePath)
     {
         try
         {
-            await _pictureRepository.DeleteAsync(imagePath);
+            if (imagePath.Contains(_containerName))
+            {
+                imagePath = imagePath.Split(_containerName)[1];
+            }
+
+            var blobClient = _blobContainerClient.GetBlobClient(imagePath);
+
+            await blobClient.DeleteAsync();
         }
         catch (RequestFailedException)
         {
@@ -87,6 +103,23 @@ public class PictureService : IPictureService
         return (null, "png");
     }
 
+    private async Task<string> UploadToBlobStorageAsync(Image image, string blobFolder, string identifier, string extension)
+    {
+        string fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.{extension}";
+
+        using (MemoryStream ms = new())
+        {
+            image.SaveAsPng(ms);
+            ms.Position = 0;
+
+            await _blobContainerClient.UploadBlobAsync(fileName, ms);
+        }
+
+        fileName = $"{_configuration["Azure:ContainerLink"]}/{_containerName}/{fileName}";
+
+        return fileName;
+    }
+
     private async Task<string> GetPictureLinkAsync(
         byte[]? formFileAsBytes, string blobFolder, string identifier, string extension)
     {
@@ -99,7 +132,7 @@ public class PictureService : IPictureService
         using (MemoryStream ms = new(formFileAsBytes))
         {
             var image = Image.Load(ms);
-            string pictureLink = await _pictureRepository.UploadAsync(image, blobFolder, identifier, extension);
+            string pictureLink = await UploadToBlobStorageAsync(image, blobFolder, identifier, extension);
 
             return pictureLink;
         }
