@@ -24,7 +24,11 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
     {
         // Arrange
         _fixture.MockDeviceService
-            .Setup(s => s.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+            .Setup(s => s.GetAllAsync(
+                It.IsAny<int>(), 
+                It.IsAny<int>(), 
+                It.IsAny<string>(), 
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.DevicePaginatedList);
 
         _fixture.MockMapper
@@ -32,7 +36,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
             .Returns(_fixture.DevicePageDto);
 
         // Act
-        var result = await _fixture.MockDevicesController.GetAsync(_fixture.PageParameters);
+        var result = await _fixture.MockDevicesController.GetAsync(_fixture.PageParameters, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var pageDto = objectResult.Value.As<PageDto<DeviceReadDto>>();
 
@@ -47,7 +51,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
     {
         // Arrange
         _fixture.MockDeviceService
-            .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+            .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Device);
 
         _fixture.MockMapper
@@ -55,7 +59,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
             .Returns(_fixture.DeviceReadDto);
 
         // Act
-        var result = await _fixture.MockDevicesController.GetAsync(_fixture.Id);
+        var result = await _fixture.MockDevicesController.GetAsync(_fixture.Id, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var readDto = objectResult.Value.As<DeviceReadDto>();
 
@@ -93,7 +97,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
     {
         // Arrange
         _fixture.MockDeviceService
-            .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+            .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Device);
 
         // Act
@@ -110,7 +114,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
     {
         // Arrange
         _fixture.MockDeviceService
-            .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+            .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Device);
 
         // Act

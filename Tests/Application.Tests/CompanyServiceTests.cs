@@ -29,6 +29,7 @@ public class CompanyServiceTests : IClassFixture<CompanyServiceFixture>
             .Setup(r => r.GetAllAsync(
                 It.IsAny<int>(), 
                 It.IsAny<int>(),
+                It.IsAny<CancellationToken>(),
                 It.IsAny<Expression<Func<Company, bool>>>()))
             .ReturnsAsync(_fixture.PaginatedList);
 
@@ -63,7 +64,7 @@ public class CompanyServiceTests : IClassFixture<CompanyServiceFixture>
             .ReturnsAsync((Company)null!);
 
         _fixture.MockCompanyRepository
-            .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Company);
 
         // Act
@@ -97,7 +98,7 @@ public class CompanyServiceTests : IClassFixture<CompanyServiceFixture>
             .ReturnsAsync((Company)null!);
 
         _fixture.MockCompanyRepository
-            .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Company)null!);
 
         // Act

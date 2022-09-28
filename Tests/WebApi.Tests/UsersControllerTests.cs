@@ -24,7 +24,10 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     {
         // Arrange
         _fixture.MockUserService
-            .Setup(s => s.GetAllAsync(It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(s => s.GetAllAsync(
+                It.IsAny<int>(), 
+                It.IsAny<int>(), 
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.UserPaginatedList);
 
         _fixture.MockMapper
@@ -32,7 +35,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
             .Returns(_fixture.UserPageDto);
 
         // Act
-        var result = await _fixture.MockUsersController.GetAsync(_fixture.PageParameters);
+        var result = await _fixture.MockUsersController.GetAsync(_fixture.PageParameters, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var pageDto = objectResult.Value.As<PageDto<UserReadDto>>();
 
@@ -47,7 +50,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     {
         // Arrange
         _fixture.MockUserService
-            .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+            .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
 
         _fixture.MockMapper
@@ -55,7 +58,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
             .Returns(_fixture.UserReadDto);
 
         // Act
-        var result = await _fixture.MockUsersController.GetAsync(_fixture.Id);
+        var result = await _fixture.MockUsersController.GetAsync(_fixture.Id, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var readDto = objectResult.Value.As<UserReadDto>();
 
@@ -93,7 +96,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
             .Returns(_fixture.UserWithTokenReadDto);
 
         // Act
-        var result = await _fixture.MockUsersController.LoginAsync(_fixture.UserLoginDto);
+        var result = await _fixture.MockUsersController.LoginAsync(_fixture.UserLoginDto, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var readWithTokenDto = objectResult.Value.As<UserWithTokenReadDto>();
 
@@ -108,7 +111,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     {
         // Arrange
         _fixture.MockUserService
-            .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+            .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
 
         // Act
@@ -125,7 +128,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     {
         // Arrange
         _fixture.MockUserService
-            .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+            .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
 
         _fixture.MockPasswordService
@@ -148,7 +151,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     {
         // Arrange
         _fixture.MockUserService
-            .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+            .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
 
         // Act
@@ -165,7 +168,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     {
         // Arrange
         _fixture.MockUserService
-            .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+            .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
 
         // Act

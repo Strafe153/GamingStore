@@ -1,8 +1,5 @@
 ﻿using Application.Tests.Fixtures;
-using Azure;
 using FluentAssertions;
-using Moq;
-using SixLabors.ImageSharp;
 using Xunit;
 
 namespace Application.Tests;
@@ -37,19 +34,11 @@ public class PictureServiceTests : IClassFixture<PictureServiceFixture>
     }
 
     [Fact]
-    public async Task UploadAsync_ExistingFile_ReturnsString()
+    public void UploadAsync_ExistingFile_ReturnsString()
     {
-        // Arrange
-        _fixture.MockPictureRepository
-            .Setup(r => r.UploadAsync(
-                It.IsAny<Image>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-            .ReturnsAsync(_fixture.ValidPath);
-
         // Act
-        var result = await _fixture.MockPictureService.UploadAsync(_fixture.Picture, _fixture.ValidPath, _fixture.ValidPath);
+        var result = async () => await _fixture.MockPictureService
+            .UploadAsync(_fixture.Picture, _fixture.ValidPath, _fixture.ValidPath);
 
         // Assert
         result.Should().NotBeNull();
@@ -58,15 +47,6 @@ public class PictureServiceTests : IClassFixture<PictureServiceFixture>
     [Fact]
     public async Task UploadAsync_InvalidBlobConnection_ThrowsNullReferenceException()
     {
-        // Arrange
-        _fixture.MockPictureRepository
-            .Setup(r => r.UploadAsync(
-                It.IsAny<Image>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-            .ThrowsAsync(new RequestFailedException(_fixture.ValidPath));
-
         // Act
         var result = async () => await _fixture.MockPictureService
             .UploadAsync(_fixture.Picture, _fixture.ValidPath, _fixture.ValidPath);

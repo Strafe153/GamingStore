@@ -71,6 +71,7 @@ public class UsersControllerFixture
     public PageParameters PageParameters { get; }
     public PaginatedList<User> UserPaginatedList { get; }
     public PageDto<UserReadDto> UserPageDto { get; }
+    public CancellationToken CancellationToken { get; }
 
     private User GetUser()
     {

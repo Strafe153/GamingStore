@@ -48,7 +48,8 @@ public class DeviceService : IDeviceService
         _logger.LogInformation("Succesfully deleted a device with id {Id}", entity.Id);
     }
 
-    public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize, string? companyName)
+    public async Task<PaginatedList<Device>> GetAllAsync(
+        int pageNumber, int pageSize, string? companyName, CancellationToken token = default)
     {
         string key = $"devices:{pageNumber}:{pageSize}:{companyName ?? "all"}";
         var cachedDevices = await _cacheService.GetAsync<List<Device>>(key);
@@ -58,12 +59,12 @@ public class DeviceService : IDeviceService
         {
             if (companyName is null)
             {
-                devices = await _repository.GetAllAsync(pageNumber, pageSize);
+                devices = await _repository.GetAllAsync(pageNumber, pageSize, token);
                 _logger.LogInformation("Successfully retrieved all devices");
             }
             else
             {
-                devices = await _repository.GetAllAsync(pageNumber, pageSize, d => d.Company!.Name == companyName);
+                devices = await _repository.GetAllAsync(pageNumber, pageSize, token, d => d.Company!.Name == companyName);
                 _logger.LogInformation("Successfully retrieved all devices of the '{CompanyName}' company", companyName);
             }
 
@@ -77,19 +78,19 @@ public class DeviceService : IDeviceService
         return devices;
     }
 
-    public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize)
+    public async Task<PaginatedList<Device>> GetAllAsync(int pageNumber, int pageSize, CancellationToken token = default)
     {
-        return await GetAllAsync(pageNumber, pageSize, null);
+        return await GetAllAsync(pageNumber, pageSize, null, token);
     }
 
-    public async Task<Device> GetByIdAsync(int id)
+    public async Task<Device> GetByIdAsync(int id, CancellationToken token = default)
     {
-        string key = $"device:{id}";
+        string key = $"devices:{id}";
         var device = await _cacheService.GetAsync<Device>(key);
 
         if (device is null)
         {
-            device = await _repository.GetByIdAsync(id);
+            device = await _repository.GetByIdAsync(id, token);
 
             if (device is null)
             {

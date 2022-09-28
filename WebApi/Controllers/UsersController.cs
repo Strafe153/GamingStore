@@ -35,18 +35,18 @@ public class UsersController : ControllerBase
 
     [HttpGet]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<ActionResult<PageDto<UserReadDto>>> GetAsync([FromQuery] PageParameters pageParams)
+    public async Task<ActionResult<PageDto<UserReadDto>>> GetAsync([FromQuery] PageParameters pageParams, CancellationToken token)
     {
-        var users = await _userService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize);
+        var users = await _userService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize, token);
         var pageDto = _mapper.Map<PageDto<UserReadDto>>(users);
 
         return Ok(pageDto);
     }
 
     [HttpGet("{id:int:min(1)}")]
-    public async Task<ActionResult<UserReadDto>> GetAsync([FromRoute] int id)
+    public async Task<ActionResult<UserReadDto>> GetAsync([FromRoute] int id, CancellationToken token)
     {
-        var user = await _userService.GetByIdAsync(id);
+        var user = await _userService.GetByIdAsync(id, token);
         var readDto = _mapper.Map<UserReadDto>(user);
 
         return Ok(readDto);
@@ -69,14 +69,14 @@ public class UsersController : ControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<ActionResult<UserWithTokenReadDto>> LoginAsync([FromBody] UserLoginDto loginDto)
+    public async Task<ActionResult<UserWithTokenReadDto>> LoginAsync([FromBody] UserLoginDto loginDto, CancellationToken token)
     {
-        var user = await _userService.GetByEmailAsync(loginDto.Email!);
+        var user = await _userService.GetByEmailAsync(loginDto.Email!, token);
 
         _passwordService.VerifyPasswordHash(loginDto.Password!, user.PasswordHash!, user.PasswordSalt!);
 
-        string token = _passwordService.CreateToken(user);
-        var readDto = _mapper.Map<UserWithTokenReadDto>(user) with { Token = token };
+        string jwtToken = _passwordService.CreateToken(user);
+        var readDto = _mapper.Map<UserWithTokenReadDto>(user) with { Token = jwtToken };
 
         return Ok(readDto);
     }

@@ -1,9 +1,10 @@
 ﻿using Application.Services;
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using Core.Interfaces.Repositories;
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -15,12 +16,14 @@ public class PictureServiceFixture
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
-        MockPictureRepository = fixture.Freeze<Mock<IPictureRepository>>();
+        MockConfiguration = fixture.Freeze<Mock<IConfiguration>>();
         MockLogger = fixture.Freeze<Mock<ILogger<PictureService>>>();
+        MockBlobServiceClient = fixture.Freeze<Mock<BlobServiceClient>>();
 
         MockPictureService = new(
-            MockPictureRepository.Object,
-            MockLogger.Object);
+            MockConfiguration.Object,
+            MockLogger.Object,
+            MockBlobServiceClient.Object);
 
         ValidPath = "../../../../../Application/Assets/Images/default_profile_pic.jpg";
         InvalidPath = null;
@@ -28,8 +31,9 @@ public class PictureServiceFixture
     }
 
     public PictureService MockPictureService { get; }
-    public Mock<IPictureRepository> MockPictureRepository { get; }
+    public Mock<IConfiguration> MockConfiguration { get; }
     public Mock<ILogger<PictureService>> MockLogger { get; }
+    public Mock<BlobServiceClient> MockBlobServiceClient { get; }
 
     public string ValidPath { get; }
     public string? InvalidPath { get; }

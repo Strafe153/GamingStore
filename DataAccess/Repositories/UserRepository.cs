@@ -29,26 +29,27 @@ public class UserRepository : IUserRepository
     public async Task<PaginatedList<User>> GetAllAsync(
         int pageNumber, 
         int pageSize,
+        CancellationToken token = default,
         Expression<Func<User, bool>>? filter = null)
     {
         var query = filter is null
             ? _context.Users
             : _context.Users.Where(filter);
 
-        var users = await query.ToPaginatedList(pageNumber, pageSize);
+        var users = await query.ToPaginatedList(pageNumber, pageSize, token);
 
         return users;
     }
 
-    public async Task<User?> GetByIdAsync(int id)
+    public async Task<User?> GetByIdAsync(int id, CancellationToken token = default)
     {
-        var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id, token);
         return user;
     }
 
-    public async Task<User?> GetByEmailAsync(string email)
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken token = default)
     {
-        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email, token);
         return user;
     }
 

@@ -32,9 +32,9 @@ public class CompaniesController : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<ActionResult<PageDto<CompanyReadDto>>> GetAsync([FromQuery] PageParameters pageParams)
+    public async Task<ActionResult<PageDto<CompanyReadDto>>> GetAsync([FromQuery] PageParameters pageParams, CancellationToken token)
     {
-        var companies = await _companyService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize);
+        var companies = await _companyService.GetAllAsync(pageParams.PageNumber, pageParams.PageSize, token);
         var pageDto = _mapper.Map<PageDto<CompanyReadDto>>(companies);
 
         return Ok(pageDto);
@@ -42,9 +42,9 @@ public class CompaniesController : ControllerBase
 
     [HttpGet("{id:int:min(1)}")]
     [AllowAnonymous]
-    public async Task<ActionResult<CompanyReadDto>> GetAsync([FromRoute] int id)
+    public async Task<ActionResult<CompanyReadDto>> GetAsync([FromRoute] int id, CancellationToken token)
     {
-        var company = await _companyService.GetByIdAsync(id);
+        var company = await _companyService.GetByIdAsync(id, token);
         var readDto = _mapper.Map<CompanyReadDto>(company);
 
         return Ok(readDto);
