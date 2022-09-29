@@ -38,6 +38,7 @@ public class CompanyRepository : IRepository<Company>
 
         var companies = await query
             .Include(c => c.Devices)
+            .AsNoTracking()
             .ToPaginatedList(pageNumber, pageSize, token);
 
         return companies;

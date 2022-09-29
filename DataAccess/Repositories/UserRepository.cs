@@ -36,7 +36,9 @@ public class UserRepository : IUserRepository
             ? _context.Users
             : _context.Users.Where(filter);
 
-        var users = await query.ToPaginatedList(pageNumber, pageSize, token);
+        var users = await query
+            .AsNoTracking()
+            .ToPaginatedList(pageNumber, pageSize, token);
 
         return users;
     }
