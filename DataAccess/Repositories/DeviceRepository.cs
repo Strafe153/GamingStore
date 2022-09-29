@@ -47,7 +47,7 @@ public class DeviceRepository : IRepository<Device>
     {
         var device = await _context.Devices
             .Include(d => d.Company)
-            .SingleOrDefaultAsync(d => d.Id == id, token);
+            .FirstOrDefaultAsync(d => d.Id == id, token);
 
         return device;
     }

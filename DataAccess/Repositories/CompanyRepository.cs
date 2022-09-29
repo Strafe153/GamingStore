@@ -47,7 +47,7 @@ public class CompanyRepository : IRepository<Company>
     {
         var company = await _context.Companies
             .Include(c => c.Devices)
-            .SingleOrDefaultAsync(c => c.Id == id, token);
+            .FirstOrDefaultAsync(c => c.Id == id, token);
 
         return company;
     }
