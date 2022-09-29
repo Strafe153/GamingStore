@@ -43,13 +43,13 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByIdAsync(int id, CancellationToken token = default)
     {
-        var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id, token);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id, token);
         return user;
     }
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken token = default)
     {
-        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email, token);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email, token);
         return user;
     }
 
