@@ -1,9 +1,8 @@
 ﻿using Core.Entities;
 using Core.Interfaces.Repositories;
-using DataAccess.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DataAccess;
+namespace DataAccess.Repositories;
 
 public static class RepositoriesConfiguration
 {

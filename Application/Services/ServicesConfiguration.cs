@@ -1,9 +1,8 @@
-﻿using Application.Services;
-using Core.Entities;
+﻿using Core.Entities;
 using Core.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Application;
+namespace Application.Services;
 
 public static class ServicesConfiguration
 {
@@ -12,8 +11,8 @@ public static class ServicesConfiguration
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IService<Company>, CompanyService>();
         services.AddScoped<IDeviceService, DeviceService>();
-        services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IPictureService, PictureService>();
+        services.AddSingleton<IPasswordService, PasswordService>();
         services.AddSingleton<ICacheService, CacheService>();
     }
 }
