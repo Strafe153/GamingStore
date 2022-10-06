@@ -88,25 +88,6 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     }
 
     [Fact]
-    public async Task LoginAsync_ValidDto_ReturnsActionResultOfUserWithTokenReadDto()
-    {
-        // Arrange
-        _fixture.MockMapper
-            .Setup(m => m.Map<UserWithTokenReadDto>(It.IsAny<User>()))
-            .Returns(_fixture.UserWithTokenReadDto);
-
-        // Act
-        var result = await _fixture.MockUsersController.LoginAsync(_fixture.UserLoginDto, _fixture.CancellationToken);
-        var objectResult = result.Result.As<OkObjectResult>();
-        var readWithTokenDto = objectResult.Value.As<UserWithTokenReadDto>();
-
-        // Assert
-        result.Should().NotBeNull().And.BeOfType<ActionResult<UserWithTokenReadDto>>();
-        objectResult.StatusCode.Should().Be(200);
-        readWithTokenDto.Should().NotBeNull();
-    }
-
-    [Fact]
     public async Task UpdateAsync_ExistingUserValidDto_ReturnsNoContentResult()
     {
         // Arrange
@@ -131,19 +112,13 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
             .Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
 
-        _fixture.MockPasswordService
-            .Setup(s => s.CreateToken(It.IsAny<User>()))
-            .Returns(_fixture.Username);
-
         // Act
         var result = await _fixture.MockUsersController.ChangePasswordAsync(_fixture.Id, _fixture.UserChangePasswordDto);
-        var objectResult = result.Result.As<OkObjectResult>();
-        var readToken = objectResult.Value.As<string>();
+        var objectResult = result.Result.As<NoContentResult>();
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<string>>();
-        objectResult.StatusCode.Should().Be(200);
-        readToken.Should().NotBeNull();
+        objectResult.StatusCode.Should().Be(204);
     }
 
     [Fact]

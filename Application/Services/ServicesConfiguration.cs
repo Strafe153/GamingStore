@@ -6,13 +6,14 @@ namespace Application.Services;
 
 public static class ServicesConfiguration
 {
-    public static void AddApplicationServices(this IServiceCollection services)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IService<Company>, CompanyService>();
         services.AddScoped<IDeviceService, DeviceService>();
         services.AddScoped<IPictureService, PictureService>();
-        services.AddSingleton<IPasswordService, PasswordService>();
         services.AddSingleton<ICacheService, CacheService>();
+
+        return services;
     }
 }

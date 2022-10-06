@@ -1,13 +1,10 @@
 ﻿using Core.Entities;
-using Core.Enums;
 using Core.Exceptions;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Core.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace Application.Services;
 
@@ -30,28 +27,30 @@ public class UserService : IUserService
         _logger = logger;
     }
 
-    public async Task CreateAsync(User entity)
+    public async Task CreateAsync(User entity, string password)
     {
-        try
-        {
-            _repository.Create(entity);
-            await _repository.SaveChangesAsync();
+        var result = await _repository.CreateAsync(entity, password);
 
-            _logger.LogInformation("Succesfully registered a user");
-        } 
-        catch (DbUpdateException)
+        if (!result.Succeeded)
         {
-            _logger.LogWarning("Failed to register a user. The email '{Email}' is already taken", entity.Email);
-            throw new UsernameNotUniqueException($"Email '{entity.Email}' is already taken");
+            _logger.LogWarning("Failed to register a user. The performerEmail '{Email}' is already taken", entity.Email);
+            throw new NameNotUniqueException($"Email '{entity.Email}' is already taken");
         }
+
+        _logger.LogInformation("Successfully registered a user");
     }
 
     public async Task DeleteAsync(User entity)
     {
-        _repository.Delete(entity);
-        await _repository.SaveChangesAsync();
+        var result = await _repository.DeleteAsync(entity);
 
-        _logger.LogInformation("Succesfully deleted a user with id {Id}", entity.Id);
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Failed to delete user with username {Username}", entity.UserName);
+            throw new OperationFailedException($"Failed to delete user with username {entity.UserName}");
+        }
+
+        _logger.LogInformation("Succesfully deleted user with id {Id}", entity.Id);
     }
 
     public async Task<PaginatedList<User>> GetAllAsync(int pageNumber, int pageSize, CancellationToken token = default)
@@ -110,7 +109,7 @@ public class UserService : IUserService
             if (user is null)
             {
                 _logger.LogWarning("Failed to retrieve a user with username {Email}", email);
-                throw new NullReferenceException($"User with email {email} not found");
+                throw new NullReferenceException($"User with performerEmail {email} not found");
             }
 
             await _cacheService.SetAsync(key, user);
@@ -123,52 +122,61 @@ public class UserService : IUserService
 
     public async Task UpdateAsync(User entity)
     {
-        try
-        {
-            _repository.Update(entity);
-            await _repository.SaveChangesAsync();
+        var result = await _repository.UpdateAsync(entity);
 
-            _logger.LogInformation("Successfully updated a user with id {Id}", entity.Id);
-        }
-        catch (DbUpdateException)
+        if (!result.Succeeded)
         {
             _logger.LogWarning("Failed to update the user with id {Id}. The username '{Username}' is already taken",
-                entity.Id, entity.Username);
-            throw new UsernameNotUniqueException($"Username '{entity.Username}' is already taken");
+                entity.Id, entity.UserName);
+            throw new NameNotUniqueException($"Username '{entity.UserName}' is already taken");
         }
+
+        _logger.LogInformation("Successfully updater user with id {Id}", entity.Id);
     }
 
-    public User ConstructUser(string username, string email, string? profilePicture, byte[] passwordHash, byte[] passwordSalt)
+    public async Task AssignRoleAsync(User user, string role)
     {
-        User user = new()
+        var result = await _repository.RemoveFromRolesAsync(user);
+
+        if (!result.Succeeded)
         {
-            Username = username,
-            Email = email,
-            Role = UserRole.User,
-            ProfilePicture = profilePicture,
-            PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt
-        };
+            _logger.LogWarning("Failed to remove roles from user with id {Id}", user.Id);
+            throw new OperationFailedException($"Failed to remove roles from user with id {user.Id}");
+        }
 
-        return user;
+        result = await _repository.AssignRoleAsync(user, role);
+
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Failed to assign performerRole {Role} to user with id {Id}", role, user.Id);
+            throw new OperationFailedException($"Failed to assign performerRole {role} to user with id {user.Id}");
+        }
+
+        _logger.LogInformation("Successfully assigned performerRole {Role} to user with id {Id}", role, user.Id);
     }
 
-    public void ChangePasswordData(User user, byte[] passwordHash, byte[] passwordSalt)
+    public async Task ChangePasswordAsync(User user, string currentPassword, string newPassword)
     {
-        user.PasswordHash = passwordHash;
-        user.PasswordSalt = passwordSalt;
+        var result = await _repository.ChangePasswordAsync(user, currentPassword, newPassword);
+
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Failed to change password for user with id {Id}", user.Id);
+            throw new OperationFailedException($"Failed to change password for user with id {user.Id}");
+        }
+
+        _logger.LogInformation("Successfully changed password for user with id {Id}", user.Id);
     }
 
     public void VerifyUserAccessRights(User performedOn)
     {
         var context = _httpContextAccessor.HttpContext;
-        var claims = context.User.Claims;
-        string performerEmail = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)!.Value;
-        string performerRole = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!.Value;
+        string performerRole = context.User.Claims.First(c => c.Type.Contains("role")).Value;
+        string performerEmail = context.User.Claims.First(c => c.Type.Contains("email")).Value;
 
-        if ((performedOn.Email != performerEmail) && (performerRole != UserRole.Admin.ToString()))
+        if ((performedOn.Email != performerEmail) && (performerRole != "Admin"))
         {
-            _logger.LogWarning("User '{Name}' failed to perform an operation due to insufficient access rights", 
+            _logger.LogWarning("User '{Name}' failed to perform an operation due to insufficient access rights",
                 context.User.Identity!.Name);
             throw new NotEnoughRightsException("Not enough rights to perform the operation");
         }

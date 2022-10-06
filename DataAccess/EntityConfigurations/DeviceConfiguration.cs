@@ -9,29 +9,23 @@ public class DeviceConfiguration : IEntityTypeConfiguration<Device>
 {
     public void Configure(EntityTypeBuilder<Device> builder)
     {
-        builder
-            .HasKey(d => d.Id);
+        builder.HasKey(d => d.Id);
 
-        builder
-            .HasIndex(d => d.Name)
+        builder.HasIndex(d => d.Name)
             .IsUnique();
 
-        builder
-            .Property(d => d.Name)
+        builder.Property(d => d.Name)
             .HasMaxLength(50)
             .IsRequired();
 
-        builder
-            .Property(d => d.Price)
+        builder.Property(d => d.Price)
             .HasColumnType("decimal(8,2)")
             .IsRequired();
 
-        builder
-            .Property(d => d.Category)
+        builder.Property(d => d.Category)
             .HasDefaultValue(DeviceCategory.Mouse);
 
-        builder
-            .Property(d => d.CompanyId)
+        builder.Property(d => d.CompanyId)
             .IsRequired();
     }
 }

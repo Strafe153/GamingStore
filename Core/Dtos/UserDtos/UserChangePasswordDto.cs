@@ -2,5 +2,6 @@
 
 public record UserChangePasswordDto
 {
-    public string? Password { get; init; }
+    public string? CurrentPassword { get; init; }
+    public string? NewPassword { get; init; }
 }

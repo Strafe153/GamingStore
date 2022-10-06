@@ -10,14 +10,13 @@ namespace WebApi.Validators;
 
 public static class ValidatorsConfiguration
 {
-    public static void AddApplicationValidators(this IServiceCollection services)
+    public static IServiceCollection AddApplicationValidators(this IServiceCollection services)
     {
         // User validators
         services.AddScoped<IValidator<UserBaseDto>, UserBaseValidator<UserBaseDto>>();
         services.AddScoped<IValidator<UserRegisterDto>, UserBaseValidator<UserRegisterDto>>();
         services.AddScoped<IValidator<UserLoginDto>, UserLoginValidator>();
         services.AddScoped<IValidator<UserUpdateDto>, UserUpdateValidator>();
-        services.AddScoped<IValidator<UserChangeRoleDto>, UserChangeRoleValidator>();
         services.AddScoped<IValidator<UserChangePasswordDto>, UserChangePasswordValidator>();
 
         // Company validators
@@ -25,5 +24,7 @@ public static class ValidatorsConfiguration
 
         // Device validators
         services.AddScoped<IValidator<DeviceBaseDto>, DeviceBaseValidator>();
+
+        return services;
     }
 }

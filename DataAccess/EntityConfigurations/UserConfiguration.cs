@@ -1,5 +1,4 @@
 ﻿using Core.Entities;
-using Core.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,20 +8,18 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder
-            .HasKey(u => u.Id);
+        builder.HasKey(u => u.Id);
 
-        builder
-            .HasIndex(u => u.Email)
-            .IsUnique();
-
-        builder
-            .Property(u => u.Username)
+        builder.Property(u => u.FirstName)
             .HasMaxLength(30)
             .IsRequired();
 
-        builder
-            .Property(u => u.Role)
-            .HasDefaultValue(UserRole.User);
+        builder.Property(u => u.LastName)
+            .HasMaxLength(30)
+            .IsRequired();
+
+        builder.Property(u => u.PhoneNumber)
+            .HasMaxLength(20)
+            .IsRequired();
     }
 }

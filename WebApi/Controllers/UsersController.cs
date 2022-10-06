@@ -15,19 +15,16 @@ namespace WebApi.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly IPasswordService _passwordService;
     private readonly IPictureService _pictureService;
     private readonly IMapper _mapper;
     private readonly string _blobFolder;
 
     public UsersController(
         IUserService userService,
-        IPasswordService passwordService,
         IPictureService pictureService,
         IMapper mapper)
     {
         _userService = userService;
-        _passwordService = passwordService;
         _pictureService = pictureService;
         _mapper = mapper;
         _blobFolder = "user-profile-pictures";
@@ -56,29 +53,15 @@ public class UsersController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<UserReadDto>> RegisterAsync([FromForm] UserRegisterDto registerDto)
     {
-        (byte[] hash, byte[] salt) = _passwordService.CreatePasswordHash(registerDto.Password!);
-        string? pictureLink = await _pictureService.UploadAsync(registerDto.ProfilePicture, _blobFolder, registerDto.Email!);
+        var user = _mapper.Map<User>(registerDto);
+        user.ProfilePicture = await _pictureService.UploadAsync(registerDto.ProfilePicture, _blobFolder, registerDto.Email!);
 
-        User user = _userService.ConstructUser(registerDto.Username!, registerDto.Email!, pictureLink, hash, salt);
-        await _userService.CreateAsync(user);
+        await _userService.CreateAsync(user, registerDto.Password!);
+        await _userService.AssignRoleAsync(user, "User");
 
         var readDto = _mapper.Map<UserReadDto>(user);
 
         return CreatedAtAction(nameof(GetAsync), new { Id = readDto.Id }, readDto);
-    }
-
-    [HttpPost("login")]
-    [AllowAnonymous]
-    public async Task<ActionResult<UserWithTokenReadDto>> LoginAsync([FromBody] UserLoginDto loginDto, CancellationToken token)
-    {
-        var user = await _userService.GetByEmailAsync(loginDto.Email!, token);
-
-        _passwordService.VerifyPasswordHash(loginDto.Password!, user.PasswordHash!, user.PasswordSalt!);
-
-        string jwtToken = _passwordService.CreateToken(user);
-        var readDto = _mapper.Map<UserWithTokenReadDto>(user) with { Token = jwtToken };
-
-        return Ok(readDto);
     }
 
     [HttpPut("{id:int:min(1)}")]
@@ -103,15 +86,11 @@ public class UsersController : ControllerBase
         [FromBody] UserChangePasswordDto changePasswordDto)
     {
         var user = await _userService.GetByIdAsync(id);
+
         _userService.VerifyUserAccessRights(user);
+        await _userService.ChangePasswordAsync(user, changePasswordDto.CurrentPassword!, changePasswordDto.NewPassword!);
 
-        (byte[] hash, byte[] salt) = _passwordService.CreatePasswordHash(changePasswordDto.Password!);
-        _userService.ChangePasswordData(user, hash, salt);
-        await _userService.UpdateAsync(user);
-
-        string token = _passwordService.CreateToken(user);
-
-        return Ok(token);
+        return NoContent();
     }
 
     [HttpPut("{id:int:min(1)}/changeRole")]
@@ -119,9 +98,7 @@ public class UsersController : ControllerBase
     public async Task<ActionResult> ChangeRoleAsync([FromRoute] int id, [FromBody] UserChangeRoleDto changeRoleDto)
     {
         var user = await _userService.GetByIdAsync(id);
-
-        _mapper.Map(changeRoleDto, user);
-        await _userService.UpdateAsync(user);
+        await _userService.AssignRoleAsync(user, changeRoleDto.Role!);
 
         return NoContent();
     }

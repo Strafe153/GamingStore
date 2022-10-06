@@ -2,6 +2,7 @@
 using Core.Interfaces.Repositories;
 using Core.Models;
 using DataAccess.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -9,21 +10,23 @@ namespace DataAccess.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private readonly GamingStoreContext _context;
+    private readonly UserManager<User> _userManager;
 
-    public UserRepository(GamingStoreContext context)
+    public UserRepository(UserManager<User> userManager)
     {
-        _context = context;
+        _userManager = userManager;
     }
 
-    public void Create(User entity)
+    public async Task<IdentityResult> CreateAsync(User user, string password)
     {
-        _context.Users.Add(entity);
+        var result = await _userManager.CreateAsync(user, password);
+        return result;
     }
 
-    public void Delete(User entity)
+    public async Task<IdentityResult> DeleteAsync(User user)
     {
-        _context.Users.Remove(entity);
+        var result = await _userManager.DeleteAsync(user);
+        return result;
     }
 
     public async Task<PaginatedList<User>> GetAllAsync(
@@ -33,8 +36,8 @@ public class UserRepository : IUserRepository
         Expression<Func<User, bool>>? filter = null)
     {
         var query = filter is null
-            ? _context.Users
-            : _context.Users.Where(filter);
+            ? _userManager.Users
+            : _userManager.Users.Where(filter);
 
         var users = await query
             .AsNoTracking()
@@ -45,23 +48,39 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByIdAsync(int id, CancellationToken token = default)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id, token);
+        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id, token);
         return user;
     }
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken token = default)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email, token);
+        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email, token);
         return user;
     }
 
-    public async Task SaveChangesAsync()
+    public async Task<IdentityResult> UpdateAsync(User user)
     {
-        await _context.SaveChangesAsync();
+        var result = await _userManager.UpdateAsync(user);
+        return result;
     }
 
-    public void Update(User entity)
+    public async Task<IdentityResult> AssignRoleAsync(User user, string role)
     {
-        _context.Users.Update(entity);
+        var result = await _userManager.AddToRoleAsync(user, role);
+        return result;
+    }
+
+    public async Task<IdentityResult> RemoveFromRolesAsync(User user)
+    {
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var result = await _userManager.RemoveFromRolesAsync(user, userRoles);
+
+        return result;
+    }
+
+    public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword)
+    {
+        var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        return result;
     }
 }

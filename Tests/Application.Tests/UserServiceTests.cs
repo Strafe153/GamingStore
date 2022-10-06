@@ -106,6 +106,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
         var result = async () => await _fixture.MockUserService.GetByIdAsync(_fixture.Id);
 
         // Assert
+        result.Should().NotBeNull();
         await result.Should().ThrowAsync<NullReferenceException>();
     }
 
@@ -159,59 +160,193 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
         var result = async() => await _fixture.MockUserService.GetByEmailAsync(_fixture.Name);
 
         // Assert
+        result.Should().NotBeNull();
         await result.Should().ThrowAsync<NullReferenceException>();
     }
 
     [Fact]
-    public void CreateAsync_ValidUser_ReturnsTask()
+    public void CreateAsync_IdentityResultSucceeded_ReturnsTask()
     {
+        // Arrange
+        _fixture.MockUserRepository
+            .Setup(r => r.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .ReturnsAsync(_fixture.SucceededResult);
+
         // Act
-        var result = _fixture.MockUserService.CreateAsync(_fixture.User);
+        var result = async () => await _fixture.MockUserService.CreateAsync(_fixture.User, _fixture.Name);
 
         // Assert
         result.Should().NotBeNull();
     }
 
     [Fact]
-    public void UpdateAsync_ValidUser_ReturnsTask()
+    public async Task CreateAsync_IdentityResultFailed_ThrowsOperationFailedException()
     {
+        // Arrange
+        _fixture.MockUserRepository
+            .Setup(r => r.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .ReturnsAsync(_fixture.FailedResult);
+
         // Act
-        var result = _fixture.MockUserService.UpdateAsync(_fixture.User);
+        var result = async () => await _fixture.MockUserService.CreateAsync(_fixture.User, _fixture.Name);
+
+        // Assert
+        result.Should().NotBeNull();
+        await result.Should().ThrowAsync<NameNotUniqueException>();
+    }
+
+    [Fact]
+    public void UpdateAsync_IdentityResultSucceeded_ReturnsTask()
+    {
+        // Arrange
+        _fixture.MockUserRepository
+            .Setup(r => r.UpdateAsync(It.IsAny<User>()))
+            .ReturnsAsync(_fixture.SucceededResult);
+
+        // Act
+        var result = async () => await _fixture.MockUserService.UpdateAsync(_fixture.User);
 
         // Assert
         result.Should().NotBeNull();
     }
 
     [Fact]
-    public void DeleteAsync_ValidUser_ReturnsTask()
+    public async Task UpdateAsync_IdentityResultFailed_ThrowsOperationFailedException()
     {
+        // Arrange
+        _fixture.MockUserRepository
+            .Setup(r => r.UpdateAsync(It.IsAny<User>()))
+            .ReturnsAsync(_fixture.FailedResult);
+
         // Act
-        var result = _fixture.MockUserService.DeleteAsync(_fixture.User);
+        var result = async () => await _fixture.MockUserService.UpdateAsync(_fixture.User);
+
+        // Assert
+        result.Should().NotBeNull();
+        await result.Should().ThrowAsync<NameNotUniqueException>();
+    }
+
+    [Fact]
+    public void DeleteAsync_IdentityResultSucceeded_ReturnsTask()
+    {
+        // Arrange
+        _fixture.MockUserRepository
+            .Setup(r => r.DeleteAsync(It.IsAny<User>()))
+            .ReturnsAsync(_fixture.SucceededResult);
+
+        // Act
+        var result = async () => await _fixture.MockUserService.DeleteAsync(_fixture.User);
 
         // Assert
         result.Should().NotBeNull();
     }
 
     [Fact]
-    public void ConstructUser_ValidParameters_ReturnsUser()
+    public async Task DeleteAsync_IdentityResultFailed_ThrowsOperationFailedException()
     {
-        // Act
-        var result = _fixture.MockUserService.ConstructUser(
-            _fixture.Name, _fixture.Name, _fixture.Name, _fixture.Bytes, _fixture.Bytes);
+        // Arrange
+        _fixture.MockUserRepository
+            .Setup(r => r.DeleteAsync(It.IsAny<User>()))
+            .ReturnsAsync(_fixture.FailedResult);
 
-        // Assert
-        result.Should().NotBeNull().And.BeOfType<User>();
-    }
-
-    [Fact]
-    public void ChangePasswordData_ValidParameters_ReturnsVoid()
-    {
         // Act
-        var result = () => _fixture.MockUserService
-            .ChangePasswordData(_fixture.User, _fixture.Bytes, _fixture.Bytes);
+        var result = async () => await _fixture.MockUserService.DeleteAsync(_fixture.User);
 
         // Assert
         result.Should().NotBeNull();
+        await result.Should().ThrowAsync<OperationFailedException>();
+    }
+
+    [Fact]
+    public void AssignRoleAsync_IdentityResultSucceeded_ReturnsTask()
+    {
+        // Arrange
+        _fixture.MockUserRepository
+            .Setup(r => r.RemoveFromRolesAsync(It.IsAny<User>()))
+            .ReturnsAsync(_fixture.SucceededResult);
+
+        _fixture.MockUserRepository
+            .Setup(r => r.AssignRoleAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .ReturnsAsync(_fixture.SucceededResult);
+
+        // Act
+        var result = async () => await _fixture.MockUserService.AssignRoleAsync(_fixture.User, _fixture.Name);
+
+        // Assert
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task AssignRoleAsync_RemoveFromRolesAsyncIdentityResultFailed_ThrowsOperationFailedException()
+    {
+        // Arrange
+        _fixture.MockUserRepository
+            .Setup(r => r.RemoveFromRolesAsync(It.IsAny<User>()))
+            .ReturnsAsync(_fixture.SucceededResult);
+
+        _fixture.MockUserRepository
+            .Setup(r => r.AssignRoleAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .ReturnsAsync(_fixture.FailedResult);
+
+        // Act
+        var result = async () => await _fixture.MockUserService.AssignRoleAsync(_fixture.User, _fixture.Name);
+
+        // Assert
+        result.Should().NotBeNull();
+        await result.Should().ThrowAsync<OperationFailedException>();
+    }
+
+    [Fact]
+    public async Task AssignRoleAsync_AssignRoleAsyncIdentityResultFailed_ThrowsOperationFailedException()
+    {
+        // Arrange
+        _fixture.MockUserRepository
+            .Setup(r => r.RemoveFromRolesAsync(It.IsAny<User>()))
+            .ReturnsAsync(_fixture.FailedResult);
+
+        // Act
+        var result = async () => await _fixture.MockUserService.AssignRoleAsync(_fixture.User, _fixture.Name);
+
+        // Assert
+        result.Should().NotBeNull();
+        await result.Should().ThrowAsync<OperationFailedException>();
+    }
+
+    [Fact]
+    public void ChangePasswordAsync_IdentityResultSucceeded_ReturnsTask()
+    {
+        // Arrange
+        _fixture.MockUserRepository
+            .Setup(r => r.ChangePasswordAsync(
+                It.IsAny<User>(), 
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+            .ReturnsAsync(_fixture.SucceededResult);
+
+        // Act
+        var result = async () => await _fixture.MockUserService.ChangePasswordAsync(_fixture.User, _fixture.Name, _fixture.Name);
+
+        // Assert
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task ChangePasswordAsync_IdentityResultFailed_ThrowsOperationFailedException()
+    {
+        // Arrange
+        _fixture.MockUserRepository
+            .Setup(r => r.ChangePasswordAsync(
+                It.IsAny<User>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+            .ReturnsAsync(_fixture.FailedResult);
+
+        // Act
+        var result = async () => await _fixture.MockUserService.ChangePasswordAsync(_fixture.User, _fixture.Name, _fixture.Name);
+
+        // Assert
+        result.Should().NotBeNull();
+        await result.Should().ThrowAsync<OperationFailedException>();
     }
 
     [Fact]

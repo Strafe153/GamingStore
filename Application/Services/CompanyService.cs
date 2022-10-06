@@ -36,7 +36,7 @@ public class CompanyService : IService<Company>
         catch (DbUpdateException)
         {
             _logger.LogWarning("Failed to create a company. The name '{Name}' is already taken", entity.Name);
-            throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
+            throw new NameNotUniqueException($"Name '{entity.Name}' is already taken");
         }
     }
 
@@ -105,7 +105,7 @@ public class CompanyService : IService<Company>
         {
             _logger.LogWarning("Failed to update the company with id {Id}. The name '{Name}' is already taken", 
                 entity.Id, entity.Name);
-            throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
+            throw new NameNotUniqueException($"Name '{entity.Name}' is already taken");
         }
     }
 }

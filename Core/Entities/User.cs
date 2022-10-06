@@ -1,14 +1,10 @@
-﻿using Core.Enums;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Core.Entities;
 
-public class User
+public class User : IdentityUser<int>
 {
-    public int Id { get; set; }
-    public string? Username { get; set; }
-    public string? Email { get; set; }
-    public UserRole Role { get; set; }
-    public byte[]? PasswordHash { get; set; }
-    public byte[]? PasswordSalt { get; set; }
+    public string? FirstName { get; init; }
+    public string? LastName { get; init; }
     public string? ProfilePicture { get; set; }
 }

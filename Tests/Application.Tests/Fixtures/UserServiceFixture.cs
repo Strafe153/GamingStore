@@ -2,15 +2,14 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Core.Entities;
-using Core.Enums;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Core.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Security.Claims;
-using System.Security.Principal;
 
 namespace Application.Tests.Fixtures;
 
@@ -31,12 +30,13 @@ public class UserServiceFixture
             MockHttpContextAccessor.Object,
             MockLogger.Object);
 
-
         Id = 1;
         Name = "Name";
         Bytes = new byte[0];
         User = GetUser();
-        PaginatedList = GetPaginatedList();
+        PaginatedList = new(GetUsers(), 6, 1, 5);
+        SucceededResult = IdentityResult.Success;
+        FailedResult = IdentityResult.Failed();
         HttpContextWithSufficientClaims = GetHttpContextWithSufficientClaims();
         HttpContextWithInsufficientClaims = GetHttpContextWithInsufficientClaims();
     }
@@ -52,6 +52,8 @@ public class UserServiceFixture
     public byte[] Bytes { get; }
     public User User { get; }
     public PaginatedList<User> PaginatedList { get; }
+    public IdentityResult SucceededResult { get; }
+    public IdentityResult FailedResult { get; }
     public HttpContext HttpContextWithSufficientClaims { get; }
     public HttpContext HttpContextWithInsufficientClaims { get; }
 
@@ -60,10 +62,8 @@ public class UserServiceFixture
         return new()
         {
             Id = Id,
-            Username = Name,
-            Role = UserRole.User,
-            PasswordHash = Bytes,
-            PasswordSalt = Bytes
+            UserName = Name,
+            PasswordHash = Name,
         };
     }
 
@@ -74,11 +74,6 @@ public class UserServiceFixture
             User,
             User
         };
-    }
-
-    private PaginatedList<User> GetPaginatedList()
-    {
-        return new(GetUsers(), 6, 1, 5);
     }
 
     private IEnumerable<Claim> GetInsufficientClaims()
@@ -97,7 +92,7 @@ public class UserServiceFixture
         {
             new Claim(ClaimTypes.Name, Name!),
             new Claim(ClaimTypes.Email, Name!),
-            new Claim(ClaimTypes.Role, UserRole.Admin.ToString())
+            new Claim(ClaimTypes.Role, "Admin")
         };
     }
 
