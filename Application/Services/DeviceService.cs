@@ -36,7 +36,7 @@ public class DeviceService : IDeviceService
         catch (DbUpdateException)
         {
             _logger.LogWarning("Failed to create a device. The name '{Name}' is already taken", entity.Name);
-            throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
+            throw new NameNotUniqueException($"Name '{entity.Name}' is already taken");
         }
     }
 
@@ -119,7 +119,7 @@ public class DeviceService : IDeviceService
         {
             _logger.LogWarning("Failed to update the device wiht id {Id}. The name '{Name}' is already taken", 
                 entity.Id, entity.Name);
-            throw new UsernameNotUniqueException($"Name '{entity.Name}' is already taken");
+            throw new NameNotUniqueException($"Name '{entity.Name}' is already taken");
         }
     }
 }

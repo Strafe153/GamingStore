@@ -1,5 +1,6 @@
 ﻿using Application.Tests.Fixtures;
 using Core.Entities;
+using Core.Exceptions;
 using Core.Models;
 using FluentAssertions;
 using Moq;
@@ -112,27 +113,59 @@ public class DeviceServiceTests : IClassFixture<DeviceServiceFixture>
     public void CreateAsync_ValidDevice_ReturnsTask()
     {
         // Act
-        var result = _fixture.MockDeviceService.CreateAsync(_fixture.Device);
+        var result = async () => await _fixture.MockDeviceService.CreateAsync(_fixture.Device);
 
         // Assert
         result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task CreateAsync_InvalidDevice_ReturnsTask()
+    {
+        // Arrange
+        _fixture.MockDeviceRepository
+            .Setup(r => r.SaveChangesAsync())
+            .ThrowsAsync(_fixture.DbUpdateException);
+
+        // Act
+        var result = async () => await _fixture.MockDeviceService.CreateAsync(_fixture.Device);
+
+        // Assert
+        result.Should().NotBeNull();
+        await result.Should().ThrowAsync<NameNotUniqueException>();
     }
 
     [Fact]
     public void UpdateAsync_ValidDevice_ReturnsTask()
     {
         // Act
-        var result = _fixture.MockDeviceService.UpdateAsync(_fixture.Device);
+        var result = async () => await _fixture.MockDeviceService.UpdateAsync(_fixture.Device);
 
         // Assert
         result.Should().NotBeNull();
     }
 
     [Fact]
+    public async Task UpdateAsync_InvalidDevice_ReturnsTask()
+    {
+        // Arrange
+        _fixture.MockDeviceRepository
+            .Setup(r => r.SaveChangesAsync())
+            .ThrowsAsync(_fixture.DbUpdateException);
+
+        // Act
+        var result = async () => await _fixture.MockDeviceService.UpdateAsync(_fixture.Device);
+
+        // Assert
+        result.Should().NotBeNull();
+        await result.Should().ThrowAsync<NameNotUniqueException>();
+    }
+
+    [Fact]
     public void DeleteAsync_ValidDevice_ReturnsTask()
     {
         // Act
-        var result = _fixture.MockDeviceService.DeleteAsync(_fixture.Device);
+        var result = async () => await _fixture.MockDeviceService.DeleteAsync(_fixture.Device);
 
         // Assert
         result.Should().NotBeNull();

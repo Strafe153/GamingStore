@@ -2,7 +2,6 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Core.Entities;
-using Core.Enums;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -40,11 +39,9 @@ public class CacheServiceFixture
         return new()
         {
             Id = 1,
-            Username = Key,
+            UserName = Key,
             Email = Key,
-            Role = UserRole.User,
-            PasswordHash = Bytes,
-            PasswordSalt = Bytes
+            PasswordHash = Key
         };
     }
 }

@@ -5,6 +5,7 @@ using Core.Entities;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Core.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -27,7 +28,8 @@ public class CompanyServiceFixture
 
         Id = 1;
         Company = GetCompany();
-        PaginatedList = GetPaginatedList();
+        PaginatedList = new(GetCompanies(), 6, 1, 5);
+        DbUpdateException = new();
     }
 
     public CompanyService MockCompanyService { get; }
@@ -38,6 +40,7 @@ public class CompanyServiceFixture
     public int Id { get; }
     public Company Company { get; }
     public PaginatedList<Company> PaginatedList { get; }
+    public DbUpdateException DbUpdateException { get; }
 
     private Company GetCompany()
     {
@@ -55,10 +58,5 @@ public class CompanyServiceFixture
             Company,
             Company
         };
-    }
-
-    private PaginatedList<Company> GetPaginatedList()
-    {
-        return new(GetCompanies(), 6, 1, 5);
     }
 }

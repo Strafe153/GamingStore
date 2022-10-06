@@ -4,13 +4,10 @@ using AutoMapper;
 using Core.Dtos;
 using Core.Dtos.UserDtos;
 using Core.Entities;
-using Core.Enums;
 using Core.Interfaces.Services;
 using Core.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.Security.Claims;
 using WebApi.Controllers;
 
 namespace WebApi.Tests.Fixtures;
@@ -22,18 +19,16 @@ public class UsersControllerFixture
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
         MockUserService = fixture.Freeze<Mock<IUserService>>();
-        MockPasswordService = fixture.Freeze<Mock<IPasswordService>>();
         MockPictureService = fixture.Freeze<Mock<IPictureService>>();
         MockMapper = fixture.Freeze<Mock<IMapper>>();
 
         MockUsersController = new(
             MockUserService.Object,
-            MockPasswordService.Object,
             MockPictureService.Object,
             MockMapper.Object);
 
         Id = 1;
-        Username = "Username";
+        Name = "Name";
         Bytes = new byte[0];
         User = GetUser();
         UserBaseDto = GetUserBaseDto();
@@ -43,20 +38,18 @@ public class UsersControllerFixture
         UserUpdateDto = GetUserUpdateDto();
         UserChangeRoleDto = GetUserChangeRoleDto();
         UserChangePasswordDto = GetUserChangePasswordDto();
-        UserWithTokenReadDto = GetUserWithTokenReadDto();
         PageParameters = GetPageParameters();
-        UserPaginatedList = GetUserPaginatedList();
+        UserPaginatedList = new(GetUsers(), 6, 1, 5);
         UserPageDto = GetUserPageDto();
     }
 
     public UsersController MockUsersController { get; }
     public Mock<IUserService> MockUserService { get; }
-    public Mock<IPasswordService> MockPasswordService { get; }
     public Mock<IPictureService> MockPictureService { get; }
     public Mock<IMapper> MockMapper { get; }
 
     public int Id { get; }
-    public string Username { get; }
+    public string Name { get; }
     public byte[] Bytes { get; }
     public IFormFile? Picture { get; }
     public User User { get; }
@@ -67,7 +60,6 @@ public class UsersControllerFixture
     public UserUpdateDto UserUpdateDto { get; }
     public UserChangeRoleDto UserChangeRoleDto { get; }
     public UserChangePasswordDto UserChangePasswordDto { get; }
-    public UserWithTokenReadDto UserWithTokenReadDto { get; }
     public PageParameters PageParameters { get; }
     public PaginatedList<User> UserPaginatedList { get; }
     public PageDto<UserReadDto> UserPageDto { get; }
@@ -78,10 +70,8 @@ public class UsersControllerFixture
         return new()
         {
             Id = Id,
-            Username = Username,
-            Role = UserRole.User,
-            PasswordHash = Bytes,
-            PasswordSalt = Bytes
+            UserName = Name,
+            PasswordHash = Name,
         };
     }
 
@@ -103,16 +93,12 @@ public class UsersControllerFixture
         };
     }
 
-    private PaginatedList<User> GetUserPaginatedList()
-    {
-        return new(GetUsers(), 6, 1, 5);
-    }
-
     private UserBaseDto GetUserBaseDto()
     {
         return new()
         {
-            Username = Username
+            FirstName = Name,
+            LastName = Name
         };
     }
 
@@ -121,8 +107,8 @@ public class UsersControllerFixture
         return new()
         {
             Id = Id,
-            Username = Username,
-            Role = UserRole.User
+            FirstName = Name,
+            LastName = Name
         };
     }
 
@@ -130,8 +116,9 @@ public class UsersControllerFixture
     {
         return new()
         {
-            Username = Username,
-            Password = Username
+            FirstName = Name,
+            LastName = Name,
+            Password = Name
         };
     }
 
@@ -139,8 +126,8 @@ public class UsersControllerFixture
     {
         return new()
         {
-            Email = Username,
-            Password = Username
+            Email = Name,
+            Password = Name
         };
     }
 
@@ -148,7 +135,8 @@ public class UsersControllerFixture
     {
         return new()
         {
-            Username = Username,
+            FirstName = Name,
+            LastName = Name,
             ProfilePicture = Picture
         };
     }
@@ -157,7 +145,7 @@ public class UsersControllerFixture
     {
         return new()
         {
-            Role = UserRole.Admin
+            Role = Name
         };
     }
 
@@ -165,18 +153,8 @@ public class UsersControllerFixture
     {
         return new()
         {
-            Password = Username
-        };
-    }
-
-    private UserWithTokenReadDto GetUserWithTokenReadDto()
-    {
-        return new()
-        {
-            Id = Id,
-            Username = Username,
-            Role = UserRole.User,
-            Token = Username
+            CurrentPassword = Name,
+            NewPassword = Name
         };
     }
 

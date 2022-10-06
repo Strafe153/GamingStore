@@ -6,6 +6,7 @@ using Core.Enums;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Core.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -29,7 +30,8 @@ public class DeviceServiceFixture
         Id = 1;
         Name = "Name";
         Device = GetDevice();
-        PaginatedList = GetPaginatedList();
+        PaginatedList = new(GetDevices(), 6, 1, 5);
+        DbUpdateException = new();
     }
 
     public DeviceService MockDeviceService { get; }
@@ -41,6 +43,7 @@ public class DeviceServiceFixture
     public string Name { get; }
     public Device Device { get; }
     public PaginatedList<Device> PaginatedList { get; }
+    public DbUpdateException DbUpdateException { get; }
 
     private Device GetDevice()
     {
@@ -62,10 +65,5 @@ public class DeviceServiceFixture
             Device,
             Device
         };
-    }
-
-    private PaginatedList<Device> GetPaginatedList()
-    {
-        return new(GetDevices(), 6, 1, 5);
     }
 }

@@ -11,12 +11,14 @@ public class UserProfile : Profile
     public UserProfile()
     {
         CreateMap<PaginatedList<User>, PageDto<UserReadDto>>()
-            .ForMember(pvm => pvm.Entities, opt => opt.MapFrom(pl => pl));
+            .ForMember(pd => pd.Entities, opt => opt.MapFrom(pl => pl));
 
         CreateMap<User, UserReadDto>();
-        CreateMap<User, UserWithTokenReadDto>();
+
+        CreateMap<UserRegisterDto, User>()
+            .ForMember(u => u.UserName, opt => opt.MapFrom(ud => ud.Email));
+
         CreateMap<UserBaseDto, User>();
         CreateMap<UserUpdateDto, User>();
-        CreateMap<UserChangeRoleDto, User>();
     }
 }

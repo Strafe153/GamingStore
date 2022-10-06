@@ -1,16 +1,17 @@
 ﻿using Application.Services;
+using Core.Entities;
 using DataAccess;
 using DataAccess.Extensions;
 using DataAccess.Repositories;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Serilog;
-using System.Text;
 using WebApi.Validators;
 
 namespace WebApi;
@@ -26,24 +27,23 @@ public static class WebApplicationBuilderConfiguration
             .CreateLogger();
 
         // Configure logging.
-        builder.Logging.ClearProviders();
-        builder.Logging.AddSerilog(logger);
+        builder.Logging.ClearProviders()
+            .AddSerilog(logger);
 
         // Add custom validators, repositories, services and mappers.
-        builder.Services.AddApplicationValidators();
-        builder.Services.AddApplicationRepositories();
-        builder.Services.AddApplicationServices();
+        builder.Services.AddApplicationValidators()
+            .AddApplicationRepositories()
+            .AddApplicationServices();
 
         // Add, configure controllers.
-        builder.Services
-            .AddControllers(options =>
-            {
-                options.SuppressAsyncSuffixInActionNames = false;
-            })
-            .AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
+        builder.Services.AddControllers(options =>
+        {
+            options.SuppressAsyncSuffixInActionNames = false;
+        })
+        .AddNewtonsoftJson(options =>
+        {
+            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        });
 
         // Add database connection.
         builder.Services.AddDbContext<GamingStoreContext>(options =>
@@ -57,20 +57,37 @@ public static class WebApplicationBuilderConfiguration
             options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
         });
 
-        // Add JWT-token authentication.
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+        // Add and configure Identity.
+        builder.Services.AddIdentity<User, IdentityRole<int>>()
+            .AddEntityFrameworkStores<GamingStoreContext>();
+
+        builder.Services.Configure<IdentityOptions>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequiredLength = 6;
+        });
+
+        // Add Authentication.
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.Authority = "http://localhost:7030";
+            options.Audience = "gamingStoreApi";
+            options.RequireHttpsMetadata = false;
+            options.TokenValidationParameters = new TokenValidationParameters()
             {
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                        builder.Configuration.GetSection("AppSettings:Token").Value)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                ClockSkew = TimeSpan.Zero
+            };
+        });
 
         // Add AuthorizationPolicy.
         builder.Services.AddAuthorization(options =>
@@ -82,8 +99,7 @@ public static class WebApplicationBuilderConfiguration
         });
 
         // Add fluent validation
-        builder.Services
-            .AddFluentValidationAutoValidation()
+        builder.Services.AddFluentValidationAutoValidation()
             .AddFluentValidationClientsideAdapters();
 
         // Add AutoMapper
@@ -117,19 +133,19 @@ public static class WebApplicationBuilderConfiguration
             });
 
             options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-    {
-        {
-            new OpenApiSecurityScheme()
             {
-                Reference = new OpenApiReference()
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    new OpenApiSecurityScheme()
+                    {
+                        Reference = new OpenApiReference()
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
                 }
-            },
-            new string[] { }
-        }
-    });
+            });
         });
     }
 }

@@ -7,10 +7,20 @@ public class UserChangePasswordValidator : AbstractValidator<UserChangePasswordD
 {
     public UserChangePasswordValidator()
     {
-        RuleFor(u => u.Password)
+        RuleFor(u => u.CurrentPassword)
+            .NotEmpty()
+            .WithMessage("CurrentPassword is required")
             .MinimumLength(6)
-            .WithMessage("Password must be at least 6 characters long")
-            .MaximumLength(50)
-            .WithMessage("Password must not be longer than 50 characters");
+            .WithMessage("CurrentPassword must be at least 6 characters long")
+            .MaximumLength(24)
+            .WithMessage("CurrentPassword must not be longer than 24 characters");
+
+        RuleFor(u => u.NewPassword)
+            .NotEmpty()
+            .WithMessage("NewPassword is required")
+            .MinimumLength(6)
+            .WithMessage("NewPassword must be at least 6 characters long")
+            .MaximumLength(24)
+            .WithMessage("NewPassword must not be longer than 24 characters");
     }
 }

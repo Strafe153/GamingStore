@@ -1,5 +1,6 @@
 ﻿using Application.Tests.Fixtures;
 using Core.Entities;
+using Core.Exceptions;
 using Core.Models;
 using FluentAssertions;
 using Moq;
@@ -112,20 +113,52 @@ public class CompanyServiceTests : IClassFixture<CompanyServiceFixture>
     public void CreateAsync_ValidCompany_ReturnsTask()
     {
         // Act
-        var result = _fixture.MockCompanyService.CreateAsync(_fixture.Company);
+        var result = async () => await _fixture.MockCompanyService.CreateAsync(_fixture.Company);
 
         // Assert
         result.Should().NotBeNull();
     }
 
     [Fact]
-    public void UpdateAsync_ValidCompany_ReturnsTask()
+    public async Task CreateAsync_InvalidCompany_ReturnsTask()
     {
+        // Arrange
+        _fixture.MockCompanyRepository
+            .Setup(r => r.SaveChangesAsync())
+            .ThrowsAsync(_fixture.DbUpdateException);
+
         // Act
-        var result = _fixture.MockCompanyService.UpdateAsync(_fixture.Company);
+        var result = async () => await _fixture.MockCompanyService.CreateAsync(_fixture.Company);
 
         // Assert
         result.Should().NotBeNull();
+        await result.Should().ThrowAsync<NameNotUniqueException>();
+    }
+
+    [Fact]
+    public void UpdateAsync_ValidCompany_ReturnsTask()
+    {
+        // Act
+        var result = async () => await _fixture.MockCompanyService.UpdateAsync(_fixture.Company);
+
+        // Assert
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task UpdateAsync_InvalidCompany_ReturnsTask()
+    {
+        // Arrange
+        _fixture.MockCompanyRepository
+            .Setup(r => r.SaveChangesAsync())
+            .ThrowsAsync(_fixture.DbUpdateException);
+
+        // Act
+        var result = async () => await _fixture.MockCompanyService.UpdateAsync(_fixture.Company);
+
+        // Assert
+        result.Should().NotBeNull();
+        await result.Should().ThrowAsync<NameNotUniqueException>();
     }
 
     [Fact]
