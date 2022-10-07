@@ -45,7 +45,7 @@ public static class Configuration
                 RequireConsent = false,
                 ClientId = "postman_client",
                 ClientName = "Postman Client",
-                AllowedScopes = { "apiAccess", "openid" },
+                AllowedScopes = { "apiAccess", "openid", "profile" },
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 AllowOfflineAccess = true,
                 RefreshTokenUsage = TokenUsage.OneTimeOnly,
