@@ -1,7 +1,17 @@
 using IdentityServer.ServiceExtensions;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
+
+// Create a serilog instance
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
+builder.Logging.ClearProviders()
+    .AddSerilog(logger);
 
 builder.Services.AddServices(config);
 
