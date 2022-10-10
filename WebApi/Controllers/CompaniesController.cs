@@ -86,6 +86,11 @@ public class CompaniesController : ControllerBase
         await _companyService.DeleteAsync(company);
         await _pictureService.DeleteAsync(company.Picture!);
 
+        foreach (var device in company.Devices)
+        {
+            await _pictureService.DeleteAsync(device.Picture!);
+        }
+
         return NoContent();
     }
 }
