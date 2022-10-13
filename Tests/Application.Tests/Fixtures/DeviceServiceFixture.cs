@@ -22,7 +22,7 @@ public class DeviceServiceFixture
         MockCacheService = fixture.Freeze<Mock<ICacheService>>();
         MockLogger = fixture.Freeze<Mock<ILogger<DeviceService>>>();
 
-        MockDeviceService = new(
+        MockDeviceService = new DeviceService(
             MockDeviceRepository.Object,
             MockCacheService.Object,
             MockLogger.Object);
@@ -30,8 +30,8 @@ public class DeviceServiceFixture
         Id = 1;
         Name = "Name";
         Device = GetDevice();
-        PaginatedList = new(GetDevices(), 6, 1, 5);
-        DbUpdateException = new();
+        PaginatedList = new PaginatedList<Device>(GetDevices(), 6, 1, 5);
+        DbUpdateException = new DbUpdateException();
     }
 
     public DeviceService MockDeviceService { get; }
@@ -47,7 +47,7 @@ public class DeviceServiceFixture
 
     private Device GetDevice()
     {
-        return new()
+        return new Device()
         {
             Id = Id,
             Name = Name,
@@ -60,7 +60,7 @@ public class DeviceServiceFixture
 
     private List<Device> GetDevices()
     {
-        return new()
+        return new List<Device>()
         {
             Device,
             Device

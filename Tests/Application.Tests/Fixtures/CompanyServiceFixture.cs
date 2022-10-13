@@ -21,15 +21,15 @@ public class CompanyServiceFixture
         MockCacheService = fixture.Freeze<Mock<ICacheService>>();
         MockLogger = fixture.Freeze<Mock<ILogger<CompanyService>>>();
 
-        MockCompanyService = new(
+        MockCompanyService = new CompanyService(
             MockCompanyRepository.Object,
             MockCacheService.Object,
             MockLogger.Object);
 
         Id = 1;
         Company = GetCompany();
-        PaginatedList = new(GetCompanies(), 6, 1, 5);
-        DbUpdateException = new();
+        PaginatedList = new PaginatedList<Company>(GetCompanies(), 6, 1, 5);
+        DbUpdateException = new DbUpdateException();
     }
 
     public CompanyService MockCompanyService { get; }
@@ -44,7 +44,7 @@ public class CompanyServiceFixture
 
     private Company GetCompany()
     {
-        return new()
+        return new Company()
         {
             Id = Id,
             Name = "Name"
@@ -53,7 +53,7 @@ public class CompanyServiceFixture
 
     private List<Company> GetCompanies()
     {
-        return new()
+        return new List<Company>()
         {
             Company,
             Company

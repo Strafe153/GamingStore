@@ -23,7 +23,7 @@ public class DevicesControllerFixture
         MockPictureService = fixture.Freeze<Mock<IPictureService>>();
         MockMapper = fixture.Freeze<Mock<IMapper>>();
 
-        MockDevicesController = new(
+        MockDevicesController = new DevicesController(
             MockDeviceService.Object,
             MockPictureService.Object,
             MockMapper.Object);
@@ -58,7 +58,7 @@ public class DevicesControllerFixture
 
     private Device GetDevice()
     {
-        return new()
+        return new Device()
         {
             Id = Id,
             Name = Name,
@@ -71,7 +71,7 @@ public class DevicesControllerFixture
 
     private List<Device> GetDevices()
     {
-        return new()
+        return new List<Device>()
         {
             GetDevice(),
             GetDevice()
@@ -80,7 +80,7 @@ public class DevicesControllerFixture
 
     private DevicePageParameters GetPageParameters()
     {
-        return new()
+        return new DevicePageParameters()
         {
             PageNumber = 1,
             PageSize = 5,
@@ -90,12 +90,12 @@ public class DevicesControllerFixture
 
     private PaginatedList<Device> GetDevicePaginatedList()
     {
-        return new(GetDevices(), 6, 1, 5);
+        return new PaginatedList<Device>(GetDevices(), 6, 1, 5);
     }
 
     private DeviceReadDto GetDeviceReadDto()
     {
-        return new()
+        return new DeviceReadDto()
         {
             Id = Id,
             Name = Name,
@@ -108,7 +108,7 @@ public class DevicesControllerFixture
 
     private DeviceBaseDto GetDeviceBaseDto()
     {
-        return new()
+        return new DeviceBaseDto()
         {
             Name = Name,
             Category = DeviceCategory.Mouse,
@@ -120,7 +120,7 @@ public class DevicesControllerFixture
 
     private DeviceCreateUpdateDto GetDeviceCreateUpdateDto()
     {
-        return new()
+        return new DeviceCreateUpdateDto()
         {
             Name = Name,
             Category = DeviceCategory.Mouse,
@@ -133,7 +133,7 @@ public class DevicesControllerFixture
 
     private List<DeviceReadDto> GetDeviceReadDtos()
     {
-        return new()
+        return new List<DeviceReadDto>()
         {
             DeviceReadDto,
             DeviceReadDto
@@ -142,7 +142,7 @@ public class DevicesControllerFixture
 
     private PageDto<DeviceReadDto> GetDevicePageDto()
     {
-        return new()
+        return new PageDto<DeviceReadDto>()
         {
             CurrentPage = 1,
             TotalPages = 2,

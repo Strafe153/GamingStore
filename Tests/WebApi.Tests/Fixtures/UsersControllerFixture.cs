@@ -22,14 +22,14 @@ public class UsersControllerFixture
         MockPictureService = fixture.Freeze<Mock<IPictureService>>();
         MockMapper = fixture.Freeze<Mock<IMapper>>();
 
-        MockUsersController = new(
+        MockUsersController = new UsersController(
             MockUserService.Object,
             MockPictureService.Object,
             MockMapper.Object);
 
         Id = 1;
         Name = "Name";
-        Bytes = new byte[0];
+        Bytes = Array.Empty<byte>();
         User = GetUser();
         UserBaseDto = GetUserBaseDto();
         UserReadDto = GetUserReadDto();
@@ -67,7 +67,7 @@ public class UsersControllerFixture
 
     private User GetUser()
     {
-        return new()
+        return new User()
         {
             Id = Id,
             UserName = Name,
@@ -77,7 +77,7 @@ public class UsersControllerFixture
 
     private List<User> GetUsers()
     {
-        return new()
+        return new List<User>()
         {
             GetUser(),
             GetUser()
@@ -86,7 +86,7 @@ public class UsersControllerFixture
 
     private PageParameters GetPageParameters()
     {
-        return new()
+        return new PageParameters()
         {
             PageNumber = 1,
             PageSize = 5
@@ -95,7 +95,7 @@ public class UsersControllerFixture
 
     private UserBaseDto GetUserBaseDto()
     {
-        return new()
+        return new UserBaseDto()
         {
             FirstName = Name,
             LastName = Name
@@ -104,7 +104,7 @@ public class UsersControllerFixture
 
     private UserReadDto GetUserReadDto()
     {
-        return new()
+        return new UserReadDto()
         {
             Id = Id,
             FirstName = Name,
@@ -114,7 +114,7 @@ public class UsersControllerFixture
 
     private UserRegisterDto GetUserRegisterDto()
     {
-        return new()
+        return new UserRegisterDto()
         {
             FirstName = Name,
             LastName = Name,
@@ -124,7 +124,7 @@ public class UsersControllerFixture
 
     private UserLoginDto GetUserLoginDto()
     {
-        return new()
+        return new UserLoginDto()
         {
             Email = Name,
             Password = Name
@@ -133,7 +133,7 @@ public class UsersControllerFixture
 
     private UserUpdateDto GetUserUpdateDto()
     {
-        return new()
+        return new UserUpdateDto()
         {
             FirstName = Name,
             LastName = Name,
@@ -143,7 +143,7 @@ public class UsersControllerFixture
 
     private UserChangeRoleDto GetUserChangeRoleDto()
     {
-        return new()
+        return new UserChangeRoleDto()
         {
             Role = Name
         };
@@ -151,7 +151,7 @@ public class UsersControllerFixture
 
     private UserChangePasswordDto GetUserChangePasswordDto()
     {
-        return new()
+        return new UserChangePasswordDto()
         {
             CurrentPassword = Name,
             NewPassword = Name
@@ -160,7 +160,7 @@ public class UsersControllerFixture
 
     private List<UserReadDto> GetUserReadViewModels()
     {
-        return new()
+        return new List<UserReadDto>()
         {
             UserReadDto,
             UserReadDto
@@ -169,7 +169,7 @@ public class UsersControllerFixture
 
     private PageDto<UserReadDto> GetUserPageDto()
     {
-        return new()
+        return new PageDto<UserReadDto>()
         {
             CurrentPage = 1,
             TotalPages = 2,

@@ -17,7 +17,7 @@ public class CacheServiceFixture
         MockDistributedCache = fixture.Freeze<Mock<IDistributedCache>>();
         MockLogger = fixture.Freeze<Mock<ILogger<CacheService>>>();
 
-        MockCacheService = new(
+        MockCacheService = new CacheService(
             MockDistributedCache.Object,
             MockLogger.Object);
 
@@ -36,7 +36,7 @@ public class CacheServiceFixture
 
     private User GetUser()
     {
-        return new()
+        return new User()
         {
             Id = 1,
             UserName = Key,

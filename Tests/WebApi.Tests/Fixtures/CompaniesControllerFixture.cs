@@ -24,7 +24,7 @@ public class CompaniesControllerFixture
         MockPictureService = fixture.Freeze<Mock<IPictureService>>();
         MockMapper = fixture.Freeze<Mock<IMapper>>();
 
-        MockCompaniesController = new(
+        MockCompaniesController = new CompaniesController(
             MockCompanyService.Object,
             MockPictureService.Object,
             MockMapper.Object);
@@ -72,7 +72,7 @@ public class CompaniesControllerFixture
 
     private List<Company> GetCompanies()
     {
-        return new()
+        return new List<Company>()
         {
             Company,
             Company
@@ -81,7 +81,7 @@ public class CompaniesControllerFixture
 
     private Device GetDevice()
     {
-        return new()
+        return new Device()
         {
             Id = Id,
             Name = Name,
@@ -94,7 +94,7 @@ public class CompaniesControllerFixture
 
     private List<Device> GetDevices()
     {
-        return new()
+        return new List<Device>()
         {
             GetDevice(),
             GetDevice()
@@ -103,7 +103,7 @@ public class CompaniesControllerFixture
 
     private PageParameters GetPageParameters()
     {
-        return new()
+        return new PageParameters()
         {
             PageNumber = 1,
             PageSize = 5
@@ -112,17 +112,17 @@ public class CompaniesControllerFixture
 
     private PaginatedList<Company> GetCompanyPaginatedList()
     {
-        return new(GetCompanies(), 6, 1, 5);
+        return new PaginatedList<Company>(GetCompanies(), 6, 1, 5);
     }
 
     private PaginatedList<Device> GetDevicePaginatedList()
     {
-        return new(GetDevices(), 6, 1, 5);
+        return new PaginatedList<Device>(GetDevices(), 6, 1, 5);
     }
 
     private CompanyBaseDto GetCompanyBaseDto()
     {
-        return new()
+        return new CompanyBaseDto()
         {
             Name = Name
         };
@@ -130,7 +130,7 @@ public class CompaniesControllerFixture
 
     private CompanyReadDto GetCompanyReadDto()
     {
-        return new()
+        return new CompanyReadDto()
         {
             Id = Id,
             Name = Name
@@ -139,7 +139,7 @@ public class CompaniesControllerFixture
 
     private CompanyCreateUpdateDto GetCompanyCreateUpdateDto()
     {
-        return new()
+        return new CompanyCreateUpdateDto()
         {
             Name = Name,
             Picture = Picture
@@ -148,7 +148,7 @@ public class CompaniesControllerFixture
 
     private List<CompanyReadDto> GetCompanyReadViewModels()
     {
-        return new()
+        return new List<CompanyReadDto>()
         {
             CompanyReadDto,
             CompanyReadDto
@@ -157,7 +157,7 @@ public class CompaniesControllerFixture
 
     private PageDto<CompanyReadDto> GetCompanyPageDto()
     {
-        return new()
+        return new PageDto<CompanyReadDto>()
         {
             CurrentPage = 1,
             TotalPages = 2,
@@ -171,7 +171,7 @@ public class CompaniesControllerFixture
 
     private DeviceReadDto GetDeviceReadViewModel()
     {
-        return new()
+        return new DeviceReadDto()
         {
             Id = Id,
             Name = Name,
@@ -184,7 +184,7 @@ public class CompaniesControllerFixture
 
     private List<DeviceReadDto> GetDeviceReadViewModels()
     {
-        return new()
+        return new List<DeviceReadDto>()
         {
             GetDeviceReadViewModel(),
             GetDeviceReadViewModel()
@@ -193,7 +193,7 @@ public class CompaniesControllerFixture
 
     private PageDto<DeviceReadDto> GetDevicePageDto()
     {
-        return new()
+        return new PageDto<DeviceReadDto>()
         {
             CurrentPage = 1,
             TotalPages = 2,

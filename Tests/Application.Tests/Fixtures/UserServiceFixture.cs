@@ -24,7 +24,7 @@ public class UserServiceFixture
         MockHttpContextAccessor = fixture.Freeze<Mock<IHttpContextAccessor>>();
         MockLogger = fixture.Freeze<Mock<ILogger<UserService>>>();
 
-        MockUserService = new(
+        MockUserService = new UserService(
             MockUserRepository.Object,
             MockCacheService.Object,
             MockHttpContextAccessor.Object,
@@ -32,7 +32,7 @@ public class UserServiceFixture
 
         Id = 1;
         Name = "Name";
-        Bytes = new byte[0];
+        Bytes = Array.Empty<byte>();
         User = GetUser();
         PaginatedList = new(GetUsers(), 6, 1, 5);
         SucceededResult = IdentityResult.Success;
@@ -59,7 +59,7 @@ public class UserServiceFixture
 
     private User GetUser()
     {
-        return new()
+        return new User()
         {
             Id = Id,
             UserName = Name,
@@ -69,7 +69,7 @@ public class UserServiceFixture
 
     private List<User> GetUsers()
     {
-        return new()
+        return new List<User>()
         {
             User,
             User
@@ -98,9 +98,9 @@ public class UserServiceFixture
 
     private HttpContext GetHttpContextWithSufficientClaims()
     {
-        ClaimsIdentity identity = new(GetSufficientClaims());
-        ClaimsPrincipal claimsPrincipal = new(identity);
-        DefaultHttpContext context = new()
+        var identity = new ClaimsIdentity(GetSufficientClaims());
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        var context = new DefaultHttpContext()
         {
             User = claimsPrincipal
         };
@@ -110,9 +110,9 @@ public class UserServiceFixture
 
     private HttpContext GetHttpContextWithInsufficientClaims()
     {
-        ClaimsIdentity identity = new(GetInsufficientClaims());
-        ClaimsPrincipal claimsPrincipal = new(identity);
-        DefaultHttpContext context = new()
+        var identity = new ClaimsIdentity(GetInsufficientClaims());
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        var context = new DefaultHttpContext()
         {
             User = claimsPrincipal
         };

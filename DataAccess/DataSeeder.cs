@@ -33,9 +33,9 @@ public static class DataSeeder
     {
         string name = "Admin";
         string email = "admin@gmail.com";
-        PasswordHasher<User> passwordHasher = new();
+        var passwordHasher = new PasswordHasher<User>();
 
-        User admin = new()
+        var admin = new User()
         {
             Id = 1,
             FirstName = name,

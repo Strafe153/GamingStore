@@ -20,7 +20,7 @@ public class PictureServiceFixture
         MockLogger = fixture.Freeze<Mock<ILogger<PictureService>>>();
         MockBlobServiceClient = fixture.Freeze<Mock<BlobServiceClient>>();
 
-        MockPictureService = new(
+        MockPictureService = new PictureService(
             MockConfiguration.Object,
             MockLogger.Object,
             MockBlobServiceClient.Object);

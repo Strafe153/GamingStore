@@ -3,7 +3,6 @@ using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace IdentityServer.Services;
 
@@ -23,12 +22,12 @@ public class ProfileService : IProfileService
     public async Task GetProfileDataAsync(ProfileDataRequestContext context)
     {
         string subjectId = context.Subject.GetSubjectId();
-        User user = await _userManager.FindByIdAsync(subjectId);
+        var user = await _userManager.FindByIdAsync(subjectId);
 
         var userClaimsPrincipal = await _claimsFactory.CreateAsync(user);
         var requestedClaims = context.RequestedResources.Resources.IdentityResources.SelectMany(r => r.UserClaims);
 
-        List<Claim> claimsToAdd = userClaimsPrincipal.Claims
+        var claimsToAdd = userClaimsPrincipal.Claims
             .Where(c => requestedClaims.Contains(c.Type) || c.Type is "role" || c.Type is "email")
             .ToList();
 
@@ -38,7 +37,7 @@ public class ProfileService : IProfileService
     public async Task IsActiveAsync(IsActiveContext context)
     {
         string subjectId = context.Subject.GetSubjectId();
-        User user = await _userManager.FindByIdAsync(subjectId);
+        var user = await _userManager.FindByIdAsync(subjectId);
 
         context.IsActive = user is not null;
     }
