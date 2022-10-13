@@ -20,11 +20,13 @@ public class DevicesControllerFixture
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
         MockDeviceService = fixture.Freeze<Mock<IDeviceService>>();
+        MockCompanyService = fixture.Freeze<Mock<IService<Company>>>();
         MockPictureService = fixture.Freeze<Mock<IPictureService>>();
         MockMapper = fixture.Freeze<Mock<IMapper>>();
 
         MockDevicesController = new DevicesController(
             MockDeviceService.Object,
+            MockCompanyService.Object,
             MockPictureService.Object,
             MockMapper.Object);
 
@@ -41,6 +43,7 @@ public class DevicesControllerFixture
 
     public DevicesController MockDevicesController { get; }
     public Mock<IDeviceService> MockDeviceService { get; }
+    public Mock<IService<Company>> MockCompanyService { get; }
     public Mock<IPictureService> MockPictureService { get; }
     public Mock<IMapper> MockMapper { get; }
 
