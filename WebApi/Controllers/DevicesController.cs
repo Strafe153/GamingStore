@@ -15,16 +15,19 @@ namespace WebApi.Controllers;
 public class DevicesController : ControllerBase
 {
     private readonly IDeviceService _deviceService;
+    private readonly IService<Company> _companyService;
     private readonly IPictureService _pictureService;
     private readonly IMapper _mapper;
     private readonly string _blobFolder;
 
     public DevicesController(
         IDeviceService deviceService,
+        IService<Company> companyService,
         IPictureService pictureService,
         IMapper mapper)
     {
         _deviceService = deviceService;
+        _companyService = companyService;
         _pictureService = pictureService;
         _mapper = mapper;
         _blobFolder = "device-pictures";
@@ -54,6 +57,7 @@ public class DevicesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<DeviceReadDto>> CreateAsync([FromForm] DeviceCreateUpdateDto createDto)
     {
+        await _companyService.GetByIdAsync(createDto.CompanyId);
         var device = _mapper.Map<Device>(createDto);
 
         device.Picture = await _pictureService.UploadAsync(createDto.Picture, _blobFolder, createDto.Name!);
@@ -67,6 +71,7 @@ public class DevicesController : ControllerBase
     [HttpPut("{id:int:min(1)}")]
     public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromForm] DeviceCreateUpdateDto updateDto)
     {
+        await _companyService.GetByIdAsync(updateDto.CompanyId);
         var device = await _deviceService.GetByIdAsync(id);
 
         await _pictureService.DeleteAsync(device.Picture!);
