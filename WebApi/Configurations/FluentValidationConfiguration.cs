@@ -2,15 +2,22 @@
 using Core.Dtos.DeviceDtos;
 using Core.Dtos.UserDtos;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using WebApi.Validators.CompanyValidators;
 using WebApi.Validators.DeviceValidators;
 using WebApi.Validators.UserValidators;
 
-namespace WebApi.Validators;
+namespace WebApi.Configurations;
 
-public static class ValidatorsConfiguration
+public static class FluentValidationConfiguration
 {
-    public static IServiceCollection AddApplicationValidators(this IServiceCollection services)
+    public static void ConfigureFluentValidation(this IServiceCollection services)
+    {
+        services.AddFluentValidationAutoValidation()
+            .AddFluentValidationClientsideAdapters();
+    }
+    
+    public static void AddCustomValidators(this IServiceCollection services)
     {
         // User validators
         services.AddScoped<IValidator<UserBaseDto>, UserBaseValidator<UserBaseDto>>();
@@ -24,7 +31,5 @@ public static class ValidatorsConfiguration
 
         // Device validators
         services.AddScoped<IValidator<DeviceBaseDto>, DeviceBaseValidator>();
-
-        return services;
     }
 }

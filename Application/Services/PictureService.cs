@@ -1,7 +1,6 @@
 ﻿using Azure;
 using Azure.Storage.Blobs;
 using Core.Exceptions;
-using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -107,7 +106,7 @@ public class PictureService : IPictureService
     {
         string fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.{extension}";
 
-        using (MemoryStream ms = new())
+        using (var ms = new MemoryStream())
         {
             image.SaveAsPng(ms);
             ms.Position = 0;
@@ -125,11 +124,11 @@ public class PictureService : IPictureService
     {
         if (formFileAsBytes is null)
         {
-            string defaultProfilePicPath = "../Application/Assets/Images/default_profile_pic.jpg";
-            formFileAsBytes = await File.ReadAllBytesAsync(defaultProfilePicPath);
+            string defaultPicturePath = _configuration.GetSection("Application:DefaultPicturePath").Value;
+            formFileAsBytes = await File.ReadAllBytesAsync(defaultPicturePath);
         }
 
-        using (MemoryStream ms = new(formFileAsBytes))
+        using (var ms = new MemoryStream(formFileAsBytes))
         {
             var image = Image.Load(ms);
             string pictureLink = await UploadToBlobStorageAsync(image, blobFolder, identifier, extension);
