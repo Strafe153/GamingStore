@@ -18,7 +18,7 @@ public class GamingStoreContext : IdentityDbContext<User, IdentityRole<int>, int
         IConfiguration configuration)
         : base(options)
     {
-        _adminPassword = configuration.GetSection("AppSettings:AdminPassword").Value;
+        _adminPassword = configuration.GetSection("AdminSettings:Password").Value;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

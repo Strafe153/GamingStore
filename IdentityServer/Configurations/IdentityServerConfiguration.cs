@@ -1,9 +1,9 @@
 ﻿using IdentityModel;
 using IdentityServer4.Models;
 
-namespace IdentityServer;
+namespace IdentityServer.Configurations;
 
-public static class Configuration
+public static class IdentityServerConfiguration
 {
     public static IEnumerable<IdentityResource> GetIdentityResources()
     {

@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  web_api:
+    build:
+      context: .
+      dockerfile: ./WebApi/Dockerfile
+    container_name: web_api
+    ports:
+      - 8080:80
+      - 8081:443
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=kestrel_password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/GamingStore.pfx
+      - ConnectionStrings:DatabaseConnection=Server=ms_sql_server,1433;Database=gaming_store_db;User Id=SA;Password=Pa55w0rd!;
+      - BlobStorageConnection=DefaultEndpointsProtocol=https;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=https://host.docker.internal:10000/devstoreaccount1;
+      - ConnectionStrings:RedisConnection=redis:6379
+      - ConnectionStrings:IdentityServerConnection=http://identity_server/7030
+      - Azure:ContainerLink=https://host.docker.internal:10000/devstoreaccount1
+
+      - Application:DefaultPicturePath=Application
+      - Application_DefaultPicturePath=Application
+      - Application__DefaultPicturePath=Application
+      - DefaultPicturePath=Application
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    depends_on:
+      - ms_sql_server
+      - azurite
+      - redis
+
+  identity_server:
+    build:
+      context: .
+      dockerfile: ./IdentityServer/Dockerfile
+    container_name: identity_server
+    ports:
+      - 7030:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings:DatabaseConnection=Server=ms_sql_server,1433;Database=gaming_store_db;User Id=SA;Password=Pa55w0rd!;
+    depends_on:
+      - ms_sql_server
+      - web_api
+
+  ms_sql_server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ms_sql_server
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Pa55w0rd!
+    ports:
+      - 1433:1433
+  
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    container_name: azurite
+    command: "azurite --loose --blobHost 0.0.0.0 --blobPort 10000 --location /workspace --debug /workspace/debug.log"
+    ports:
+      - 10000:10000
+    volumes:
+      - ./azurite:/workspace
