@@ -9,6 +9,7 @@
 
 ## Dependencies
 * `Azure.Storage.Blobs` for storing images in a blob storage
+* `MediatR.Extensions.Microsoft.DependencyInjection` for MediatR
 * `Microsoft.Extensions.Caching.StackExchangeRedis` for distributed Redis cache
 * `IdentityServer4` for JWT-authentication
 * `SixLabors.ImageSharp` for images manipulation
