@@ -20,12 +20,6 @@ services:
       - ConnectionStrings:RedisConnection=redis:6379
       - ConnectionStrings:IdentityServerConnection=http://identity_server/7030
       - Azure:ContainerLink=https://host.docker.internal:10000/devstoreaccount1
-
-      # attempts at providing a default profile picture path
-      - Application:DefaultPicturePath=Application
-      - Application_DefaultPicturePath=Application
-      - Application__DefaultPicturePath=Application
-      - DefaultPicturePath=Application
     volumes:
       - ~/.aspnet/https:/https:ro
     depends_on:
