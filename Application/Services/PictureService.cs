@@ -47,8 +47,8 @@ public class PictureService : IPictureService
         }
         catch (RequestFailedException)
         {
-            _logger.LogWarning("The image with the provided link could no be deleted");
-            throw new NullReferenceException("The image with the provided link could no be deleted");
+            _logger.LogWarning("Failed to upload the image");
+            throw new NullReferenceException("Failed to upload the image");
         }
     }
 
@@ -63,8 +63,8 @@ public class PictureService : IPictureService
         }
         catch (RequestFailedException)
         {
-            _logger.LogWarning("The image with the provided path could no be uploaded");
-            throw new OperationFailedException("The image with the provided path could no be uploaded");
+            _logger.LogWarning("Failed to upload the image");
+            throw new OperationFailedException("Failed to upload the image");
         }
 
         return fileName;
