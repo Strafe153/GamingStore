@@ -4,20 +4,22 @@ WORKDIR /app
     
 # Copy csproj and restore as distinct layers
 COPY ../*.sln ./
-COPY ../WebApi/*.csproj ./WebApi/
+COPY ../Web/*.csproj ./Web/
 COPY ../IdentityServer/*.csproj ./IdentityServer/
 COPY ../Application/*.csproj ./Application/
-COPY ../Core/*.csproj ./Core/
-COPY ../DataAccess/*.csproj ./DataAccess/
+COPY ../Domain/*.csproj ./Domain/
+COPY ../Infrastructure/*.csproj ./Infrastructure/
+COPY ../Presentation/*.csproj ./Presentation/
 COPY ../Tests/Application.Tests/*.csproj ./Tests/Application.Tests/
-COPY ../Tests/WebApi.Tests/*.csproj ./Tests/WebApi.Tests/
+COPY ../Tests/Web.Tests/*.csproj ./Tests/Web.Tests/
 RUN dotnet restore
     
 # Copy everything else and build
 COPY ../IdentityServer/. ./IdentityServer/
 COPY ../Application/. ./Application/
-COPY ../Core/. ./Core/
-COPY ../DataAccess/. ./DataAccess/
+COPY ../Domain/. ./Domain/
+COPY ../Infrastructure/. ./Infrastructure/
+COPY ../Presentation/. ./Presentation/
 WORKDIR /app/IdentityServer
 RUN dotnet publish -c Release -o out
     

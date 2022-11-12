@@ -1,5 +1,6 @@
 bin/
 obj/
+azurite/
 .git
 .gitignore
 *.md

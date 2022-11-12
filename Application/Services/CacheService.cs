@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.Services;
+﻿using Application.Abstractions.Services;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System.Text;
