@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  web_api:
+  web:
     build:
       context: .
-      dockerfile: ./WebApi/Dockerfile
-    container_name: web_api
+      dockerfile: ./Web/Dockerfile
+    container_name: web
     ports:
       - 8080:80
       - 8081:443
@@ -21,6 +21,7 @@ services:
       - ConnectionStrings:IdentityServerConnection=http://identity_server/7030
       - Azure:ContainerLink=https://host.docker.internal:10000/devstoreaccount1
 
+      # attempts at providing a default profile picture path
       - Application:DefaultPicturePath=Application
       - Application_DefaultPicturePath=Application
       - Application__DefaultPicturePath=Application
@@ -44,7 +45,7 @@ services:
       - ConnectionStrings:DatabaseConnection=Server=ms_sql_server,1433;Database=gaming_store_db;User Id=SA;Password=Pa55w0rd!;
     depends_on:
       - ms_sql_server
-      - web_api
+      - web
 
   ms_sql_server:
     image: mcr.microsoft.com/mssql/server:2022-latest

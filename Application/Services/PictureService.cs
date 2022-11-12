@@ -1,7 +1,7 @@
-﻿using Azure;
+﻿using Application.Abstractions.Services;
+using Azure;
 using Azure.Storage.Blobs;
-using Core.Exceptions;
-using Core.Interfaces.Services;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -39,11 +39,10 @@ public class PictureService : IPictureService
         {
             if (imagePath.Contains(_containerName))
             {
-                imagePath = imagePath.Split(_containerName)[1];
+                imagePath = imagePath.Split($"{_containerName}/")[1];
             }
 
             var blobClient = _blobContainerClient.GetBlobClient(imagePath);
-
             await blobClient.DeleteAsync();
         }
         catch (RequestFailedException)
@@ -65,7 +64,7 @@ public class PictureService : IPictureService
         catch (RequestFailedException)
         {
             _logger.LogWarning("The image with the provided path could no be uploaded");
-            throw new NullReferenceException("The image with the provided path could no be uploaded");
+            throw new OperationFailedException("The image with the provided path could no be uploaded");
         }
 
         return fileName;
@@ -89,14 +88,12 @@ public class PictureService : IPictureService
         if (formFile is not null)
         {
             string extension = VerifyFileExtension(formFile);
+            using var ms = new MemoryStream();
 
-            using (var ms = new MemoryStream())
-            {
-                formFile.CopyTo(ms);
-                byte[] formFileAsBytes = ms.ToArray();
+            formFile.CopyTo(ms);
+            byte[] formFileAsBytes = ms.ToArray();
 
-                return (formFileAsBytes, extension);
-            }
+            return (formFileAsBytes, extension);
         }
 
         return (null, "png");
@@ -105,22 +102,18 @@ public class PictureService : IPictureService
     private async Task<string> UploadToBlobStorageAsync(Image image, string blobFolder, string identifier, string extension)
     {
         string fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.{extension}";
+        using var ms = new MemoryStream();
 
-        using (var ms = new MemoryStream())
-        {
-            image.SaveAsPng(ms);
-            ms.Position = 0;
+        image.SaveAsPng(ms);
+        ms.Position = 0;
 
-            await _blobContainerClient.UploadBlobAsync(fileName, ms);
-        }
-
+        await _blobContainerClient.UploadBlobAsync(fileName, ms);
         fileName = $"{_configuration["Azure:ContainerLink"]}/{_containerName}/{fileName}";
 
         return fileName;
     }
 
-    private async Task<string> GetPictureLinkAsync(
-        byte[]? formFileAsBytes, string blobFolder, string identifier, string extension)
+    private async Task<string> GetPictureLinkAsync(byte[]? formFileAsBytes, string blobFolder, string identifier, string extension)
     {
         if (formFileAsBytes is null)
         {
@@ -128,12 +121,10 @@ public class PictureService : IPictureService
             formFileAsBytes = await File.ReadAllBytesAsync(defaultPicturePath);
         }
 
-        using (var ms = new MemoryStream(formFileAsBytes))
-        {
-            var image = Image.Load(ms);
-            string pictureLink = await UploadToBlobStorageAsync(image, blobFolder, identifier, extension);
+        using var ms = new MemoryStream(formFileAsBytes);
+        var image = Image.Load(ms);
+        string pictureLink = await UploadToBlobStorageAsync(image, blobFolder, identifier, extension);
 
-            return pictureLink;
-        }
+        return pictureLink;
     }
 }

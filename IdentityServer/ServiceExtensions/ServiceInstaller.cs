@@ -1,8 +1,8 @@
-﻿using Core.Entities;
-using DataAccess;
+﻿using Domain.Entities;
 using IdentityServer.Configurations;
 using IdentityServer.Services;
 using IdentityServer4.Services;
+using Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
