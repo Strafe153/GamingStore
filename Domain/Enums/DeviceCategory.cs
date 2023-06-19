@@ -2,7 +2,7 @@
 
 public enum DeviceCategory
 {
-    Mouse,
+    Mouse = 1,
     Keyboard,
     Headphones,
     Earphones,

@@ -31,7 +31,7 @@ public class CreateDeviceCommandValidator : AbstractValidator<CreateDeviceComman
             .NotEmpty()
             .WithMessage("Category is mandatory")
             .Must(BeInRange)
-            .WithMessage("Category must be in the range from 0 to 7 inclusive");
+            .WithMessage("Category must be in the range from 1 to 8 inclusive");
 
         RuleFor(d => d.CompanyId)
             .NotEmpty()
@@ -41,9 +41,9 @@ public class CreateDeviceCommandValidator : AbstractValidator<CreateDeviceComman
     private bool BeInRange(DeviceCategory category)
     {
         int typeAsInt = (int)category;
-        int totalCategories = Enum.GetNames(typeof(DeviceCategory)).Length;
+        int totalCategories = Enum.GetNames(typeof(DeviceCategory)).Length + 1;
 
-        if ((typeAsInt > -1) && (typeAsInt < totalCategories))
+        if ((typeAsInt > 0) && (typeAsInt < totalCategories))
         {
             return true;
         }
