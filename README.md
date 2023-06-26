@@ -21,6 +21,7 @@
 * `Moq` for mocking
 * `AutoFixture` for test fixtures
 * `FluentAssertions` for assertions
+* `Bogus` for fake data generation
 
 ## How To Use?
 1. Sign Up
