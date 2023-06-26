@@ -32,10 +32,6 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.PaginatedList);
 
-        _fixture.MockMapper
-            .Setup(m => m.Map<PaginatedModel<GetDeviceResponse>>(It.IsAny<PaginatedList<Device>>()))
-            .Returns(_fixture.PaginatedModel);
-
         // Act
         var result = await _fixture.DevicesController.GetAsync(_fixture.PageParameters, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
@@ -56,10 +52,6 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
                 It.IsAny<GetDeviceByIdQuery>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Device);
-
-        _fixture.MockMapper
-            .Setup(m => m.Map<GetDeviceResponse>(It.IsAny<Device>()))
-            .Returns(_fixture.GetDeviceResponse);
 
         // Act
         var result = await _fixture.DevicesController.GetAsync(_fixture.Id, _fixture.CancellationToken);
@@ -82,10 +74,6 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Device);
 
-        _fixture.MockMapper
-            .Setup(m => m.Map<GetDeviceResponse>(It.IsAny<Device>()))
-            .Returns(_fixture.GetDeviceResponse);
-
         // Act
         var result = await _fixture.DevicesController.CreateAsync(_fixture.CreateDeviceRequest, _fixture.CancellationToken);
         var objectResult = result.Result.As<CreatedAtActionResult>();
@@ -106,10 +94,6 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
                 It.IsAny<GetDeviceByIdQuery>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Device);
-
-        _fixture.MockMapper
-            .Setup(m => m.Map<UpdateDeviceCommand>(It.IsAny<UpdateDeviceRequest>()))
-            .Returns(_fixture.UpdateDeviceCommand);
 
         // Act
         var result = await _fixture.DevicesController

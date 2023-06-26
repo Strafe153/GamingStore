@@ -3,9 +3,9 @@ using Application.Abstractions.Services;
 using Application.Devices.Commands.Update;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
 using Domain.Enums;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -16,6 +16,23 @@ public class UpdateDeviceCommandHandlerFixture
     public UpdateDeviceCommandHandlerFixture()
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
+
+        var deviceFaker = new Faker<Device>()
+            .CustomInstantiator(f => new(
+                f.Commerce.ProductName(),
+                (DeviceCategory)Random.Shared.Next(Enum.GetValues(typeof(DeviceCategory)).Length),
+                f.Random.Decimal(),
+                f.Random.Int(),
+                f.Internet.Url(),
+                f.Random.Int(1, 5000)));
+
+        var updateDeviceCommandFaker = new Faker<UpdateDeviceCommand>()
+            .RuleFor(c => c.Device, deviceFaker)
+            .RuleFor(c => c.Name, f => f.Commerce.ProductName())
+            .RuleFor(c => c.Category, f => (DeviceCategory)Random.Shared.Next(Enum.GetValues(typeof(DeviceCategory)).Length))
+            .RuleFor(c => c.Price, f => f.Random.Decimal())
+            .RuleFor(c => c.InStock, f => f.Random.Int())
+            .RuleFor(c => c.CompanyId, f => f.Random.Int(1, 5000));
 
         MockRepository = fixture.Freeze<Mock<IRepository<Device>>>();
         MockUnitOfWork = fixture.Freeze<Mock<IUnitOfWork>>();
@@ -28,9 +45,7 @@ public class UpdateDeviceCommandHandlerFixture
             MockPictureService.Object,
             MockLogger.Object);
 
-        Name = "Name";
-        Device = GetDevice();
-        UpdateDeviceCommand = GetUpdateDeviceCommand();
+        UpdateDeviceCommand = updateDeviceCommandFaker.Generate();
     }
 
     public UpdateDeviceCommandHandler UpdateDeviceCommandHandler { get; }
@@ -39,28 +54,6 @@ public class UpdateDeviceCommandHandlerFixture
     public Mock<IPictureService> MockPictureService { get; }
     public Mock<ILogger<UpdateDeviceCommandHandler>> MockLogger { get; }
 
-    public string Name { get; }
-    public IFormFile? Picture { get; }
     public CancellationToken CancellationToken { get; }
-    public Device Device { get; }
     public UpdateDeviceCommand UpdateDeviceCommand { get; }
-
-    private Device GetDevice()
-    {
-        return new Device(Name, DeviceCategory.Mouse, 18.99M, 413, Name, 1);
-    }
-
-    private UpdateDeviceCommand GetUpdateDeviceCommand()
-    {
-        return new UpdateDeviceCommand()
-        {
-            Device = Device,
-            Name = Name,
-            Category = DeviceCategory.CableHolder,
-            Price = 13.49M,
-            InStock = 413,
-            CompanyId = 3,
-            Picture = Picture
-        };
-    }
 }

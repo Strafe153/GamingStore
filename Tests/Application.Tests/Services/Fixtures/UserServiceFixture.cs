@@ -1,6 +1,7 @@
 ﻿using Application.Services;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -15,25 +16,36 @@ public class UserServiceFixture
 	{
 		var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
-		MockHttpContextAccessor = fixture.Freeze<Mock<IHttpContextAccessor>>();
+        var userFaker = new Faker<User>()
+            .CustomInstantiator(f => new(
+                f.Name.FirstName(),
+                f.Name.LastName(),
+                f.Internet.Email(),
+                f.Internet.UserName(),
+                f.Phone.PhoneNumber(),
+                null));
+
+        GeneralFaker = new Faker();
+
+        MockHttpContextAccessor = fixture.Freeze<Mock<IHttpContextAccessor>>();
 		MockLogger = fixture.Freeze<Mock<ILogger<UserService>>>();
 
 		UserService = new UserService(
 			MockHttpContextAccessor.Object,
 			MockLogger.Object);
 
-        Name = "Name";
-        User = GetUser();
+        User = userFaker.Generate();
         HttpContextWithSufficientClaims = GetHttpContextWithSufficientClaims();
         HttpContextWithInsufficientClaims = GetHttpContextWithInsufficientClaims();
     }
 
-	public UserService UserService { get; }
+    private Faker GeneralFaker { get; }
+
+    public UserService UserService { get; }
 
 	public Mock<IHttpContextAccessor> MockHttpContextAccessor { get; }
 	public Mock<ILogger<UserService>> MockLogger { get; }
 
-    public string Name { get; }
     public User User { get; }
     public HttpContext HttpContextWithSufficientClaims { get; }
     public HttpContext HttpContextWithInsufficientClaims { get; }
@@ -49,35 +61,22 @@ public class UserServiceFixture
 
         return context;
     }
-    private User GetUser()
-    {
-        return new User()
-        {
-            Id = 1,
-            UserName = Name,
-            PasswordHash = Name,
-        };
-    }
 
-    private IEnumerable<Claim> GetInsufficientClaims()
-    {
-        return new List<Claim>()
+    private IEnumerable<Claim> GetInsufficientClaims() =>
+        new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, Name!),
-            new Claim(ClaimTypes.Email, Name!),
-            new Claim(ClaimTypes.Role, Name!)
+            new Claim(ClaimTypes.Name, GeneralFaker.Name.FullName()),
+            new Claim(ClaimTypes.Email, GeneralFaker.Internet.Email()),
+            new Claim(ClaimTypes.Role, GeneralFaker.Name.JobTitle())
         };
-    }
 
-    private IEnumerable<Claim> GetSufficientClaims()
-    {
-        return new List<Claim>()
+    private IEnumerable<Claim> GetSufficientClaims() =>
+        new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, Name!),
-            new Claim(ClaimTypes.Email, Name!),
+            new Claim(ClaimTypes.Name, GeneralFaker.Name.FullName()),
+            new Claim(ClaimTypes.Email, GeneralFaker.Internet.Email()),
             new Claim(ClaimTypes.Role, "Admin")
         };
-    }
 
     private HttpContext GetHttpContextWithInsufficientClaims()
     {

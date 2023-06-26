@@ -26,7 +26,7 @@ public class PictureServiceFixture
 
         MockBlobServiceClient
             .Setup(c => c.Uri)
-            .Returns(GetUri());
+            .Returns(new Uri("https://127.0.0.1:10000/devstoreaccount1"));
 
         MockBlobServiceClient
             .Setup(c => c.GetBlobContainerClient(It.IsAny<string>()))
@@ -55,17 +55,12 @@ public class PictureServiceFixture
 
     private async Task<IFormFile> GetFormFile()
     {
-        byte[] pictureAsBytes = await File.ReadAllBytesAsync(ValidPath);
+        var pictureAsBytes = await File.ReadAllBytesAsync(ValidPath);
 
         return new FormFile(new MemoryStream(pictureAsBytes), 0, pictureAsBytes.Length, "ProfilePicture", "picture.jpg")
         {
             Headers = new HeaderDictionary(),
             ContentType = "image/jpeg"
         };
-    }
-
-    private Uri GetUri()
-    {
-        return new Uri("https://127.0.0.1:10000/devstoreaccount1");
     }
 }

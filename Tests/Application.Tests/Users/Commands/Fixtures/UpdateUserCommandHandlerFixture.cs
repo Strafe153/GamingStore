@@ -3,8 +3,8 @@ using Application.Abstractions.Services;
 using Application.Users.Commands.Update;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -17,6 +17,21 @@ public class UpdateUserCommandHandlerFixture
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
+        var userFaker = new Faker<User>()
+            .CustomInstantiator(f => new(
+                f.Name.FirstName(),
+                f.Name.LastName(),
+                f.Internet.Email(),
+                f.Internet.UserName(),
+                f.Phone.PhoneNumber(),
+                null));
+
+        var updateUserCommandFaker = new Faker<UpdateUserCommand>()
+            .RuleFor(c => c.User, userFaker)
+            .RuleFor(c => c.FirstName, f => f.Name.FirstName())
+            .RuleFor(c => c.LastName, f => f.Name.LastName())
+            .RuleFor(c => c.PhoneNumber, f => f.Phone.PhoneNumber());
+
         MockRepository = fixture.Freeze<Mock<IUserRepository>>();
         MockUserService = fixture.Freeze<Mock<IUserService>>();
         MockPictureService = fixture.Freeze<Mock<IPictureService>>();
@@ -28,11 +43,9 @@ public class UpdateUserCommandHandlerFixture
             MockPictureService.Object,
             MockLogger.Object);
 
-        Name = "Name";
         SucceededResult = IdentityResult.Success;
         FailedResult = IdentityResult.Failed();
-        User = GetUser();
-        UpdateUserCommand = GetUpdateUserCommand();
+        UpdateUserCommand = updateUserCommandFaker.Generate();
     }
 
     public UpdateUserCommandHandler UpdateUserCommandHandler { get; }
@@ -41,28 +54,8 @@ public class UpdateUserCommandHandlerFixture
     public Mock<IPictureService> MockPictureService { get; }
     public Mock<ILogger<UpdateUserCommandHandler>> MockLogger { get; }
 
-    public string Name { get; }
-    public IFormFile? ProfilePicture { get; }
     public CancellationToken CancellationToken { get; }
     public IdentityResult SucceededResult { get; }
     public IdentityResult FailedResult { get; }
-    public User User { get; }
     public UpdateUserCommand UpdateUserCommand { get; }
-
-    private User GetUser()
-    {
-        return new User(Name, Name, Name, Name, Name, Name);
-    }
-
-    private UpdateUserCommand GetUpdateUserCommand()
-    {
-        return new UpdateUserCommand()
-        {
-            User = User,
-            FirstName = Name,
-            LastName = Name,
-            PhoneNumber = Name,
-            ProfilePicture = ProfilePicture
-        };
-    }
 }

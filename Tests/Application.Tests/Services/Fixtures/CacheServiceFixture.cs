@@ -1,6 +1,7 @@
 ﻿using Application.Services;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,15 @@ public class CacheServiceFixture
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
+        var userFaker = new Faker<User>()
+            .CustomInstantiator(f => new(
+                f.Name.FirstName(),
+                f.Name.LastName(),
+                f.Internet.Email(),
+                f.Internet.UserName(),
+                f.Phone.PhoneNumber(),
+                null));
+
         MockDistributedCache = fixture.Freeze<Mock<IDistributedCache>>();
         MockLogger = fixture.Freeze<Mock<ILogger<CacheService>>>();
 
@@ -21,9 +31,9 @@ public class CacheServiceFixture
             MockDistributedCache.Object,
             MockLogger.Object);
 
-        Key = "key";
+        Key = new Faker().Internet.DomainName();
         Bytes = new byte[] { 123, 125 };
-        User = GetUser();
+        User = userFaker.Generate();
     }
 
     public CacheService CacheService { get; }
@@ -33,15 +43,4 @@ public class CacheServiceFixture
     public byte[] Bytes { get; }
     public string Key { get; }
     public User User { get; }
-
-    private User GetUser()
-    {
-        return new User()
-        {
-            Id = 1,
-            UserName = Key,
-            Email = Key,
-            PasswordHash = Key
-        };
-    }
 }

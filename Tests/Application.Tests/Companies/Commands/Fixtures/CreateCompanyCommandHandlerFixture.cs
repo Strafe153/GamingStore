@@ -3,9 +3,8 @@ using Application.Abstractions.Services;
 using Application.Companies.Commands.Create;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -16,6 +15,9 @@ public class CreateCompanyCommandHandlerFixture
     public CreateCompanyCommandHandlerFixture()
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
+
+        var createCompanyCommandFaker = new Faker<CreateCompanyCommand>()
+            .RuleFor(c => c.Name, f => f.Company.CompanyName());
 
         MockRepository = fixture.Freeze<Mock<IRepository<Company>>>();
         MockUnitOfWork = fixture.Freeze<Mock<IUnitOfWork>>();
@@ -28,8 +30,7 @@ public class CreateCompanyCommandHandlerFixture
             MockPictureService.Object,
             MockLogger.Object);
 
-        Name = "Name";
-        CreateCompanyCommand = GetCreateCompanyCommand();
+        CreateCompanyCommand = createCompanyCommandFaker.Generate();
     }
 
     public CreateCompanyCommandHandler CreateCompanyCommandHandler { get; }
@@ -38,17 +39,6 @@ public class CreateCompanyCommandHandlerFixture
     public Mock<IPictureService> MockPictureService { get; }
     public Mock<ILogger<CreateCompanyCommandHandler>> MockLogger { get; }
 
-    public string Name { get; }
-    public IFormFile? Picture { get; }
     public CancellationToken CancellationToken { get; }
     public CreateCompanyCommand CreateCompanyCommand { get; }
-
-    private CreateCompanyCommand GetCreateCompanyCommand()
-    {
-        return new CreateCompanyCommand()
-        {
-            Name = Name,
-            Picture = Picture
-        };
-    }
 }

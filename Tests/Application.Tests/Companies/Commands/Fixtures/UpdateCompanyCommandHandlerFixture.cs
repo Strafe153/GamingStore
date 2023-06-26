@@ -3,8 +3,8 @@ using Application.Abstractions.Services;
 using Application.Companies.Commands.Update;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -15,6 +15,15 @@ public class UpdateCompanyCommandHandlerFixture
     public UpdateCompanyCommandHandlerFixture()
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
+
+        var companyFaker = new Faker<Company>()
+            .CustomInstantiator(f => new(
+                f.Company.CompanyName(),
+                f.Internet.Url()));
+
+        var updateCompanyCommandFaker = new Faker<UpdateCompanyCommand>()
+            .RuleFor(c => c.Name, f => f.Company.CompanyName())
+            .RuleFor(c => c.Company, companyFaker);
 
         MockRepository = fixture.Freeze<Mock<IRepository<Company>>>();
         MockUnitOfWork = fixture.Freeze<Mock<IUnitOfWork>>();
@@ -27,9 +36,7 @@ public class UpdateCompanyCommandHandlerFixture
             MockPictureService.Object,
             MockLogger.Object);
 
-        Name = "Name";
-        Company = GetCompany();
-        UpdateCompanyCommand = GetUpdateCompanyCommand();
+        UpdateCompanyCommand = updateCompanyCommandFaker.Generate();
     }
 
     public UpdateCompanyCommandHandler UpdateCompanyCommandHandler { get; }
@@ -38,24 +45,6 @@ public class UpdateCompanyCommandHandlerFixture
     public Mock<IPictureService> MockPictureService { get; }
     public Mock<ILogger<UpdateCompanyCommandHandler>> MockLogger { get; }
 
-    public string Name { get; }
-    public IFormFile? Picture { get; }
     public CancellationToken CancellationToken { get; }
-    public Company Company { get; }
     public UpdateCompanyCommand UpdateCompanyCommand { get; }
-
-    private Company GetCompany()
-    {
-        return new Company(Name, Name);
-    }
-
-    private UpdateCompanyCommand GetUpdateCompanyCommand()
-    {
-        return new UpdateCompanyCommand()
-        {
-            Company = Company,
-            Name = Name,
-            Picture = Picture
-        };
-    }
 }

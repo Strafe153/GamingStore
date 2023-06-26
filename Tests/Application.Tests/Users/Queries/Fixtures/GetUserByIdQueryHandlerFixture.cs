@@ -1,9 +1,9 @@
 ﻿using Application.Abstractions.Repositories;
 using Application.Abstractions.Services;
-using Application.Devices.Queries.GetById;
 using Application.Users.Queries.GetById;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -16,6 +16,18 @@ public class GetUserByIdQueryHandlerFixture
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
+        var userFaker = new Faker<User>()
+            .CustomInstantiator(f => new(
+                f.Name.FirstName(),
+                f.Name.LastName(),
+                f.Internet.Email(),
+                f.Internet.UserName(),
+                f.Phone.PhoneNumber(),
+                null));
+
+        var getUserByIdQueryFaker = new Faker<GetUserByIdQuery>()
+            .CustomInstantiator(f => new(f.Random.Int(1, 5000)));
+
         MockRepository = fixture.Freeze<Mock<IUserRepository>>();
         MockCacheService = fixture.Freeze<Mock<ICacheService>>();
         MockLogger = fixture.Freeze<Mock<ILogger<GetUserByIdQueryHandler>>>();
@@ -25,9 +37,8 @@ public class GetUserByIdQueryHandlerFixture
             MockCacheService.Object,
             MockLogger.Object);
 
-        Name = "Name";
-        User = GetUser();
-        GetUserByIdQuery = GetGetUserByIdQuery();
+        User = userFaker.Generate();
+        GetUserByIdQuery = getUserByIdQueryFaker.Generate();
     }
 
     public GetUserByIdQueryHandler GetUserByIdQueryHandler { get; }
@@ -35,19 +46,7 @@ public class GetUserByIdQueryHandlerFixture
     public Mock<ICacheService> MockCacheService { get; }
     public Mock<ILogger<GetUserByIdQueryHandler>> MockLogger { get; }
 
-    public int Id { get; }
-    public string Name { get; }
     public CancellationToken CancellationToken { get; }
     public User User { get; }
     public GetUserByIdQuery GetUserByIdQuery { get; }
-
-    private GetUserByIdQuery GetGetUserByIdQuery()
-    {
-        return new GetUserByIdQuery(Id);
-    }
-
-    private User GetUser()
-    {
-        return new User(Name, Name, Name, Name, Name, Name);
-    }
 }

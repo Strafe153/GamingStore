@@ -2,6 +2,7 @@
 using Application.Users.Commands.ChangeRole;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,19 @@ public class ChangeUserRoleCommandHandlerFixture
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
+        var userFaker = new Faker<User>()
+            .CustomInstantiator(f => new(
+                f.Name.FirstName(),
+                f.Name.LastName(),
+                f.Internet.Email(),
+                f.Internet.UserName(),
+                f.Phone.PhoneNumber(),
+                null));
+
+        var changeUserRoleCommandFaker = new Faker<ChangeUserRoleCommand>()
+            .RuleFor(c => c.User, userFaker)
+            .RuleFor(c => c.Role, f => f.Name.JobTitle());
+
         MockRepository = fixture.Freeze<Mock<IUserRepository>>();
         MockLogger = fixture.Freeze<Mock<ILogger<ChangeUserRoleCommandHandler>>>();
 
@@ -22,35 +36,17 @@ public class ChangeUserRoleCommandHandlerFixture
             MockRepository.Object,
             MockLogger.Object);
 
-        Name = "Name";
         SucceededResult = IdentityResult.Success;
         FailedResult = IdentityResult.Failed();
-        User = GetUser();
-        ChangeUserRoleCommand = GetChangeUserRoleCommand();
+        ChangeUserRoleCommand = changeUserRoleCommandFaker.Generate();
     }
 
     public ChangeUserRoleCommandHandler ChangeUserRoleCommandHandler { get; }
     public Mock<IUserRepository> MockRepository { get; }
     public Mock<ILogger<ChangeUserRoleCommandHandler>> MockLogger { get; }
 
-    public string Name { get; }
     public CancellationToken CancellationToken { get; }
     public IdentityResult SucceededResult { get; }
     public IdentityResult FailedResult { get; }
-    public User User { get; }
     public ChangeUserRoleCommand ChangeUserRoleCommand { get; }
-
-    private User GetUser()
-    {
-        return new User(Name, Name, Name, Name, Name, Name);
-    }
-
-    private ChangeUserRoleCommand GetChangeUserRoleCommand()
-    {
-        return new ChangeUserRoleCommand()
-        {
-            User = User,
-            Role = Name
-        };
-    }
 }

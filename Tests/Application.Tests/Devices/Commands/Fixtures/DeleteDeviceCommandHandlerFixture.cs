@@ -1,13 +1,13 @@
 ﻿using Application.Abstractions.Repositories;
 using Application.Abstractions.Services;
-using Application.Companies.Commands.Delete;
-using AutoFixture.AutoMoq;
+using Application.Devices.Commands.Delete;
 using AutoFixture;
+using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Application.Devices.Commands.Delete;
-using Domain.Enums;
 
 namespace Application.Tests.Devices.Commands.Fixtures;
 
@@ -16,6 +16,18 @@ public class DeleteDeviceCommandHandlerFixture
     public DeleteDeviceCommandHandlerFixture()
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
+
+        var deviceFaker = new Faker<Device>()
+            .CustomInstantiator(f => new(
+                f.Commerce.ProductName(),
+                (DeviceCategory)Random.Shared.Next(Enum.GetValues(typeof(DeviceCategory)).Length),
+                f.Random.Decimal(),
+                f.Random.Int(),
+                f.Internet.Url(),
+                f.Random.Int(1, 5000)));
+
+        var deleteDeviceCommandFaker = new Faker<DeleteDeviceCommand>()
+            .CustomInstantiator(f => new(deviceFaker.Generate()));
 
         MockRepository = fixture.Freeze<Mock<IRepository<Device>>>();
         MockUnitOfWork = fixture.Freeze<Mock<IUnitOfWork>>();
@@ -28,28 +40,15 @@ public class DeleteDeviceCommandHandlerFixture
             MockPictureService.Object,
             MockLogger.Object);
 
-        Name = "Name";
-        Device = GetDevice();
-        DeleteDeviceCommand = GetDeleteDeviceCommand();
+        DeleteDeviceCommand = deleteDeviceCommandFaker.Generate();
     }
+
     public DeleteDeviceCommandHandler DeleteDeviceCommandHandler { get; }
     public Mock<IRepository<Device>> MockRepository { get; }
     public Mock<IUnitOfWork> MockUnitOfWork { get; }
     public Mock<IPictureService> MockPictureService { get; }
     public Mock<ILogger<DeleteDeviceCommandHandler>> MockLogger { get; }
 
-    public string Name { get; }
     public CancellationToken CancellationToken { get; }
-    public Device Device { get; }
     public DeleteDeviceCommand DeleteDeviceCommand { get; }
-
-    private Device GetDevice()
-    {
-        return new Device(Name, DeviceCategory.Mat, 6.99M, 501, Name, 1);
-    }
-
-    private DeleteDeviceCommand GetDeleteDeviceCommand()
-    {
-        return new DeleteDeviceCommand(Device);
-    }
 }

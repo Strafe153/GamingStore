@@ -3,6 +3,7 @@ using Application.Abstractions.Services;
 using Application.Users.Commands.Delete;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,18 @@ public class DeleteUserCommandHandlerFixture
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
+        var userFaker = new Faker<User>()
+            .CustomInstantiator(f => new(
+                f.Name.FirstName(),
+                f.Name.LastName(),
+                f.Internet.Email(),
+                f.Internet.UserName(),
+                f.Phone.PhoneNumber(),
+                null));
+
+        var deleteUserCommandFaker = new Faker<DeleteUserCommand>()
+            .CustomInstantiator(f => new(userFaker.Generate()));
+
         MockRepository = fixture.Freeze<Mock<IUserRepository>>();
         MockUserService = fixture.Freeze<Mock<IUserService>>();
         MockPictureService = fixture.Freeze<Mock<IPictureService>>();
@@ -27,11 +40,9 @@ public class DeleteUserCommandHandlerFixture
             MockPictureService.Object,
             MockLogger.Object);
 
-        Name = "Name";
         SucceededResult = IdentityResult.Success;
         FailedResult = IdentityResult.Failed();
-        User = GetUser();
-        DeleteUserCommand = GetDeleteUserCommand();
+        DeleteUserCommand = deleteUserCommandFaker.Generate();
     }
     public DeleteUserCommandHandler DeleteUserCommandHandler { get; }
     public Mock<IUserRepository> MockRepository { get; }
@@ -39,20 +50,8 @@ public class DeleteUserCommandHandlerFixture
     public Mock<IPictureService> MockPictureService { get; }
     public Mock<ILogger<DeleteUserCommandHandler>> MockLogger { get; }
 
-    public string Name { get; }
     public CancellationToken CancellationToken { get; }
     public IdentityResult SucceededResult { get; }
     public IdentityResult FailedResult { get; }
-    public User User { get; }
     public DeleteUserCommand DeleteUserCommand { get; }
-
-    private User GetUser()
-    {
-        return new User(Name, Name, Name, Name, Name, Name);
-    }
-
-    private DeleteUserCommand GetDeleteUserCommand()
-    {
-        return new DeleteUserCommand(User);
-    }
 }

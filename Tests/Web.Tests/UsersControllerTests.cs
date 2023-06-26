@@ -34,10 +34,6 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.PaginatedList);
 
-        _fixture.MockMapper
-            .Setup(m => m.Map<PaginatedModel<GetUserResponse>>(It.IsAny<PaginatedList<User>>()))
-            .Returns(_fixture.PaginatedModel);
-
         // Act
         var result = await _fixture.UsersController.GetAsync(_fixture.PageParameters, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
@@ -58,10 +54,6 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
                 It.IsAny<GetUserByIdQuery>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
-
-        _fixture.MockMapper
-            .Setup(m => m.Map<GetUserResponse>(It.IsAny<User>()))
-            .Returns(_fixture.GetUserResponse);
 
         // Act
         var result = await _fixture.UsersController.GetAsync(_fixture.Id, _fixture.CancellationToken);
@@ -84,10 +76,6 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
 
-        _fixture.MockMapper
-            .Setup(m => m.Map<GetUserResponse>(It.IsAny<User>()))
-            .Returns(_fixture.GetUserResponse);
-
         // Act
         var result = await _fixture.UsersController.RegisterAsync(_fixture.RegisterUserRequest, _fixture.CancellationToken);
         var objectResult = result.Result.As<CreatedAtActionResult>();
@@ -109,13 +97,9 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
 
-        _fixture.MockMapper
-            .Setup(m => m.Map<UpdateUserCommand>(It.IsAny<UpdateUserRequest>()))
-            .Returns(_fixture.UpdateUserCommand);
-
         // Act
         var result = await _fixture.UsersController
-            .UpdateAsync(_fixture.Id, _fixture.UpdateDeviceRequest, _fixture.CancellationToken);
+            .UpdateAsync(_fixture.Id, _fixture.UpdateUserRequest, _fixture.CancellationToken);
         var objectResult = result.As<NoContentResult>();
 
         // Assert
@@ -132,10 +116,6 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
                 It.IsAny<GetUserByIdQuery>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
-
-        _fixture.MockMapper
-            .Setup(m => m.Map<ChangeUserPasswordCommand>(It.IsAny<ChangeUserPasswordRequest>()))
-            .Returns(_fixture.ChangeUserPasswordCommand);
 
         // Act
         var result = await _fixture.UsersController
@@ -156,10 +136,6 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
                 It.IsAny<GetUserByIdQuery>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
-
-        _fixture.MockMapper
-            .Setup(m => m.Map<ChangeUserRoleCommand>(It.IsAny<ChangeUserRoleRequest>()))
-            .Returns(_fixture.ChangeUserRoleCommand);
 
         // Act
         var result = await _fixture.UsersController

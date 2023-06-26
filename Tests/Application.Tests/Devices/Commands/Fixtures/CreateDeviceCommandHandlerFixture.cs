@@ -3,9 +3,9 @@ using Application.Abstractions.Services;
 using Application.Devices.Commands.Create;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
 using Domain.Enums;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -16,6 +16,13 @@ public class CreateDeviceCommandHandlerFixture
 	public CreateDeviceCommandHandlerFixture()
 	{
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
+
+        var createDeviceCommandFaker = new Faker<CreateDeviceCommand>()
+            .RuleFor(c => c.Name, f => f.Commerce.ProductName())
+            .RuleFor(c => c.Category, f => (DeviceCategory)Random.Shared.Next(Enum.GetValues(typeof(DeviceCategory)).Length))
+            .RuleFor(c => c.Price, f => f.Random.Decimal())
+            .RuleFor(c => c.InStock, f => f.Random.Int())
+            .RuleFor(c => c.CompanyId, f => f.Random.Int(1, 5000));
 
         MockRepository = fixture.Freeze<Mock<IRepository<Device>>>();
         MockUnitOfWork = fixture.Freeze<Mock<IUnitOfWork>>();
@@ -28,8 +35,7 @@ public class CreateDeviceCommandHandlerFixture
             MockPictureService.Object,
             MockLogger.Object);
 
-        Name = "Name";
-        CreateDeviceCommand = GetCreateDeviceCommand();
+        CreateDeviceCommand = createDeviceCommandFaker.Generate();
     }
 
     public CreateDeviceCommandHandler CreateDeviceCommandHandler { get; }
@@ -38,21 +44,6 @@ public class CreateDeviceCommandHandlerFixture
     public Mock<IPictureService> MockPictureService { get; }
     public Mock<ILogger<CreateDeviceCommandHandler>> MockLogger { get; }
 
-    public string Name { get; }
-    public IFormFile? Picture { get; }
     public CancellationToken CancellationToken { get; }
     public CreateDeviceCommand CreateDeviceCommand { get; }
-
-    private CreateDeviceCommand GetCreateDeviceCommand()
-    {
-        return new CreateDeviceCommand()
-        {
-            Name = Name,
-            Category = DeviceCategory.Mouse,
-            Price = 18.99M,
-            InStock = 72,
-            CompanyId = 1,
-            Picture = Picture
-        };
-    }
 }

@@ -1,9 +1,9 @@
 ﻿using Application.Abstractions.Repositories;
 using Application.Abstractions.Services;
-using Application.Companies.Queries.GetAll;
 using Application.Devices.Queries.GetAll;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Shared;
@@ -18,6 +18,32 @@ public class GetAllDevicesCommandHandlerFixture
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
+        var getAllDevicesQueryFaker = new Faker<GetAllDevicesQuery>()
+            .CustomInstantiator(f => new(
+                f.Random.Int(1, 500),
+                f.Random.Int(1, 500),
+                f.Company.CompanyName()));
+
+        var deviceFaker = new Faker<Device>()
+            .CustomInstantiator(f => new(
+                f.Commerce.ProductName(),
+                (DeviceCategory)Random.Shared.Next(Enum.GetValues(typeof(DeviceCategory)).Length),
+                f.Random.Decimal(),
+                f.Random.Int(),
+                f.Internet.Url(),
+                f.Random.Int(1, 5000)));
+
+        var totalItemsCount = Random.Shared.Next(2, 50);
+
+        var paginatedListFaker = new Faker<PaginatedList<Device>>()
+            .CustomInstantiator(f => new(
+                deviceFaker.Generate(totalItemsCount),
+                totalItemsCount,
+                f.Random.Int(1, 2),
+                f.Random.Int(1, 2)))
+            .RuleFor(l => l.PageSize, (f, l) => f.Random.Int(1, l.TotalItems))
+            .RuleFor(l => l.CurrentPage, (f, l) => f.Random.Int(1, l.TotalPages));
+
         MockRepository = fixture.Freeze<Mock<IRepository<Device>>>();
         MockCacheService = fixture.Freeze<Mock<ICacheService>>();
         MockLogger = fixture.Freeze<Mock<ILogger<GetAllDevicesQueryHandler>>>();
@@ -27,9 +53,8 @@ public class GetAllDevicesCommandHandlerFixture
             MockCacheService.Object,
             MockLogger.Object);
 
-        Name = "Name";
-        GetAllDevicesQuery = GetGetAllDevicesQuery();
-        PaginatedList = GetPaginatedList();
+        GetAllDevicesQuery = getAllDevicesQueryFaker.Generate();
+        PaginatedList = paginatedListFaker.Generate();
     }
 
     public GetAllDevicesQueryHandler GetAllDevicesQueryHandler { get; }
@@ -37,32 +62,7 @@ public class GetAllDevicesCommandHandlerFixture
     public Mock<ICacheService> MockCacheService { get; }
     public Mock<ILogger<GetAllDevicesQueryHandler>> MockLogger { get; }
 
-    public string Name { get; }
     public CancellationToken CancellationToken { get; }
     public GetAllDevicesQuery GetAllDevicesQuery { get; }
     public PaginatedList<Device> PaginatedList { get; }
-
-    private GetAllDevicesQuery GetGetAllDevicesQuery()
-    {
-        return new GetAllDevicesQuery(1, 5, Name);
-    }
-
-    private Device GetDevice()
-    {
-        return new Device(Name, DeviceCategory.Earphones, 64.99M, 123, Name, 1);
-    }
-
-    private List<Device> GetDevices()
-    {
-        return new List<Device>()
-        {
-            GetDevice(),
-            GetDevice()
-        };
-    }
-
-    private PaginatedList<Device> GetPaginatedList()
-    {
-        return new PaginatedList<Device>(GetDevices(), 6, 1, 5);
-    }
 }

@@ -5,11 +5,11 @@ namespace Domain.Entities;
 public class User : IdentityUser<int>
 {
     public User(
-        string firstName, 
-        string lastName, 
+        string firstName,
+        string lastName,
         string email,
         string userName,
-        string phoneNumber, 
+        string phoneNumber,
         string? profilePicture)
     {
         FirstName = firstName;

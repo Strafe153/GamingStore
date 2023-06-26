@@ -32,10 +32,6 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
 				It.IsAny<CancellationToken>()))
 			.ReturnsAsync(_fixture.PaginatedList);
 
-		_fixture.MockMapper
-			.Setup(m => m.Map<PaginatedModel<GetCompanyResponse>>(It.IsAny<PaginatedList<Company>>()))
-			.Returns(_fixture.PaginatedModel);
-
 		// Act
 		var result = await _fixture.CompaniesController.GetAsync(_fixture.PageParameters, _fixture.CancellationToken);
 		var objectResult = result.Result.As<OkObjectResult>();
@@ -56,10 +52,6 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
 				It.IsAny<GetCompanyByIdQuery>(),
 				It.IsAny<CancellationToken>()))
 			.ReturnsAsync(_fixture.Company);
-
-		_fixture.MockMapper
-			.Setup(m => m.Map<GetCompanyResponse>(It.IsAny<Company>()))
-			.Returns(_fixture.GetCompanyResponse);
 
 		// Act
 		var result = await _fixture.CompaniesController.GetAsync(_fixture.Id, _fixture.CancellationToken);
@@ -82,14 +74,6 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
 				It.IsAny<CancellationToken>()))
 			.ReturnsAsync(_fixture.Company);
 
-		_fixture.MockMapper
-			.Setup(m => m.Map<CreateCompanyCommand>(It.IsAny<CreateCompanyRequest>()))
-			.Returns(_fixture.CreateCompanyCommand);
-
-        _fixture.MockMapper
-            .Setup(m => m.Map<GetCompanyResponse>(It.IsAny<Company>()))
-            .Returns(_fixture.GetCompanyResponse);
-
         // Act
         var result = await _fixture.CompaniesController.CreateAsync(_fixture.CreateCompanyRequest, _fixture.CancellationToken);
 		var objectResult = result.Result.As<CreatedAtActionResult>();
@@ -110,10 +94,6 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
 				It.IsAny<GetCompanyByIdQuery>(),
 				It.IsAny<CancellationToken>()))
 			.ReturnsAsync(_fixture.Company);
-
-		_fixture.MockMapper
-			.Setup(m => m.Map<UpdateCompanyCommand>(It.IsAny<UpdateCompanyRequest>()))
-			.Returns(_fixture.UpdateCompanyCommand);
 
 		// Act
 		var result = await _fixture.CompaniesController

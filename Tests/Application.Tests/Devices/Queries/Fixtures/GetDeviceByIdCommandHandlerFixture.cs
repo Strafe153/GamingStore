@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Application.Devices.Queries.GetById;
 using Domain.Enums;
+using Bogus;
 
 namespace Application.Tests.Devices.Queries.Fixtures;
 
@@ -16,6 +17,18 @@ public class GetDeviceByIdCommandHandlerFixture
     public GetDeviceByIdCommandHandlerFixture()
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
+
+        var deviceFaker = new Faker<Device>()
+            .CustomInstantiator(f => new(
+                f.Commerce.ProductName(),
+                (DeviceCategory)Random.Shared.Next(Enum.GetValues(typeof(DeviceCategory)).Length),
+                f.Random.Decimal(),
+                f.Random.Int(),
+                f.Internet.Url(),
+                f.Random.Int(1, 5000)));
+
+        var getDeviceByIdQueryFaker = new Faker<GetDeviceByIdQuery>()
+            .CustomInstantiator(f => new(f.Random.Int(1, 5000)));
 
         MockRepository = fixture.Freeze<Mock<IRepository<Device>>>();
         MockCacheService = fixture.Freeze<Mock<ICacheService>>();
@@ -26,9 +39,8 @@ public class GetDeviceByIdCommandHandlerFixture
             MockCacheService.Object,
             MockLogger.Object);
 
-        Name = "Name";
-        Device = GetDevice();
-        GetDeviceByIdQuery = GetGetDeviceByIdQuery();
+        Device = deviceFaker.Generate();
+        GetDeviceByIdQuery = getDeviceByIdQueryFaker.Generate();
     }
 
     public GetDeviceByIdQueryHandler GetDeviceByIdQueryHandler { get; }
@@ -36,19 +48,7 @@ public class GetDeviceByIdCommandHandlerFixture
     public Mock<ICacheService> MockCacheService { get; }
     public Mock<ILogger<GetDeviceByIdQueryHandler>> MockLogger { get; }
 
-    public int Id { get; }
-    public string Name { get; }
     public CancellationToken CancellationToken { get; }
-    public Device Device { get; }
+    public Device Device { get; set; }
     public GetDeviceByIdQuery GetDeviceByIdQuery { get; }
-
-    private GetDeviceByIdQuery GetGetDeviceByIdQuery()
-    {
-        return new GetDeviceByIdQuery(Id);
-    }
-
-    private Device GetDevice()
-    {
-        return new Device(Name, DeviceCategory.Gamepad, 99.99M, 4, Name, 2);
-    }
 }

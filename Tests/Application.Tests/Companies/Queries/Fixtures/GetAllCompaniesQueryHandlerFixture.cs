@@ -3,6 +3,7 @@ using Application.Abstractions.Services;
 using Application.Companies.Queries.GetAll;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Domain.Entities;
 using Domain.Shared;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,27 @@ public class GetAllCompaniesQueryHandlerFixture
     {
         var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
+        var getAllCompaniesQueryFaker = new Faker<GetAllCompaniesQuery>()
+            .CustomInstantiator(f => new(
+                f.Random.Int(1, 500),
+                f.Random.Int(1, 500)));
+
+        var companyFaker = new Faker<Company>()
+            .CustomInstantiator(f => new(
+                f.Company.CompanyName(),
+                f.Internet.Url()));
+
+        var totalItemsCount = Random.Shared.Next(2, 50);
+
+        var paginatedListFaker = new Faker<PaginatedList<Company>>()
+            .CustomInstantiator(f => new(
+                companyFaker.Generate(totalItemsCount),
+                totalItemsCount,
+                f.Random.Int(1, 2),
+                f.Random.Int(1, 2)))
+            .RuleFor(l => l.PageSize, (f, l) => f.Random.Int(1, l.TotalItems))
+            .RuleFor(l => l.CurrentPage, (f, l) => f.Random.Int(1, l.TotalPages));
+
         MockRepository = fixture.Freeze<Mock<IRepository<Company>>>();
         MockCacheService = fixture.Freeze<Mock<ICacheService>>();
         MockLogger = fixture.Freeze<Mock<ILogger<GetAllCompaniesQueryHandler>>>();
@@ -25,9 +47,8 @@ public class GetAllCompaniesQueryHandlerFixture
             MockCacheService.Object,
             MockLogger.Object);
 
-        Name = "Name";
-        GetAllCompaniesQuery = GetGetAllCompaniesQuery();
-        PaginatedList = GetPaginatedList();
+        GetAllCompaniesQuery = getAllCompaniesQueryFaker.Generate();
+        PaginatedList = paginatedListFaker.Generate();
     }
 
     public GetAllCompaniesQueryHandler GetAllCompaniesQueryHandler { get; }
@@ -35,32 +56,7 @@ public class GetAllCompaniesQueryHandlerFixture
     public Mock<ICacheService> MockCacheService { get; }
     public Mock<ILogger<GetAllCompaniesQueryHandler>> MockLogger { get; }
 
-    public string Name { get; }
     public CancellationToken CancellationToken { get; }
     public GetAllCompaniesQuery GetAllCompaniesQuery { get; }
     public PaginatedList<Company> PaginatedList { get; }
-
-    private GetAllCompaniesQuery GetGetAllCompaniesQuery()
-    {
-        return new GetAllCompaniesQuery(1, 5);
-    }
-
-    private Company GetCompany()
-    {
-        return new Company(Name, Name);
-    }
-
-    private List<Company> GetCompanies()
-    {
-        return new List<Company>()
-        {
-            GetCompany(),
-            GetCompany()
-        };
-    }
-
-    private PaginatedList<Company> GetPaginatedList()
-    {
-        return new PaginatedList<Company>(GetCompanies(), 6, 1, 5);
-    }
 }
