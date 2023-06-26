@@ -24,7 +24,7 @@ public sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, Us
 
     public async Task<User> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
-        string key = $"users:{query.Id}";
+        var key = $"users:{query.Id}";
         var user = await _cacheService.GetAsync<User>(key);
 
         if (user is null)

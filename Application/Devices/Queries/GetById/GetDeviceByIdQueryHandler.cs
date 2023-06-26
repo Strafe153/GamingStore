@@ -24,7 +24,7 @@ public sealed class GetDeviceByIdQueryHandler : IQueryHandler<GetDeviceByIdQuery
 
     public async Task<Device> Handle(GetDeviceByIdQuery query, CancellationToken cancellationToken)
     {
-        string key = $"devices:{query.Id}";
+        var key = $"devices:{query.Id}";
         var device = await _cacheService.GetAsync<Device>(key);
 
         if (device is null)

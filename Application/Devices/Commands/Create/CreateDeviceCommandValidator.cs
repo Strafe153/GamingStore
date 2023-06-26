@@ -40,8 +40,8 @@ public class CreateDeviceCommandValidator : AbstractValidator<CreateDeviceComman
 
     private bool BeInRange(DeviceCategory category)
     {
-        int typeAsInt = (int)category;
-        int totalCategories = Enum.GetNames(typeof(DeviceCategory)).Length + 1;
+        var typeAsInt = (int)category;
+        var totalCategories = Enum.GetNames(typeof(DeviceCategory)).Length + 1;
 
         if ((typeAsInt > 0) && (typeAsInt < totalCategories))
         {

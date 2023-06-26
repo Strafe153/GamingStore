@@ -24,7 +24,7 @@ public sealed class GetCompanyByIdQueryHandler : IQueryHandler<GetCompanyByIdQue
 
     public async Task<Company> Handle(GetCompanyByIdQuery query, CancellationToken cancellationToken)
     {
-        string key = $"companies:{query.Id}";
+        var key = $"companies:{query.Id}";
         var company = await _cacheService.GetAsync<Company>(key);
 
         if (company is null)

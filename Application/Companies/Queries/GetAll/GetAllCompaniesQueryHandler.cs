@@ -25,7 +25,7 @@ public sealed class GetAllCompaniesQueryHandler : IQueryHandler<GetAllCompaniesQ
 
     public async Task<PaginatedList<Company>> Handle(GetAllCompaniesQuery query, CancellationToken cancellationToken)
     {
-        string key = $"companies:{query.PageNumber}:{query.PageSize}";
+        var key = $"companies:{query.PageNumber}:{query.PageSize}";
         var cachedCompanies = await _cacheService.GetAsync<List<Company>>(key);
         PaginatedList<Company> companies;
 

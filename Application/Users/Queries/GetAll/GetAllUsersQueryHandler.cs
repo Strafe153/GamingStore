@@ -25,7 +25,7 @@ public sealed class GetAllUsersQueryHandler : IQueryHandler<GetAllUsersQuery, Pa
 
     public async Task<PaginatedList<User>> Handle(GetAllUsersQuery query, CancellationToken cancellationToken)
     {
-        string key = $"users:{query.PageNumber}:{query.PageSize}";
+        var key = $"users:{query.PageNumber}:{query.PageSize}";
         var cachedUsers = await _cacheService.GetAsync<List<User>>(key);
         PaginatedList<User> users;
 
