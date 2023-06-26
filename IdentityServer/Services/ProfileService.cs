@@ -21,7 +21,7 @@ public class ProfileService : IProfileService
 
     public async Task GetProfileDataAsync(ProfileDataRequestContext context)
     {
-        string subjectId = context.Subject.GetSubjectId();
+        var subjectId = context.Subject.GetSubjectId();
         var user = await _userManager.FindByIdAsync(subjectId);
 
         var userClaimsPrincipal = await _claimsFactory.CreateAsync(user);
@@ -36,7 +36,7 @@ public class ProfileService : IProfileService
 
     public async Task IsActiveAsync(IsActiveContext context)
     {
-        string subjectId = context.Subject.GetSubjectId();
+        var subjectId = context.Subject.GetSubjectId();
         var user = await _userManager.FindByIdAsync(subjectId);
 
         context.IsActive = user is not null;

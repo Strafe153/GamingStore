@@ -22,8 +22,8 @@ public class UserService : IUserService
     public void VerifyUserAccessRights(User performedOn)
     {
         var context = _httpContextAccessor.HttpContext;
-        string performerRole = context.User.Claims.First(c => c.Type.Contains("role")).Value;
-        string performerEmail = context.User.Claims.First(c => c.Type.Contains("email")).Value;
+        var performerRole = context.User.Claims.First(c => c.Type.Contains("role")).Value;
+        var performerEmail = context.User.Claims.First(c => c.Type.Contains("email")).Value;
 
         if ((performedOn.Email != performerEmail) && (performerRole != "Admin"))
         {

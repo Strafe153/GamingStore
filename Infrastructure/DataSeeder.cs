@@ -31,8 +31,8 @@ public static class DataSeeder
 
     public static void SeedAdmin(this ModelBuilder modelBuilder, string adminPassword)
     {
-        string name = "Admin";
-        string email = "admin@gmail.com";
+        var name = "Admin";
+        var email = "admin@gmail.com";
         var passwordHasher = new PasswordHasher<User>();
 
         var admin = new User()
@@ -52,6 +52,7 @@ public static class DataSeeder
 
         modelBuilder.Entity<User>()
             .HasData(admin);
+
         modelBuilder.Entity<IdentityUserRole<int>>()
             .HasData(new IdentityUserRole<int>()
             {

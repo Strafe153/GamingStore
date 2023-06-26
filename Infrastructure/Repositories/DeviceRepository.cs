@@ -16,15 +16,11 @@ public class DeviceRepository : IRepository<Device>
         _context = context;
     }
 
-    public void Create(Device entity)
-    {
+    public void Create(Device entity) =>
         _context.Devices.Add(entity);
-    }
 
-    public void Delete(Device entity)
-    {
+    public void Delete(Device entity) =>
         _context.Devices.Remove(entity);
-    }
 
     public async Task<PaginatedList<Device>> GetAllAsync(
         int pageNumber, 
@@ -53,8 +49,6 @@ public class DeviceRepository : IRepository<Device>
         return device;
     }
 
-    public void Update(Device entity)
-    {
+    public void Update(Device entity) =>
         _context.Devices.Update(entity);
-    }
 }

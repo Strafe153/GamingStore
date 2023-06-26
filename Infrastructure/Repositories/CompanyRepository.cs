@@ -16,15 +16,11 @@ public class CompanyRepository : IRepository<Company>
         _context = context;
     }
 
-    public void Create(Company entity)
-    {
+    public void Create(Company entity) =>
         _context.Companies.Add(entity);
-    }
 
-    public void Delete(Company entity)
-    {
+    public void Delete(Company entity) =>
         _context.Companies.Remove(entity);
-    }
 
     public async Task<PaginatedList<Company>> GetAllAsync(
         int pageNumber, 
@@ -53,8 +49,6 @@ public class CompanyRepository : IRepository<Company>
         return company;
     }
 
-    public void Update(Company entity)
-    {
+    public void Update(Company entity) =>
         _context.Companies.Update(entity);
-    }
 }

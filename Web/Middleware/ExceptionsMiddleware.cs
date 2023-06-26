@@ -32,7 +32,7 @@ public class ExceptionsMiddleware
     private Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         var statusCode = GetHttpStatusCode(exception);
-        int statusCodeAsInt = (int)statusCode;
+        var statusCodeAsInt = (int)statusCode;
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = statusCodeAsInt;

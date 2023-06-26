@@ -12,7 +12,7 @@ public static class ServiceInstaller
 {
     public static void AddServices(this IServiceCollection services, IConfiguration configuration)
     {
-        string dbConnectionString = configuration.GetConnectionString("DatabaseConnection");
+        var dbConnectionString = configuration.GetConnectionString("DatabaseConnection");
         var assembly = typeof(Program).Assembly.GetName().Name;
 
         services.AddDbContext<GamingStoreContext>(options => options.UseSqlServer(dbConnectionString));

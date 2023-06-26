@@ -72,7 +72,7 @@ public class PictureService : IPictureService
 
     private string VerifyFileExtension(IFormFile formFile)
     {
-        string extension = formFile.ContentType.Split('/').Last();
+        var extension = formFile.ContentType.Split('/').Last();
 
         if (!_imageExtensions.Contains(extension))
         {
@@ -87,11 +87,11 @@ public class PictureService : IPictureService
     {
         if (formFile is not null)
         {
-            string extension = VerifyFileExtension(formFile);
+            var extension = VerifyFileExtension(formFile);
             using var ms = new MemoryStream();
 
             formFile.CopyTo(ms);
-            byte[] formFileAsBytes = ms.ToArray();
+            var formFileAsBytes = ms.ToArray();
 
             return (formFileAsBytes, extension);
         }
@@ -101,7 +101,7 @@ public class PictureService : IPictureService
 
     private async Task<string> UploadToBlobStorageAsync(Image image, string blobFolder, string identifier, string extension)
     {
-        string fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.{extension}";
+        var fileName = $"{blobFolder}/{identifier}-{Guid.NewGuid()}.{extension}";
         using var ms = new MemoryStream();
 
         image.SaveAsPng(ms);
@@ -117,13 +117,13 @@ public class PictureService : IPictureService
     {
         if (formFileAsBytes is null)
         {
-            string defaultPicturePath = _configuration.GetSection("Application:DefaultPicturePath").Value;
+            var defaultPicturePath = _configuration.GetSection("Application:DefaultPicturePath").Value;
             formFileAsBytes = await File.ReadAllBytesAsync(defaultPicturePath);
         }
 
         using var ms = new MemoryStream(formFileAsBytes);
         var image = Image.Load(ms);
-        string pictureLink = await UploadToBlobStorageAsync(image, blobFolder, identifier, extension);
+        var pictureLink = await UploadToBlobStorageAsync(image, blobFolder, identifier, extension);
 
         return pictureLink;
     }
