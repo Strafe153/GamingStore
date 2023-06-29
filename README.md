@@ -12,6 +12,7 @@
 * `MediatR.Extensions.Microsoft.DependencyInjection` for MediatR
 * `Microsoft.EntityFrameworkCore` for entity mapping
 * `Microsoft.Extensions.Caching.StackExchangeRedis` for distributed Redis cache
+* `Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer` for API versioning
 * `IdentityServer4` for JWT-authentication
 * `SixLabors.ImageSharp` for images manipulation
 * `AutoMapper` for DTO mapping
