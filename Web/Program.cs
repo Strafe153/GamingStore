@@ -8,6 +8,7 @@ builder.ConfigureLoggers();
 builder.Services.AddRepositories();
 builder.Services.AddCustomServices();
 
+builder.Services.ConfigureApiVersioning();
 builder.Services.ConfigureControllers();
 builder.Services.ConfigureMediatR();
 builder.Services.ConfigureFluentValidation();
@@ -20,7 +21,7 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.ConfigureAuthorization();
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.ConfigureAutoMapper();
 
 builder.Services.ConfigureSwagger();
 
@@ -31,8 +32,7 @@ app.AddCustomMiddleware();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.ConfigureSwaggerUI();
 }
 
 app.UseHttpsRedirection();

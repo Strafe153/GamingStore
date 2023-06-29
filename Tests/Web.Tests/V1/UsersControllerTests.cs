@@ -10,18 +10,18 @@ using Domain.Shared;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Presentation.Tests.Fixtures;
+using Presentation.Tests.V1.Fixtures;
 using Xunit;
 
-namespace Presentation.Tests;
+namespace Presentation.Tests.V1;
 
 public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 {
     private readonly UsersControllerFixture _fixture;
 
-	public UsersControllerTests(UsersControllerFixture fixture)
-	{
-		_fixture = fixture;
+    public UsersControllerTests(UsersControllerFixture fixture)
+    {
+        _fixture = fixture;
     }
 
     [Fact]

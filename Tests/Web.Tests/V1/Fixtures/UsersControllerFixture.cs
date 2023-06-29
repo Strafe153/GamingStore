@@ -11,15 +11,15 @@ using Domain.Shared;
 using MediatR;
 using Moq;
 using Presentation.AutoMapperProfiles;
-using Presentation.Controllers;
+using Presentation.Controllers.V1;
 
-namespace Presentation.Tests.Fixtures;
+namespace Presentation.Tests.V1.Fixtures;
 
 public class UsersControllerFixture
 {
-	public UsersControllerFixture()
-	{
-		var fixture = new Fixture().Customize(new AutoMoqCustomization());
+    public UsersControllerFixture()
+    {
+        var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
         var userFaker = new Faker<User>()
             .CustomInstantiator(f => new(
@@ -78,10 +78,10 @@ public class UsersControllerFixture
 
         Id = Random.Shared.Next(1, 5000);
 
-        PageParameters = new() 
-        { 
+        PageParameters = new()
+        {
             PageNumber = Random.Shared.Next(1, 500),
-            PageSize = Random.Shared.Next(1, 500) 
+            PageSize = Random.Shared.Next(1, 500)
         };
 
         User = userFaker.Generate();
