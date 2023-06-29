@@ -10,18 +10,19 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Presentation.Controllers;
+namespace Presentation.Controllers.V1;
 
 [ApiController]
-[Route("api/devices")]
+[Route("api/v{version:apiVersion}/devices")]
 [Authorize(Policy = "AdminOnly")]
+[ApiVersion("1.0")]
 public class DevicesController : ControllerBase
 {
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
     public DevicesController(
-        ISender sender, 
+        ISender sender,
         IMapper mapper)
     {
         _sender = sender;
@@ -31,7 +32,7 @@ public class DevicesController : ControllerBase
     [HttpGet]
     [AllowAnonymous]
     public async Task<ActionResult<PaginatedModel<GetDeviceResponse>>> GetAsync(
-        [FromQuery] DevicePageParameters pageParameters, 
+        [FromQuery] DevicePageParameters pageParameters,
         CancellationToken cancellationToken)
     {
         var query = new GetAllDevicesQuery(pageParameters.PageNumber, pageParameters.PageSize, pageParameters.Company);
@@ -56,7 +57,7 @@ public class DevicesController : ControllerBase
 
     [HttpPost]
     public async Task<ActionResult<GetDeviceResponse>> CreateAsync(
-        [FromForm] CreateDeviceRequest request, 
+        [FromForm] CreateDeviceRequest request,
         CancellationToken cancellationToken)
     {
         var command = _mapper.Map<CreateDeviceCommand>(request);
@@ -69,8 +70,8 @@ public class DevicesController : ControllerBase
 
     [HttpPut("{id:int:min(1)}")]
     public async Task<ActionResult> UpdateAsync(
-        [FromRoute] int id, 
-        [FromForm] UpdateDeviceRequest request, 
+        [FromRoute] int id,
+        [FromForm] UpdateDeviceRequest request,
         CancellationToken cancellationToken)
     {
         var query = new GetDeviceByIdQuery(id);

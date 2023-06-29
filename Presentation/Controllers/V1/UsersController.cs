@@ -12,11 +12,12 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Presentation.Controllers;
+namespace Presentation.Controllers.V1;
 
 [ApiController]
-[Route("api/users")]
+[Route("api/v{version:apiVersion}/users")]
 [Authorize]
+[ApiVersion("1.0")]
 public class UsersController : ControllerBase
 {
     private readonly ISender _sender;
@@ -32,7 +33,7 @@ public class UsersController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<PaginatedModel<GetUserResponse>>> GetAsync(
-        [FromQuery] PageParameters pageParameters, 
+        [FromQuery] PageParameters pageParameters,
         CancellationToken cancellationToken)
     {
         var query = new GetAllUsersQuery(pageParameters.PageNumber, pageParameters.PageSize);
@@ -57,7 +58,7 @@ public class UsersController : ControllerBase
     [HttpPost("register")]
     [AllowAnonymous]
     public async Task<ActionResult<GetUserResponse>> RegisterAsync(
-        [FromForm] RegisterUserRequest request, 
+        [FromForm] RegisterUserRequest request,
         CancellationToken cancellationToken)
     {
         var command = _mapper.Map<RegisterUserCommand>(request);
@@ -70,8 +71,8 @@ public class UsersController : ControllerBase
 
     [HttpPut("{id:int:min(1)}")]
     public async Task<ActionResult> UpdateAsync(
-        [FromRoute] int id, 
-        [FromForm] UpdateUserRequest request, 
+        [FromRoute] int id,
+        [FromForm] UpdateUserRequest request,
         CancellationToken cancellationToken)
     {
         var query = new GetUserByIdQuery(id);
@@ -85,8 +86,8 @@ public class UsersController : ControllerBase
 
     [HttpPut("{id:int:min(1)}/changePassword")]
     public async Task<ActionResult> ChangePasswordAsync(
-        [FromRoute] int id, 
-        [FromBody] ChangeUserPasswordRequest request, 
+        [FromRoute] int id,
+        [FromBody] ChangeUserPasswordRequest request,
         CancellationToken cancellationToken)
     {
         var query = new GetUserByIdQuery(id);
@@ -101,8 +102,8 @@ public class UsersController : ControllerBase
     [HttpPut("{id:int:min(1)}/changeRole")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> ChangeRoleAsync(
-        [FromRoute] int id, 
-        [FromBody] ChangeUserRoleRequest request, 
+        [FromRoute] int id,
+        [FromBody] ChangeUserRoleRequest request,
         CancellationToken cancellationToken)
     {
         var query = new GetUserByIdQuery(id);

@@ -10,15 +10,15 @@ using Domain.Shared;
 using MediatR;
 using Moq;
 using Presentation.AutoMapperProfiles;
-using Presentation.Controllers;
+using Presentation.Controllers.V1;
 
-namespace Presentation.Tests.Fixtures;
+namespace Presentation.Tests.V1.Fixtures;
 
 public class DevicesControllerFixture
 {
-	public DevicesControllerFixture()
-	{
-		var fixture = new Fixture().Customize(new AutoMoqCustomization());
+    public DevicesControllerFixture()
+    {
+        var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
         var deviceFaker = new Faker<Device>()
             .CustomInstantiator(f => new(
