@@ -8,6 +8,7 @@ public static class SwaggerConfiguration
     public static void ConfigureSwagger(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
+
         services.AddSwaggerGen(options =>
         {
             var apiVersionDescriptionProvider = services
