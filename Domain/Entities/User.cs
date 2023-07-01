@@ -20,10 +20,6 @@ public class User : IdentityUser<int>
         ProfilePicture = profilePicture;
     }
 
-    public User()
-    {
-    }
-
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string? ProfilePicture { get; set; }

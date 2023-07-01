@@ -8,12 +8,12 @@ public static class DataSeeder
 {
     public static void SeedRoles(this ModelBuilder modelBuilder)
     {
-        string adminRole = "Admin";
-        string userRole = "User";
+        var adminRole = "Admin";
+        var userRole = "User";
 
         modelBuilder.Entity<IdentityRole<int>>().HasData(new[]
         {
-            new IdentityRole<int>() 
+            new IdentityRole<int>
             { 
                 Id = 1,
                 Name = adminRole, 
@@ -33,18 +33,14 @@ public static class DataSeeder
     {
         var name = "Admin";
         var email = "admin@gmail.com";
+        var phoneNumber = "+380990009009";
         var passwordHasher = new PasswordHasher<User>();
 
-        var admin = new User()
+        var admin = new User(name, name, email, email, phoneNumber, null)
         {
             Id = 1,
-            FirstName = name,
-            LastName = name,
-            Email = email,
             NormalizedEmail = email.ToUpper(),
-            UserName = email,
             NormalizedUserName = email.ToUpper(),
-            PhoneNumber = "+380990009009",
             SecurityStamp = Guid.NewGuid().ToString()
         };
 
@@ -54,7 +50,7 @@ public static class DataSeeder
             .HasData(admin);
 
         modelBuilder.Entity<IdentityUserRole<int>>()
-            .HasData(new IdentityUserRole<int>()
+            .HasData(new IdentityUserRole<int>
             {
                 RoleId = 1,
                 UserId = 1
