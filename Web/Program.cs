@@ -5,6 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.ConfigureLoggers();
 
+builder.Services.ConfigureHealthChecks(builder.Configuration);
+
 builder.Services.AddRepositories();
 builder.Services.AddCustomServices();
 
@@ -25,6 +27,8 @@ builder.Services.ConfigureAutoMapper();
 
 builder.Services.ConfigureSwagger();
 
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 app.AddCustomMiddleware();
@@ -36,6 +40,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseHealthChecks();
 
 app.UseAuthentication();
 app.UseAuthorization();
