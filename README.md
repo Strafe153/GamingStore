@@ -8,12 +8,16 @@
 * Devices management
 
 ## Dependencies
-* `Azure.Storage.Blobs` for storing images in a blob storage
+* `Azure.Storage.Blobs` for images storing in Azure Blob Storage
 * `MediatR.Extensions.Microsoft.DependencyInjection` for MediatR
 * `Microsoft.EntityFrameworkCore` for entity mapping
 * `Microsoft.Extensions.Caching.StackExchangeRedis` for distributed Redis cache
 * `Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer` for API versioning
 * `IdentityServer4` for JWT-authentication
+* `AspNetCore.HealthChecks.UI.Client` for detailed health checks information
+* `AspNetCore.HealthChecks.SqlServer` for PostgreSQL health check
+* `AspNetCore.HealthChecks.Redis` for Redis health checks
+* `AspNetCore.HealthChecks.AzureStorage` for Azure Blob Storage health checks
 * `SixLabors.ImageSharp` for images manipulation
 * `AutoMapper` for DTO mapping
 * `FluentValidation` for DTO validation
