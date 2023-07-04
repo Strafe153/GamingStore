@@ -1,5 +1,4 @@
-﻿using Azure;
-using Domain.Exceptions;
+﻿using Domain.Exceptions;
 using Domain.Shared;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -44,14 +43,17 @@ public class ExceptionsMiddleware
     }
 
     private static ProblemDetails GetProblemDetails(
-        HttpContext context, Exception exception, HttpStatusCode statusCode, int statusCodeAsInt)
+        HttpContext context,
+        Exception exception,
+        HttpStatusCode statusCode,
+        int statusCodeAsInt)
     {
         var rfcType = GetRFCType(statusCode);
         var errors = exception is ValidationException validationException
            ? validationException
                .Errors
                .GroupBy(v => v.PropertyName)
-               .Select(g => new Error()
+               .Select(g => new Error
                {
                    Property = g.Key,
                    ErrorMessages = g.Select(v => v.ErrorMessage).Distinct()
@@ -60,7 +62,7 @@ public class ExceptionsMiddleware
 
         if (errors is null)
         {
-            var problemDetails = new ProblemDetails()
+            return new ProblemDetails
             {
                 Type = rfcType,
                 Title = exception.Message,
@@ -68,49 +70,39 @@ public class ExceptionsMiddleware
                 Instance = context.Request.Path,
                 Detail = exception.Message
             };
-
-            return problemDetails;
         }
-        else
+
+        return new FluentValidationProblemDetails
         {
-            var problemDetails = new FluentValidationProblemDetails()
-            {
-                Type = rfcType,
-                Title = exception.Message,
-                Status = statusCodeAsInt,
-                Instance = context.Request.Path,
-                Detail = exception.Message,
-                ValidationErrors = errors
-            };
-
-            return problemDetails;
-        }
+            Type = rfcType,
+            Title = exception.Message,
+            Status = statusCodeAsInt,
+            Instance = context.Request.Path,
+            Detail = exception.Message,
+            ValidationErrors = errors
+        };
     }
 
-    private static HttpStatusCode GetHttpStatusCode(Exception exception)
-    {
-        return exception switch
+    private static HttpStatusCode GetHttpStatusCode(Exception exception) =>
+        exception switch
         {
             NullReferenceException => HttpStatusCode.NotFound,
             NotEnoughRightsException => HttpStatusCode.Forbidden,
-            IncorrectPasswordException 
-                or ValueNotUniqueException 
-                or IncorrectExtensionException 
-                or OperationFailedException 
+            IncorrectPasswordException
+                or ValueNotUniqueException
+                or IncorrectExtensionException
+                or OperationFailedException
                 or OperationCanceledException
                 or ValidationException => HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
-    }
 
-    private static string GetRFCType(HttpStatusCode statusCode)
-    {
-        return statusCode switch
+    private static string GetRFCType(HttpStatusCode statusCode) =>
+        statusCode switch
         {
             HttpStatusCode.NotFound => RFCType.NotFound,
             HttpStatusCode.BadRequest => RFCType.BadRequest,
             HttpStatusCode.Forbidden => RFCType.Forbidden,
             _ => RFCType.InternalServerError
         };
-    }
 }
