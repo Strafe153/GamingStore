@@ -6,7 +6,7 @@ namespace Web.Configurations;
 
 public static class MigrationsConfiguration
 {
-    public static void ApplyDatabaseMigrations(this WebApplication app)
+    public static void UseDatabaseMigrations(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<GamingStoreContext>();
@@ -23,7 +23,7 @@ public static class MigrationsConfiguration
     {
         var connecion = dbContext.Database.GetDbConnection();
         var masterConnectionString = connecion.ConnectionString.Replace("gaming_store_db", "master");
-        var masterConnection = new SqlConnection(masterConnectionString);
+        using var masterConnection = new SqlConnection(masterConnectionString);
 
         try
         {
@@ -33,10 +33,6 @@ public static class MigrationsConfiguration
         catch (SqlException)
         {
             return false;
-        }
-        finally
-        {
-            masterConnection?.Dispose();
         }
 
         return true;

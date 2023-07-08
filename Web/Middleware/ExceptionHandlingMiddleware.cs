@@ -7,11 +7,11 @@ using System.Net;
 
 namespace Web.Middleware;
 
-public class ExceptionsMiddleware
+public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public ExceptionsMiddleware(RequestDelegate next)
+    public ExceptionHandlingMiddleware(RequestDelegate next)
     {
         _next = next;
     }

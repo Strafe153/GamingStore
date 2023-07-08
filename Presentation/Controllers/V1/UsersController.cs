@@ -11,6 +11,7 @@ using Domain.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Presentation.Controllers.V1;
 
@@ -18,6 +19,7 @@ namespace Presentation.Controllers.V1;
 [Route("api/v{version:apiVersion}/users")]
 [Authorize]
 [ApiVersion("1.0")]
+[EnableRateLimiting("tokenBucket")]
 public class UsersController : ControllerBase
 {
     private readonly ISender _sender;
