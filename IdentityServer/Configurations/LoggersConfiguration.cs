@@ -11,7 +11,8 @@ public static class LoggersConfiguration
             .Enrich.FromLogContext()
             .CreateLogger();
 
-        builder.Logging.ClearProviders()
+        builder.Logging
+            .ClearProviders()
             .AddSerilog(logger);
     }
 }
