@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Infrastructure.ConfigurationModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ namespace Infrastructure;
 
 public class GamingStoreContext : IdentityDbContext<User, IdentityRole<int>, int>
 {
-    private readonly string _adminPassword;
+    private readonly AdminData _adminData = new();
 
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<Device> Devices => Set<Device>();
@@ -18,7 +19,7 @@ public class GamingStoreContext : IdentityDbContext<User, IdentityRole<int>, int
         IConfiguration configuration)
         : base(options)
     {
-        _adminPassword = configuration.GetSection("Admin:Password").Value;
+        configuration.GetSection("Admin").Bind(_adminData);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,6 +28,6 @@ public class GamingStoreContext : IdentityDbContext<User, IdentityRole<int>, int
 
         modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
         modelBuilder.SeedRoles();
-        modelBuilder.SeedAdmin(_adminPassword);
+        modelBuilder.SeedAdmin(_adminData);
     }
 }

@@ -365,5 +365,6 @@ FodyWeavers.xsd
 # Azurite - Azure Blob Storage emulator
 azurite/
 
-# folder containing log files
+# folders containing log files
 Web/logs
+IdentityServer/logs

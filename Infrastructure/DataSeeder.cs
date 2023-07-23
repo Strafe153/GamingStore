@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Infrastructure.ConfigurationModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,8 +9,8 @@ public static class DataSeeder
 {
     public static void SeedRoles(this ModelBuilder modelBuilder)
     {
-        var adminRole = "Admin";
-        var userRole = "User";
+        const string adminRole = "Admin";
+        const string userRole = "User";
 
         modelBuilder.Entity<IdentityRole<int>>().HasData(new[]
         {
@@ -29,22 +30,18 @@ public static class DataSeeder
         });
     }
 
-    public static void SeedAdmin(this ModelBuilder modelBuilder, string adminPassword)
+    public static void SeedAdmin(this ModelBuilder modelBuilder, AdminData adminData)
     {
-        var name = "Admin";
-        var email = "admin@gmail.com";
-        var phoneNumber = "+380990009009";
         var passwordHasher = new PasswordHasher<User>();
-
-        var admin = new User(name, name, email, email, phoneNumber, null)
+        var admin = new User(adminData.Name, adminData.Name, adminData.Email, adminData.Email, adminData.PhoneNumber, null)
         {
             Id = 1,
-            NormalizedEmail = email.ToUpper(),
-            NormalizedUserName = email.ToUpper(),
+            NormalizedEmail = adminData.Email.ToUpper(),
+            NormalizedUserName = adminData.Email.ToUpper(),
             SecurityStamp = Guid.NewGuid().ToString()
         };
 
-        admin.PasswordHash = passwordHasher.HashPassword(admin, adminPassword);
+        admin.PasswordHash = passwordHasher.HashPassword(admin, adminData.Password);
 
         modelBuilder.Entity<User>()
             .HasData(admin);
