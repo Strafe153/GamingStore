@@ -15,13 +15,16 @@ services:
       - ASPNETCORE_HTTPS_PORT=8081
       - ASPNETCORE_Kestrel__Certificates__Default__Password=kestrel_password
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/GamingStore.pfx
-      - ConnectionStrings:DatabaseConnection=Server=ms_sql_server,1433;Database=gaming_store_db;User Id=SA;Password=Pa55w0rd!;
-      - BlobStorageConnection=DefaultEndpointsProtocol=https;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=https://host.docker.internal:10000/devstoreaccount1;
-      - ConnectionStrings:RedisConnection=redis:6379
-      - ConnectionStrings:IdentityServerConnection=http://identity_server/7030
-      - Azure:ContainerLink=https://host.docker.internal:10000/devstoreaccount1
+      - ConnectionStrings__DatabaseConnection=Server=ms_sql_server,1433;Database=gaming_store_db;User Id=SA;Password=Pa55w0rd!;
+      - ConnectionStrings__BlobStorageConnection=DefaultEndpointsProtocol=https;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=https://host.docker.internal:10000/devstoreaccount1;
+      - ConnectionStrings__RedisConnection=redis:6379
+      - ConnectionStrings__IdentityServerConnection=http://identity_server:7030
+      - Azure__ContainerLink=https://host.docker.internal:10000/devstoreaccount1
     volumes:
       - ~/.aspnet/https:/https:ro
+      - gaming_store:/app/shared_data
+    # networks:
+    #   - gaming_store
     depends_on:
       - ms_sql_server
       - azurite
@@ -36,7 +39,15 @@ services:
       - 7030:80
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings:DatabaseConnection=Server=ms_sql_server,1433;Database=gaming_store_db;User Id=SA;Password=Pa55w0rd!;
+      - ConnectionStrings__DatabaseConnection=Server=ms_sql_server,1433;Database=gaming_store_db;User Id=SA;Password=Pa55w0rd!;
+      # - Cors__Origins__0=https://web:8081
+      # - Cors__Origins__1=http://web:8080
+      # - Cors__Methods__0=*
+      # - Cors__Headers__0=*
+    volumes:
+      - gaming_store:/app/shared_data
+    # networks:
+    #   - gaming_store
     depends_on:
       - ms_sql_server
       - web
@@ -49,6 +60,8 @@ services:
       - SA_PASSWORD=Pa55w0rd!
     ports:
       - 1433:1433
+    volumes:
+      - gaming_store:/app/shared_data
   
   redis:
     image: redis
@@ -64,3 +77,9 @@ services:
       - 10000:10000
     volumes:
       - ./azurite:/workspace
+
+volumes:
+  gaming_store:
+
+# networks:
+#   gaming_store:

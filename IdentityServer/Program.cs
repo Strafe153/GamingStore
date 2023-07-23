@@ -1,5 +1,4 @@
 using IdentityServer.Configurations;
-using IdentityServer.ServiceExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,15 +8,8 @@ builder.Services.AddServices(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseCors(options =>
-{
-    options.AllowAnyOrigin();
-    options.AllowAnyMethod();
-    options.AllowAnyHeader();
-});
-
+app.ConfigureCors(builder.Configuration);
 app.UseIdentityServer();
-
 app.ApplyDatabaseMigrations(builder.Configuration);
 
 app.Run();
