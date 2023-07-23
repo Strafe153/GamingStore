@@ -11,12 +11,9 @@ public static class CorsConfiguration
 
         app.UseCors(options =>
         {
-            options.AllowAnyOrigin();
-            options.AllowAnyMethod();
-            options.AllowAnyHeader();
-            //options.WithOrigins(corsOptions.Origins);
-            //options.WithMethods(corsOptions.Methods);
-            //options.WithHeaders(corsOptions.Headers);
+            options.WithOrigins(corsOptions.Origins);
+            options.WithMethods(corsOptions.Methods);
+            options.WithHeaders(corsOptions.Headers);
         });
     }
 }
