@@ -23,8 +23,6 @@ services:
     volumes:
       - ~/.aspnet/https:/https:ro
       - gaming_store:/app/shared_data
-    # networks:
-    #   - gaming_store
     depends_on:
       - ms_sql_server
       - azurite
@@ -40,14 +38,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DatabaseConnection=Server=ms_sql_server,1433;Database=gaming_store_db;User Id=SA;Password=Pa55w0rd!;
-      # - Cors__Origins__0=https://web:8081
-      # - Cors__Origins__1=http://web:8080
-      # - Cors__Methods__0=*
-      # - Cors__Headers__0=*
+      - Cors__Origins__0=https://web:8081
+      - Cors__Origins__1=http://web:8080
+      - Cors__Methods__0=*
+      - Cors__Headers__0=*
     volumes:
       - gaming_store:/app/shared_data
-    # networks:
-    #   - gaming_store
     depends_on:
       - ms_sql_server
       - web
@@ -80,6 +76,3 @@ services:
 
 volumes:
   gaming_store:
-
-# networks:
-#   gaming_store:
