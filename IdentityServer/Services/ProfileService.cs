@@ -24,7 +24,7 @@ public class ProfileService : IProfileService
         var subjectId = context.Subject.GetSubjectId();
         var user = await _userManager.FindByIdAsync(subjectId);
 
-        var userClaimsPrincipal = await _claimsFactory.CreateAsync(user);
+        var userClaimsPrincipal = await _claimsFactory.CreateAsync(user!);
         var requestedClaims = context.RequestedResources.Resources.IdentityResources.SelectMany(r => r.UserClaims);
 
         var claimsToAdd = userClaimsPrincipal.Claims
