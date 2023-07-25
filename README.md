@@ -47,7 +47,10 @@
 * `Moq` for mocking
 * `Newtonsoft.Json` for JSON serialization
 * `Serilog.AspNetCore` for Serilog support for ASP.NET Core
+* `Serilog.Enrichers.Environment` for enricihing the Serilog configuration with Environment properties
+* `Serilog.Exceptions` for detailed Serilog exceptions
 * `Serilog.Sinks.Console` for Serilog console sink
+* `Serilog.Sinks.Elasticsearch` for Serilog Elasticsearch sink
 * `Serilog.Sinks.File` for Serilog file sink
 * `SixLabors.ImageSharp` for images manipulation
 * `System.IdentityModel.Tokens.Jwt` for JWT
