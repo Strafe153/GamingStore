@@ -2,7 +2,7 @@ using IdentityServer.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.ConfigureLoggers();
+builder.ConfigureLoggers(builder.Configuration);
 
 builder.Services.AddServices(builder.Configuration);
 

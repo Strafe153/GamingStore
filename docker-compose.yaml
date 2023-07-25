@@ -27,6 +27,8 @@ services:
       - ms_sql_server
       - azurite
       - redis
+      - elastic_search
+      - kibana
 
   identity_server:
     build:
@@ -74,5 +76,34 @@ services:
     volumes:
       - ./azurite:/workspace
 
+  elastic_search:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.1
+    container_name: elastic_search
+    volumes:
+      - gaming_store:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    networks:
+      - elastic
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.8.1
+    container_name: kibana
+    ports:
+      - 5601:5601
+    depends_on:
+      - elastic_search
+    environment:
+      - ELASTICSEARCH_URL=http://elastic_search:9200
+    networks:
+      - elastic
+
 volumes:
   gaming_store:
+
+networks:
+  elastic:
+    driver: bridge

@@ -9,7 +9,7 @@ public static class DatabaseConfiguration
     {
         services.AddDbContext<GamingStoreContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"));
+            options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection")!);
         });
     }
 }

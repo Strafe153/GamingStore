@@ -9,7 +9,7 @@ public static class AzureConfiguration
     {
         services.AddAzureClients(clientBuilder =>
         {
-            clientBuilder.AddBlobServiceClient(configuration["BlobStorageConnection:blob"], preferMsi: true);
+            clientBuilder.AddBlobServiceClient(configuration["BlobStorageConnection:blob"]!, preferMsi: true);
         });
     }
 }

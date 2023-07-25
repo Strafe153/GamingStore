@@ -3,7 +3,7 @@ using WebApi.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.ConfigureLoggers();
+builder.ConfigureLoggers(builder.Configuration);
 
 builder.Services.ConfigureHealthChecks(builder.Configuration);
 builder.Services.ConfigureRateLimiting(builder.Configuration);
