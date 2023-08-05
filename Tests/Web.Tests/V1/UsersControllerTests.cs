@@ -8,6 +8,7 @@ using Application.Users.Queries.GetById;
 using Domain.Entities;
 using Domain.Shared;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Presentation.Tests.V1.Fixtures;
@@ -41,7 +42,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<PaginatedModel<GetUserResponse>>>();
-        objectResult.StatusCode.Should().Be(200);
+        objectResult.StatusCode.Should().Be(StatusCodes.Status200OK);
         paginatedModel.Entities.Should().NotBeEmpty();
     }
 
@@ -62,7 +63,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<GetUserResponse>>();
-        objectResult.StatusCode.Should().Be(200);
+        objectResult.StatusCode.Should().Be(StatusCodes.Status200OK);
         getCompanyResponse.Should().NotBeNull();
     }
 
@@ -83,7 +84,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<GetUserResponse>>();
-        objectResult.StatusCode.Should().Be(201);
+        objectResult.StatusCode.Should().Be(StatusCodes.Status201Created);
         getCompanyResponse.Should().NotBeNull();
     }
 
@@ -104,7 +105,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
-        objectResult.StatusCode.Should().Be(204);
+        objectResult.StatusCode.Should().Be(StatusCodes.Status204NoContent);
     }
 
     [Fact]
@@ -124,7 +125,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
-        objectResult.StatusCode.Should().Be(204);
+        objectResult.StatusCode.Should().Be(StatusCodes.Status204NoContent);
     }
 
     [Fact]
@@ -144,7 +145,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
-        objectResult.StatusCode.Should().Be(204);
+        objectResult.StatusCode.Should().Be(StatusCodes.Status204NoContent);
     }
 
     [Fact]
@@ -163,6 +164,6 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
-        objectResult.Should().NotBeNull();
+        objectResult.StatusCode.Should().Be(StatusCodes.Status204NoContent);
     }
 }

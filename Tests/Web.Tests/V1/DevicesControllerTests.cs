@@ -6,6 +6,7 @@ using Application.Devices.Queries.GetById;
 using Domain.Entities;
 using Domain.Shared;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Presentation.Tests.V1.Fixtures;
@@ -39,7 +40,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<PaginatedModel<GetDeviceResponse>>>();
-        objectResult.StatusCode.Should().Be(200);
+        objectResult.StatusCode.Should().Be(StatusCodes.Status200OK);
         paginatedModel.Entities.Should().NotBeEmpty();
     }
 
@@ -60,7 +61,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<GetDeviceResponse>>();
-        objectResult.StatusCode.Should().Be(200);
+        objectResult.StatusCode.Should().Be(StatusCodes.Status200OK);
         getCompanyResponse.Should().NotBeNull();
     }
 
@@ -81,7 +82,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<ActionResult<GetDeviceResponse>>();
-        objectResult.StatusCode.Should().Be(201);
+        objectResult.StatusCode.Should().Be(StatusCodes.Status201Created);
         getCompanyResponse.Should().NotBeNull();
     }
 
@@ -102,7 +103,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
-        objectResult.StatusCode.Should().Be(204);
+        objectResult.StatusCode.Should().Be(StatusCodes.Status204NoContent);
     }
 
     [Fact]
@@ -121,6 +122,6 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 
         // Assert
         result.Should().NotBeNull().And.BeOfType<NoContentResult>();
-        objectResult.Should().NotBeNull();
+        objectResult.StatusCode.Should().Be(StatusCodes.Status204NoContent);
     }
 }
