@@ -13,7 +13,7 @@
 * `AspNetCore.HealthChecks.SqlServer` for PostgreSQL health check
 * `AspNetCore.HealthChecks.UI.Client` for detailed health checks information
 * `AutoFixture` for test fixtures
-* `AutoFixture.AutoMoq` for test fixtures
+* `AutoFixture.AutoMoq` for test fixtures with Moq
 * `AutoMapper` for DTO mapping
 * `AutoMapper.Extensions.Microsoft.DependencyInjection` for DI with AutoMapper
 * `Azure.Storage.Blobs` for images storing in Azure Blob Storage
