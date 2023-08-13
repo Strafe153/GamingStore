@@ -22,7 +22,7 @@ public class GetAllDevicesCommandHandlerTests : IClassFixture<GetAllDevicesComma
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<List<Device>>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<List<Device>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((List<Device>)null!);
 
         _fixture.MockRepository
@@ -45,7 +45,7 @@ public class GetAllDevicesCommandHandlerTests : IClassFixture<GetAllDevicesComma
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<List<Device>>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<List<Device>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.PaginatedList);
 
         // Act

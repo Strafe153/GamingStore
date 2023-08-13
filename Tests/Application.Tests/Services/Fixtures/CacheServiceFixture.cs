@@ -42,5 +42,6 @@ public class CacheServiceFixture
 
     public byte[] Bytes { get; }
     public string Key { get; }
+    public CancellationToken CancellationToken { get; }
     public User User { get; }
 }

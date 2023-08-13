@@ -26,7 +26,7 @@ public sealed class GetAllDevicesQueryHandler : IQueryHandler<GetAllDevicesQuery
     public async Task<PaginatedList<Device>> Handle(GetAllDevicesQuery query, CancellationToken cancellationToken)
     {
         var key = $"devices:{query.PageNumber}:{query.PageSize}:{query.CompanyName ?? "all"}";
-        var cachedDevices = await _cacheService.GetAsync<List<Device>>(key);
+        var cachedDevices = await _cacheService.GetAsync<List<Device>>(key, cancellationToken);
         PaginatedList<Device> devices;
 
         if (cachedDevices is null)
@@ -46,7 +46,7 @@ public sealed class GetAllDevicesQueryHandler : IQueryHandler<GetAllDevicesQuery
                 _logger.LogInformation("Successfully retrieved all devices of the '{CompanyName}' company", query.CompanyName);
             }
 
-            await _cacheService.SetAsync(key, devices);
+            await _cacheService.SetAsync(key, devices, cancellationToken);
         }
         else
         {

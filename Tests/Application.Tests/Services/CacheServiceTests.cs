@@ -24,7 +24,7 @@ public class CacheServiceTests : IClassFixture<CacheServiceFixture>
             .ReturnsAsync(_fixture.Bytes);
 
         // Act
-        var result = await _fixture.CacheService.GetAsync<User>(_fixture.Key);
+        var result = await _fixture.CacheService.GetAsync<User>(_fixture.Key, _fixture.CancellationToken);
 
         // Assert
         result.Should().NotBeNull();
@@ -39,7 +39,7 @@ public class CacheServiceTests : IClassFixture<CacheServiceFixture>
             .ReturnsAsync((byte[])null!);
 
         // Act
-        var result = await _fixture.CacheService.GetAsync<User>(_fixture.Key);
+        var result = await _fixture.CacheService.GetAsync<User>(_fixture.Key, _fixture.CancellationToken);
 
         // Assert
         result.Should().BeNull();
@@ -49,7 +49,7 @@ public class CacheServiceTests : IClassFixture<CacheServiceFixture>
     public void SetAsync_Should_ReturnData_WhenDataIsValid()
     {
         // Act
-        var result = async () => await _fixture.CacheService.SetAsync(_fixture.Key, _fixture.User);
+        var result = async () => await _fixture.CacheService.SetAsync(_fixture.Key, _fixture.User, _fixture.CancellationToken);
 
         // Assert
         result.Should().NotBeNull();

@@ -25,7 +25,7 @@ public sealed class GetCompanyByIdQueryHandler : IQueryHandler<GetCompanyByIdQue
     public async Task<Company> Handle(GetCompanyByIdQuery query, CancellationToken cancellationToken)
     {
         var key = $"companies:{query.Id}";
-        var company = await _cacheService.GetAsync<Company>(key);
+        var company = await _cacheService.GetAsync<Company>(key, cancellationToken);
 
         if (company is null)
         {
@@ -37,7 +37,7 @@ public sealed class GetCompanyByIdQueryHandler : IQueryHandler<GetCompanyByIdQue
                 throw new NullReferenceException($"Company with id {query.Id} not found");
             }
 
-            await _cacheService.SetAsync(key, company);
+            await _cacheService.SetAsync(key, company, cancellationToken);
         }
 
         _logger.LogInformation("Successfully retrieved a company with id {Id}", query.Id);

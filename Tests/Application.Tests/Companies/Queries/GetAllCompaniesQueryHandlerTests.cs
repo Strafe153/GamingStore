@@ -22,7 +22,7 @@ public class GetAllCompaniesQueryHandlerTests : IClassFixture<GetAllCompaniesQue
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<List<Company>>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<List<Company>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((List<Company>)null!);
 
         _fixture.MockRepository
@@ -45,7 +45,7 @@ public class GetAllCompaniesQueryHandlerTests : IClassFixture<GetAllCompaniesQue
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<List<Company>>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<List<Company>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.PaginatedList);
 
         // Act

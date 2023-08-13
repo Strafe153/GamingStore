@@ -20,7 +20,7 @@ public class GetUserByIdQueryHandlerTests : IClassFixture<GetUserByIdQueryHandle
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<User>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<User>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null!);
 
         _fixture.MockRepository
@@ -39,7 +39,7 @@ public class GetUserByIdQueryHandlerTests : IClassFixture<GetUserByIdQueryHandle
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<User>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<User>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.User);
 
         // Act
@@ -54,7 +54,7 @@ public class GetUserByIdQueryHandlerTests : IClassFixture<GetUserByIdQueryHandle
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<User>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<User>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null!);
 
         _fixture.MockRepository

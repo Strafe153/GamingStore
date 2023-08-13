@@ -22,7 +22,7 @@ public class GetAllUsersQueryHandlerTests : IClassFixture<GetAllUsersQueryHandle
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<List<User>>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<List<User>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((List<User>)null!);
 
         _fixture.MockRepository
@@ -45,7 +45,7 @@ public class GetAllUsersQueryHandlerTests : IClassFixture<GetAllUsersQueryHandle
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<List<User>>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<List<User>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.PaginatedList);
 
         // Act

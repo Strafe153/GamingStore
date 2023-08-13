@@ -20,7 +20,7 @@ public class GetCompanyByIdQueryHandlerTests : IClassFixture<GetCompanyByIdQuery
 	{
 		// Arrange
 		_fixture.MockCacheService
-			.Setup(s => s.GetAsync<Company>(It.IsAny<string>()))
+			.Setup(s => s.GetAsync<Company>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync((Company)null!);
 
 		_fixture.MockRepository
@@ -39,7 +39,7 @@ public class GetCompanyByIdQueryHandlerTests : IClassFixture<GetCompanyByIdQuery
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<Company>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<Company>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Company);
 
         // Act
@@ -54,7 +54,7 @@ public class GetCompanyByIdQueryHandlerTests : IClassFixture<GetCompanyByIdQuery
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<Company>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<Company>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Company)null!);
 
         _fixture.MockRepository

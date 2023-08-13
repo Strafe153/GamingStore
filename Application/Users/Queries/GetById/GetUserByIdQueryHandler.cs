@@ -25,7 +25,7 @@ public sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, Us
     public async Task<User> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
         var key = $"users:{query.Id}";
-        var user = await _cacheService.GetAsync<User>(key);
+        var user = await _cacheService.GetAsync<User>(key, cancellationToken);
 
         if (user is null)
         {
@@ -37,7 +37,7 @@ public sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, Us
                 throw new NullReferenceException($"User with id {query.Id} not found");
             }
 
-            await _cacheService.SetAsync(key, user);
+            await _cacheService.SetAsync(key, user, cancellationToken);
         }
 
         _logger.LogInformation("Successfully retrieved a user with id {Id}", query.Id);

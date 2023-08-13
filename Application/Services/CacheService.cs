@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions.Services;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -26,15 +25,13 @@ public class CacheService : ICacheService
         };
     }
 
-    public async Task<T?> GetAsync<T>(string key)
+    public async Task<T?> GetAsync<T>(string key, CancellationToken token)
     {
-        var cachedData = await _cache.GetAsync(key);
+        var cachedData = await _cache.GetStringAsync(key, token);
 
         if (cachedData is not null)
         {
-            var serializedData = Encoding.UTF8.GetString(cachedData);
-            var result = JsonSerializer.Deserialize<T>(serializedData)!;
-
+            var result = JsonSerializer.Deserialize<T>(cachedData)!;
             _logger.LogInformation("Successfully retrieved cached data of type '{Type}'", typeof(T));
 
             return result;
@@ -45,16 +42,15 @@ public class CacheService : ICacheService
         return default;
     }
 
-    public async Task SetAsync<T>(string key, T data)
+    public async Task SetAsync<T>(string key, T data, CancellationToken token)
     {
         var serializedData = JsonSerializer.Serialize(data, _serializerOptions);
-        var dataAsBytes = Encoding.UTF8.GetBytes(serializedData);
 
-        await _cache.SetAsync(key, dataAsBytes, new DistributedCacheEntryOptions()
+        await _cache.SetStringAsync(key, serializedData, new DistributedCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1),
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60),
             SlidingExpiration = TimeSpan.FromSeconds(10)
-        });
+        }, token);
 
         _logger.LogInformation("Successfully cached data of type '{Type}'", typeof(T));
     }

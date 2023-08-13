@@ -20,7 +20,7 @@ public class GetDeviceByIdCommandHandlerTests : IClassFixture<GetDeviceByIdComma
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<Device>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<Device>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Device)null!);
 
         _fixture.MockRepository
@@ -39,7 +39,7 @@ public class GetDeviceByIdCommandHandlerTests : IClassFixture<GetDeviceByIdComma
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<Device>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<Device>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Device);
 
         // Act
@@ -54,7 +54,7 @@ public class GetDeviceByIdCommandHandlerTests : IClassFixture<GetDeviceByIdComma
     {
         // Arrange
         _fixture.MockCacheService
-            .Setup(s => s.GetAsync<Device>(It.IsAny<string>()))
+            .Setup(s => s.GetAsync<Device>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Device)null!);
 
         _fixture.MockRepository
