@@ -1,30 +1,22 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Newtonsoft.Json;
+using Web.HttpClients;
 
 namespace Web.HealthChecks;
 
 public class IdentityServerHealthCheck : IHealthCheck
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IConfiguration _configuration;
+    private readonly IdentityServerClient _client;
 
-    public IdentityServerHealthCheck(
-        IHttpClientFactory httpClientFactory,
-        IConfiguration configuration)
+    public IdentityServerHealthCheck(IdentityServerClient client)
     {
-        _httpClientFactory = httpClientFactory;
-        _configuration = configuration;
+        _client = client;
     }
 
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
         try
         {
-            var httpClient = _httpClientFactory.CreateClient();
-            await httpClient.PostAsync(
-                $"{_configuration.GetConnectionString("IdentityServerConnection")}/connect/token",
-                JsonContent.Create(JsonConvert.SerializeObject("{}")));
-
+            await _client.CheckIdentityServerHealth();
             return HealthCheckResult.Healthy();
         }
         catch (Exception ex)

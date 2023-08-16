@@ -7,6 +7,7 @@ builder.ConfigureLoggers(builder.Configuration);
 
 builder.Services.ConfigureHealthChecks(builder.Configuration);
 builder.Services.ConfigureRateLimiting(builder.Configuration);
+builder.Services.ConfigureHttpClients(builder.Configuration);
 
 builder.Services.AddRepositories();
 builder.Services.AddCustomServices();
@@ -25,10 +26,7 @@ builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.ConfigureAuthorization();
 
 builder.Services.ConfigureAutoMapper();
-
 builder.Services.ConfigureSwagger();
-
-builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
