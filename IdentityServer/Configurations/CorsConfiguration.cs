@@ -4,16 +4,19 @@ namespace IdentityServer.Configurations;
 
 public static class CorsConfiguration
 {
-    public static void ConfigureCors(this WebApplication app, IConfiguration configuration)
+    public static void ConfigureCors(this IServiceCollection services, IConfiguration configuration)
     {
         var corsOptions = new CorsOptions();
         configuration.GetSection("Cors").Bind(corsOptions);
 
-        app.UseCors(options =>
+        services.AddCors(options =>
         {
-            options.WithOrigins(corsOptions.Origins);
-            options.WithMethods(corsOptions.Methods);
-            options.WithHeaders(corsOptions.Headers);
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins(corsOptions.Origins);
+                policy.WithMethods(corsOptions.Methods);
+                policy.WithHeaders(corsOptions.Headers);
+            });
         });
     }
 }
