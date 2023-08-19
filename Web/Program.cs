@@ -1,4 +1,5 @@
 using Web.Configurations;
+using Web.Middleware;
 using WebApi.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +31,7 @@ builder.Services.ConfigureSwagger();
 
 var app = builder.Build();
 
-app.UseCustomMiddleware();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
