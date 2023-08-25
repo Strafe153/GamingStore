@@ -1,6 +1,5 @@
 using Web.Configurations;
 using Web.Middleware;
-using WebApi.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
