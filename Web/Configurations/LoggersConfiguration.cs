@@ -9,7 +9,7 @@ namespace Web.Configurations;
 
 public static class LoggersConfiguration
 {
-    public static void ConfigureLoggers(this WebApplicationBuilder builder, IConfiguration configuration)
+    public static void ConfigureLoggers(this WebApplicationBuilder builder)
     {
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")!;
 
@@ -23,7 +23,7 @@ public static class LoggersConfiguration
                 path: "./logs/GamingStore.log",
                 rollingInterval: RollingInterval.Day,
                 outputTemplate: LoggerConstants.OUTPUT_TEMPLATE)
-            .WriteTo.Elasticsearch(ConfigureElasticSink(configuration, environment))
+            .WriteTo.Elasticsearch(ConfigureElasticSink(builder.Configuration, environment))
             .Enrich.WithProperty("Environment", environment)
             .CreateLogger();
 

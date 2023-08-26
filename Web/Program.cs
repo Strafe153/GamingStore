@@ -3,7 +3,7 @@ using Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.ConfigureLoggers(builder.Configuration);
+builder.ConfigureLoggers();
 
 builder.Services.ConfigureHealthChecks(builder.Configuration);
 builder.Services.ConfigureRateLimiting(builder.Configuration);
