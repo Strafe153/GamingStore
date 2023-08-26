@@ -13,6 +13,7 @@ public static class HealthChecksConfiguration
             .AddSqlServer(configuration.GetConnectionString("DatabaseConnection")!)
             .AddRedis(configuration.GetConnectionString("RedisConnection")!)
             .AddAzureBlobStorage(configuration.GetConnectionString("BlobStorageConnection")!)
+            .AddElasticsearch(configuration.GetConnectionString("ElasticSearchConnection")!)
             .AddCheck<IdentityServerHealthCheck>("IdentityServer");
     }
 
