@@ -8,8 +8,9 @@
 * Devices management
 
 ## Dependencies
-* `AspNetCore.HealthChecks.AzureStorage` for Azure Blob Storage health checks
-* `AspNetCore.HealthChecks.Redis` for Redis health checks
+* `AspNetCore.HealthChecks.AzureStorage` for Azure Blob Storage health check
+* `AspNetCore.HealthChecks.Elasticsearch` for ElasticSearch health check
+* `AspNetCore.HealthChecks.Redis` for Redis health check
 * `AspNetCore.HealthChecks.SqlServer` for PostgreSQL health check
 * `AspNetCore.HealthChecks.UI.Client` for detailed health checks information
 * `AutoFixture` for test fixtures
