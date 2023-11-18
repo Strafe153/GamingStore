@@ -33,7 +33,7 @@ public class DevicesController : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<ActionResult<PaginatedModel<GetDeviceResponse>>> GetAsync(
+    public async Task<ActionResult<PaginatedModel<GetDeviceResponse>>> Get(
         [FromQuery] DevicePageParameters pageParameters,
         CancellationToken cancellationToken)
     {
@@ -47,7 +47,7 @@ public class DevicesController : ControllerBase
 
     [HttpGet("{id:int:min(1)}")]
     [AllowAnonymous]
-    public async Task<ActionResult<GetDeviceResponse>> GetAsync([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetDeviceResponse>> Get([FromRoute] int id, CancellationToken cancellationToken)
     {
         var query = new GetDeviceByIdQuery(id);
 
@@ -58,7 +58,7 @@ public class DevicesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<GetDeviceResponse>> CreateAsync(
+    public async Task<ActionResult<GetDeviceResponse>> Create(
         [FromForm] CreateDeviceRequest request,
         CancellationToken cancellationToken)
     {
@@ -67,11 +67,11 @@ public class DevicesController : ControllerBase
         var device = await _sender.Send(command, cancellationToken);
         var deviceResponse = _mapper.Map<GetDeviceResponse>(device);
 
-        return CreatedAtAction(nameof(GetAsync), new { deviceResponse.Id }, deviceResponse);
+        return CreatedAtAction(nameof(Get), new { deviceResponse.Id }, deviceResponse);
     }
 
     [HttpPut("{id:int:min(1)}")]
-    public async Task<ActionResult> UpdateAsync(
+    public async Task<ActionResult> Update(
         [FromRoute] int id,
         [FromForm] UpdateDeviceRequest request,
         CancellationToken cancellationToken)
@@ -86,7 +86,7 @@ public class DevicesController : ControllerBase
     }
 
     [HttpDelete("{id:int:min(1)}")]
-    public async Task<ActionResult> DeleteAsync([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<ActionResult> Delete([FromRoute] int id, CancellationToken cancellationToken)
     {
         var query = new GetDeviceByIdQuery(id);
         var device = await _sender.Send(query, cancellationToken);

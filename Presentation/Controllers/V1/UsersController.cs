@@ -34,7 +34,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PaginatedModel<GetUserResponse>>> GetAsync(
+    public async Task<ActionResult<PaginatedModel<GetUserResponse>>> Get(
         [FromQuery] PageParameters pageParameters,
         CancellationToken cancellationToken)
     {
@@ -47,7 +47,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id:int:min(1)}")]
-    public async Task<ActionResult<GetUserResponse>> GetAsync([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetUserResponse>> Get([FromRoute] int id, CancellationToken cancellationToken)
     {
         var query = new GetUserByIdQuery(id);
 
@@ -59,7 +59,7 @@ public class UsersController : ControllerBase
 
     [HttpPost("register")]
     [AllowAnonymous]
-    public async Task<ActionResult<GetUserResponse>> RegisterAsync(
+    public async Task<ActionResult<GetUserResponse>> Register(
         [FromForm] RegisterUserRequest request,
         CancellationToken cancellationToken)
     {
@@ -68,11 +68,11 @@ public class UsersController : ControllerBase
         var user = await _sender.Send(command, cancellationToken);
         var userResponse = _mapper.Map<GetUserResponse>(user);
 
-        return CreatedAtAction(nameof(GetAsync), new { userResponse.Id }, userResponse);
+        return CreatedAtAction(nameof(Get), new { userResponse.Id }, userResponse);
     }
 
     [HttpPut("{id:int:min(1)}")]
-    public async Task<ActionResult> UpdateAsync(
+    public async Task<ActionResult> Update(
         [FromRoute] int id,
         [FromForm] UpdateUserRequest request,
         CancellationToken cancellationToken)
@@ -87,7 +87,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id:int:min(1)}/changePassword")]
-    public async Task<ActionResult> ChangePasswordAsync(
+    public async Task<ActionResult> ChangePassword(
         [FromRoute] int id,
         [FromBody] ChangeUserPasswordRequest request,
         CancellationToken cancellationToken)
@@ -103,7 +103,7 @@ public class UsersController : ControllerBase
 
     [HttpPut("{id:int:min(1)}/changeRole")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<ActionResult> ChangeRoleAsync(
+    public async Task<ActionResult> ChangeRole(
         [FromRoute] int id,
         [FromBody] ChangeUserRoleRequest request,
         CancellationToken cancellationToken)
@@ -118,7 +118,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id:int:min(1)}")]
-    public async Task<ActionResult> DeleteAsync([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<ActionResult> Delete([FromRoute] int id, CancellationToken cancellationToken)
     {
         var query = new GetUserByIdQuery(id);
         var user = await _sender.Send(query, cancellationToken);

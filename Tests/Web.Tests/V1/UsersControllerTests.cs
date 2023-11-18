@@ -26,7 +26,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     }
 
     [Fact]
-    public async Task GetAsync_Should_ReturnActionResultOfPaginatedModelOfGetUserResponse_WhenDataIsValid()
+    public async Task Get_Should_ReturnActionResultOfPaginatedModelOfGetUserResponse_WhenDataIsValid()
     {
         // Arrange
         _fixture.MockSender
@@ -36,7 +36,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
             .ReturnsAsync(_fixture.PaginatedList);
 
         // Act
-        var result = await _fixture.UsersController.GetAsync(_fixture.PageParameters, _fixture.CancellationToken);
+        var result = await _fixture.UsersController.Get(_fixture.PageParameters, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var paginatedModel = objectResult.Value.As<PaginatedModel<GetUserResponse>>();
 
@@ -47,7 +47,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     }
 
     [Fact]
-    public async Task GetAsync_Should_ReturnAcitonResultOfGetDeviceResponse_WhenUserExists()
+    public async Task Get_Should_ReturnAcitonResultOfGetDeviceResponse_WhenUserExists()
     {
         // Arrange
         _fixture.MockSender
@@ -57,7 +57,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
             .ReturnsAsync(_fixture.User);
 
         // Act
-        var result = await _fixture.UsersController.GetAsync(_fixture.Id, _fixture.CancellationToken);
+        var result = await _fixture.UsersController.Get(_fixture.Id, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var getCompanyResponse = objectResult.Value.As<GetUserResponse>();
 
@@ -68,7 +68,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     }
 
     [Fact]
-    public async Task RegisterAsync_Should_ReturnActionResultOfGetUserResponse_WhenRequestIsValid()
+    public async Task Register_Should_ReturnActionResultOfGetUserResponse_WhenRequestIsValid()
     {
         // Arrange
         _fixture.MockSender
@@ -78,7 +78,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
             .ReturnsAsync(_fixture.User);
 
         // Act
-        var result = await _fixture.UsersController.RegisterAsync(_fixture.RegisterUserRequest, _fixture.CancellationToken);
+        var result = await _fixture.UsersController.Register(_fixture.RegisterUserRequest, _fixture.CancellationToken);
         var objectResult = result.Result.As<CreatedAtActionResult>();
         var getCompanyResponse = objectResult.Value.As<GetUserResponse>();
 
@@ -89,7 +89,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     }
 
     [Fact]
-    public async Task UpdateAsync_Should_ReturnNoContentResult_WhenUserExistsAndRequestIsValid()
+    public async Task Update_Should_ReturnNoContentResult_WhenUserExistsAndRequestIsValid()
     {
         // Arrange
         _fixture.MockSender
@@ -100,7 +100,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Act
         var result = await _fixture.UsersController
-            .UpdateAsync(_fixture.Id, _fixture.UpdateUserRequest, _fixture.CancellationToken);
+            .Update(_fixture.Id, _fixture.UpdateUserRequest, _fixture.CancellationToken);
         var objectResult = result.As<NoContentResult>();
 
         // Assert
@@ -109,7 +109,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     }
 
     [Fact]
-    public async Task ChangePasswordAsync_Should_ReturnNoContentResult_WhenUserExistsAndRequestIsValid()
+    public async Task ChangePassword_Should_ReturnNoContentResult_WhenUserExistsAndRequestIsValid()
     {
         // Arrange
         _fixture.MockSender
@@ -120,7 +120,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Act
         var result = await _fixture.UsersController
-            .ChangePasswordAsync(_fixture.Id, _fixture.ChangeUserPasswordRequest, _fixture.CancellationToken);
+            .ChangePassword(_fixture.Id, _fixture.ChangeUserPasswordRequest, _fixture.CancellationToken);
         var objectResult = result.As<NoContentResult>();
 
         // Assert
@@ -129,7 +129,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     }
 
     [Fact]
-    public async Task ChangeRoleAsync_Should_ReturnNoContentResult_WhenUserExistsAndRequestIsValid()
+    public async Task ChangeRole_Should_ReturnNoContentResult_WhenUserExistsAndRequestIsValid()
     {
         // Arrange
         _fixture.MockSender
@@ -140,7 +140,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
 
         // Act
         var result = await _fixture.UsersController
-            .ChangeRoleAsync(_fixture.Id, _fixture.ChangeUserRoleRequest, _fixture.CancellationToken);
+            .ChangeRole(_fixture.Id, _fixture.ChangeUserRoleRequest, _fixture.CancellationToken);
         var objectResult = result.As<NoContentResult>();
 
         // Assert
@@ -149,7 +149,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     }
 
     [Fact]
-    public async Task DeleteAsync_Should_ReturnNoContentResult_WhenUserExists()
+    public async Task Delete_Should_ReturnNoContentResult_WhenUserExists()
     {
         // Arrange
         _fixture.MockSender
@@ -159,7 +159,7 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
             .ReturnsAsync(_fixture.User);
 
         // Act
-        var result = await _fixture.UsersController.DeleteAsync(_fixture.Id, _fixture.CancellationToken);
+        var result = await _fixture.UsersController.Delete(_fixture.Id, _fixture.CancellationToken);
         var objectResult = result.As<NoContentResult>();
 
         // Assert

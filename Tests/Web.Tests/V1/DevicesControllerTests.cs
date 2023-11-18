@@ -24,7 +24,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
     }
 
     [Fact]
-    public async Task GetAsync_Should_ReturnActionResultOfPaginatedModelOfGetDeviceResponse_WhenDataIsValid()
+    public async Task Get_Should_ReturnActionResultOfPaginatedModelOfGetDeviceResponse_WhenDataIsValid()
     {
         // Arrange
         _fixture.MockSender
@@ -34,7 +34,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
             .ReturnsAsync(_fixture.PaginatedList);
 
         // Act
-        var result = await _fixture.DevicesController.GetAsync(_fixture.PageParameters, _fixture.CancellationToken);
+        var result = await _fixture.DevicesController.Get(_fixture.PageParameters, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var paginatedModel = objectResult.Value.As<PaginatedModel<GetDeviceResponse>>();
 
@@ -45,7 +45,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
     }
 
     [Fact]
-    public async Task GetAsync_ShouldReturnActionResultOfGetDeviceResponse_WhenDeviceExists()
+    public async Task Get_ShouldReturnActionResultOfGetDeviceResponse_WhenDeviceExists()
     {
         // Arrange
         _fixture.MockSender
@@ -55,7 +55,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
             .ReturnsAsync(_fixture.Device);
 
         // Act
-        var result = await _fixture.DevicesController.GetAsync(_fixture.Id, _fixture.CancellationToken);
+        var result = await _fixture.DevicesController.Get(_fixture.Id, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var getCompanyResponse = objectResult.Value.As<GetDeviceResponse>();
 
@@ -66,7 +66,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
     }
 
     [Fact]
-    public async Task CreateAsync_Should_ReturnActionResultOfGetDeviceResponse_WhenRequestIsValid()
+    public async Task Create_Should_ReturnActionResultOfGetDeviceResponse_WhenRequestIsValid()
     {
         // Arrange
         _fixture.MockSender
@@ -76,7 +76,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
             .ReturnsAsync(_fixture.Device);
 
         // Act
-        var result = await _fixture.DevicesController.CreateAsync(_fixture.CreateDeviceRequest, _fixture.CancellationToken);
+        var result = await _fixture.DevicesController.Create(_fixture.CreateDeviceRequest, _fixture.CancellationToken);
         var objectResult = result.Result.As<CreatedAtActionResult>();
         var getCompanyResponse = objectResult.Value.As<GetDeviceResponse>();
 
@@ -87,7 +87,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
     }
 
     [Fact]
-    public async Task UpdateAsync_Should_ReturnNoContentResult_WhenDeviceExistsAndRequestIsValid()
+    public async Task Update_Should_ReturnNoContentResult_WhenDeviceExistsAndRequestIsValid()
     {
         // Arrange
         _fixture.MockSender
@@ -98,7 +98,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 
         // Act
         var result = await _fixture.DevicesController
-            .UpdateAsync(_fixture.Id, _fixture.UpdateDeviceRequest, _fixture.CancellationToken);
+            .Update(_fixture.Id, _fixture.UpdateDeviceRequest, _fixture.CancellationToken);
         var objectResult = result.As<NoContentResult>();
 
         // Assert
@@ -107,7 +107,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
     }
 
     [Fact]
-    public async Task DeleteAsync_Should_ReturnNoContentResult_WhenDeviceExists()
+    public async Task Delete_Should_ReturnNoContentResult_WhenDeviceExists()
     {
         // Arrange
         _fixture.MockSender
@@ -117,7 +117,7 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
             .ReturnsAsync(_fixture.Device);
 
         // Act
-        var result = await _fixture.DevicesController.DeleteAsync(_fixture.Id, _fixture.CancellationToken);
+        var result = await _fixture.DevicesController.Delete(_fixture.Id, _fixture.CancellationToken);
         var objectResult = result.As<NoContentResult>();
 
         // Assert

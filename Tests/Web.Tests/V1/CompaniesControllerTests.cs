@@ -24,7 +24,7 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
     }
 
     [Fact]
-    public async Task GetAsync_Should_ReturnActionResultOfPaginatedModelOfGetCompanyResponse_WhenDataIsValid()
+    public async Task Get_Should_ReturnActionResultOfPaginatedModelOfGetCompanyResponse_WhenDataIsValid()
     {
         // Arrange
         _fixture.MockSender
@@ -34,7 +34,7 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
             .ReturnsAsync(_fixture.PaginatedList);
 
         // Act
-        var result = await _fixture.CompaniesController.GetAsync(_fixture.PageParameters, _fixture.CancellationToken);
+        var result = await _fixture.CompaniesController.Get(_fixture.PageParameters, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var paginatedModel = objectResult.Value.As<PaginatedModel<GetCompanyResponse>>();
 
@@ -45,7 +45,7 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
     }
 
     [Fact]
-    public async Task GetAsync_Should_ReturnActionResultOfGetCompanyResponse_WhenCompanyExists()
+    public async Task Get_Should_ReturnActionResultOfGetCompanyResponse_WhenCompanyExists()
     {
         // Arrange
         _fixture.MockSender
@@ -55,7 +55,7 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
             .ReturnsAsync(_fixture.Company);
 
         // Act
-        var result = await _fixture.CompaniesController.GetAsync(_fixture.Id, _fixture.CancellationToken);
+        var result = await _fixture.CompaniesController.Get(_fixture.Id, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
         var getCompanyResponse = objectResult.Value.As<GetCompanyResponse>();
 
@@ -66,7 +66,7 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
     }
 
     [Fact]
-    public async Task CreateAsync_Should_ReturnActionResultOfGetCompanyResponse_WhenRequestIsValid()
+    public async Task Create_Should_ReturnActionResultOfGetCompanyResponse_WhenRequestIsValid()
     {
         // Arrange
         _fixture.MockSender
@@ -76,7 +76,7 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
             .ReturnsAsync(_fixture.Company);
 
         // Act
-        var result = await _fixture.CompaniesController.CreateAsync(_fixture.CreateCompanyRequest, _fixture.CancellationToken);
+        var result = await _fixture.CompaniesController.Create(_fixture.CreateCompanyRequest, _fixture.CancellationToken);
         var objectResult = result.Result.As<CreatedAtActionResult>();
         var getCompanyResponse = objectResult.Value.As<GetCompanyResponse>();
 
@@ -87,7 +87,7 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
     }
 
     [Fact]
-    public async Task UpdateAsync_Should_ReturnNoContentResult_WhenCompanyExistsAndRequestIsValid()
+    public async Task Update_Should_ReturnNoContentResult_WhenCompanyExistsAndRequestIsValid()
     {
         // Arrange
         _fixture.MockSender
@@ -98,7 +98,7 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
 
         // Act
         var result = await _fixture.CompaniesController
-            .UpdateAsync(_fixture.Id, _fixture.UpdateCompanyRequest, _fixture.CancellationToken);
+            .Update(_fixture.Id, _fixture.UpdateCompanyRequest, _fixture.CancellationToken);
         var objectResult = result.As<NoContentResult>();
 
         // Assert
@@ -107,7 +107,7 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
     }
 
     [Fact]
-    public async Task DeleteAsync_Should_ReturnNoContentResult_WhenCompanyExists()
+    public async Task Delete_Should_ReturnNoContentResult_WhenCompanyExists()
     {
         // Arrange
         _fixture.MockSender
@@ -117,7 +117,7 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
             .ReturnsAsync(_fixture.Company);
 
         // Act
-        var result = await _fixture.CompaniesController.DeleteAsync(_fixture.Id, _fixture.CancellationToken);
+        var result = await _fixture.CompaniesController.Delete(_fixture.Id, _fixture.CancellationToken);
         var objectResult = result.As<NoContentResult>();
 
         // Assert

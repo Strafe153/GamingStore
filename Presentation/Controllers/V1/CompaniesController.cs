@@ -33,7 +33,7 @@ public class CompaniesController : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<ActionResult<PaginatedModel<GetCompanyResponse>>> GetAsync(
+    public async Task<ActionResult<PaginatedModel<GetCompanyResponse>>> Get(
         [FromQuery] PageParameters pageParameters,
         CancellationToken cancellationToken)
     {
@@ -47,7 +47,7 @@ public class CompaniesController : ControllerBase
 
     [HttpGet("{id:int:min(1)}")]
     [AllowAnonymous]
-    public async Task<ActionResult<GetCompanyResponse>> GetAsync([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetCompanyResponse>> Get([FromRoute] int id, CancellationToken cancellationToken)
     {
         var query = new GetCompanyByIdQuery(id);
 
@@ -58,7 +58,7 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<GetCompanyResponse>> CreateAsync(
+    public async Task<ActionResult<GetCompanyResponse>> Create(
         [FromForm] CreateCompanyRequest request,
         CancellationToken cancellationToken)
     {
@@ -67,11 +67,11 @@ public class CompaniesController : ControllerBase
         var company = await _sender.Send(command, cancellationToken);
         var companyResponse = _mapper.Map<GetCompanyResponse>(company);
 
-        return CreatedAtAction(nameof(GetAsync), new { companyResponse.Id }, companyResponse);
+        return CreatedAtAction(nameof(Get), new { companyResponse.Id }, companyResponse);
     }
 
     [HttpPut("{id:int:min(1)}")]
-    public async Task<ActionResult> UpdateAsync(
+    public async Task<ActionResult> Update(
         [FromRoute] int id,
         [FromForm] UpdateCompanyRequest request,
         CancellationToken cancellationToken)
@@ -86,7 +86,7 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpDelete("{id:int:min(1)}")]
-    public async Task<ActionResult> DeleteAsync([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<ActionResult> Delete([FromRoute] int id, CancellationToken cancellationToken)
     {
         var query = new GetCompanyByIdQuery(id);
         var company = await _sender.Send(query, cancellationToken);
