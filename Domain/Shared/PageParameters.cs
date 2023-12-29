@@ -7,10 +7,7 @@ public class PageParameters
 
     public int PageSize
     {
-        get
-        {
-            return _pageSize;
-        }
+        get => _pageSize;
 
         set
         {

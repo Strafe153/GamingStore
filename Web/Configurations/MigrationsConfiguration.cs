@@ -8,8 +8,7 @@ public static class MigrationsConfiguration
 {
     public static void UseDatabaseMigrations(this WebApplication app)
     {
-        using var scope = app.Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<GamingStoreContext>();
+        using var dbContext = app.Services.GetRequiredService<GamingStoreContext>();
 
         while (!dbContext.CanConnect())
         {
@@ -21,7 +20,7 @@ public static class MigrationsConfiguration
 
     private static bool CanConnect(this GamingStoreContext dbContext)
     {
-        var connecion = dbContext.Database.GetDbConnection();
+        /* using */ var connecion = dbContext.Database.GetDbConnection();
         var masterConnectionString = connecion.ConnectionString.Replace("gaming_store_db", "master");
         using var masterConnection = new SqlConnection(masterConnectionString);
 

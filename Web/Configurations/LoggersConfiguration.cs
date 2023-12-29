@@ -18,11 +18,11 @@ public static class LoggersConfiguration
             .MinimumLevel.Override("System", LogEventLevel.Warning)
             .Enrich.FromLogContext()
             .Enrich.WithExceptionDetails()
-            .WriteTo.Console(outputTemplate: LoggerConstants.OUTPUT_TEMPLATE)
+            .WriteTo.Console(outputTemplate: LoggerConstants.OutputTemplate)
             .WriteTo.File(
                 path: "./logs/GamingStore.log",
                 rollingInterval: RollingInterval.Day,
-                outputTemplate: LoggerConstants.OUTPUT_TEMPLATE)
+                outputTemplate: LoggerConstants.OutputTemplate)
             .WriteTo.Elasticsearch(ConfigureElasticSink(builder.Configuration, environment))
             .Enrich.WithProperty("Environment", environment)
             .CreateLogger();
