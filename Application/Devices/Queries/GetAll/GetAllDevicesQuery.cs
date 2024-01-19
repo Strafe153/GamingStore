@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions.MediatR;
 using Domain.Entities;
-using Domain.Shared;
+using Domain.Shared.Paging;
 
 namespace Application.Devices.Queries.GetAll;
 

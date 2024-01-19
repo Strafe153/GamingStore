@@ -1,5 +1,5 @@
 ﻿using Domain.Entities;
-using Domain.Shared;
+using Domain.Shared.Paging;
 using Microsoft.AspNetCore.Identity;
 using System.Linq.Expressions;
 

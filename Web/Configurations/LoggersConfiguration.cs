@@ -1,4 +1,4 @@
-﻿using Domain.Shared;
+﻿using Domain.Shared.Constants;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;

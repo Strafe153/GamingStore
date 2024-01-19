@@ -5,7 +5,9 @@ using Application.Devices.Queries;
 using Application.Devices.Queries.GetAll;
 using Application.Devices.Queries.GetById;
 using AutoMapper;
-using Domain.Shared;
+using Domain.Shared.Constants;
+using Domain.Shared.PageParameters;
+using Domain.Shared.Paging;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +18,8 @@ namespace Presentation.Controllers.V1;
 [ApiController]
 [Route("api/v{version:apiVersion}/devices")]
 [Authorize(Policy = "AdminOnly")]
-[ApiVersion("1.0")]
-[EnableRateLimiting("tokenBucket")]
+[ApiVersion(ApiVersioningConstants.V1)]
+[EnableRateLimiting(RateLimitingConstants.TokenBucket)]
 public class DevicesController : ControllerBase
 {
     private readonly ISender _sender;

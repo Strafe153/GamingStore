@@ -1,4 +1,4 @@
-﻿namespace Domain.Shared;
+﻿namespace Domain.Shared.PageParameters;
 
 public class DevicePageParameters : PageParameters
 {

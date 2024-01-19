@@ -1,4 +1,4 @@
-﻿namespace Domain.Shared;
+﻿namespace Domain.Shared.Paging;
 
 public class PaginatedModel<T>
 {

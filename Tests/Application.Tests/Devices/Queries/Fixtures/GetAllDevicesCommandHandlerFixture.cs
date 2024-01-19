@@ -6,7 +6,7 @@ using AutoFixture.AutoMoq;
 using Bogus;
 using Domain.Entities;
 using Domain.Enums;
-using Domain.Shared;
+using Domain.Shared.Paging;
 using Microsoft.Extensions.Logging;
 using Moq;
 

@@ -3,7 +3,7 @@ using Application.Companies.Commands.Update;
 using Application.Companies.Queries;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Shared;
+using Domain.Shared.Paging;
 
 namespace Presentation.AutoMapperProfiles;
 

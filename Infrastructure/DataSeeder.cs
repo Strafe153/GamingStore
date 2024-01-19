@@ -1,5 +1,5 @@
 ﻿using Domain.Entities;
-using Infrastructure.ConfigurationModels;
+using Infrastructure.Configurations.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +30,7 @@ public static class DataSeeder
         });
     }
 
-    public static void SeedAdmin(this ModelBuilder modelBuilder, AdminData adminData)
+    public static void SeedAdmin(this ModelBuilder modelBuilder, AdminOptions adminData)
     {
         var passwordHasher = new PasswordHasher<User>();
         var admin = new User(adminData.Name, adminData.Name, adminData.Email, adminData.Email, adminData.PhoneNumber, null)

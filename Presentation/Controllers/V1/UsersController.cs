@@ -7,7 +7,9 @@ using Application.Users.Queries;
 using Application.Users.Queries.GetAll;
 using Application.Users.Queries.GetById;
 using AutoMapper;
-using Domain.Shared;
+using Domain.Shared.Constants;
+using Domain.Shared.PageParameters;
+using Domain.Shared.Paging;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +20,8 @@ namespace Presentation.Controllers.V1;
 [ApiController]
 [Route("api/v{version:apiVersion}/users")]
 [Authorize]
-[ApiVersion("1.0")]
-[EnableRateLimiting("tokenBucket")]
+[ApiVersion(ApiVersioningConstants.V1)]
+[EnableRateLimiting(RateLimitingConstants.TokenBucket)]
 public class UsersController : ControllerBase
 {
     private readonly ISender _sender;

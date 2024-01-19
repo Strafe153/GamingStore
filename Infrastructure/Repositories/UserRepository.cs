@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Repositories;
 using Application.Common.Extensions;
 using Domain.Entities;
-using Domain.Shared;
+using Domain.Shared.Paging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;

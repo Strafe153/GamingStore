@@ -1,4 +1,5 @@
-﻿using IdentityServer4.EntityFramework.DbContexts;
+﻿using Domain.Shared.Constants;
+using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +22,7 @@ public static class MigrationsConfiguration
 
     private static bool CanConnect(IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DatabaseConnection");
+        var connectionString = configuration.GetConnectionString(ConnectionStringsConstants.DatabaseConnection);
         var connection = new SqlConnection(connectionString);
 
         try

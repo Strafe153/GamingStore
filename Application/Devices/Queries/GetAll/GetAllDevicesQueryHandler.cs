@@ -2,7 +2,7 @@
 using Application.Abstractions.Repositories;
 using Application.Abstractions.Services;
 using Domain.Entities;
-using Domain.Shared;
+using Domain.Shared.Paging;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Devices.Queries.GetAll;

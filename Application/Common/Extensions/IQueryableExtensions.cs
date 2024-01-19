@@ -1,4 +1,4 @@
-﻿using Domain.Shared;
+﻿using Domain.Shared.Paging;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Common.Extensions;

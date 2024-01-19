@@ -1,6 +1,6 @@
 ﻿using Application.Tests.Devices.Queries.Fixtures;
 using Domain.Entities;
-using Domain.Shared;
+using Domain.Shared.Paging;
 using FluentAssertions;
 using Moq;
 using System.Linq.Expressions;

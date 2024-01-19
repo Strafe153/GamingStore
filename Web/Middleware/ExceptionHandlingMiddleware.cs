@@ -1,5 +1,6 @@
 ﻿using Domain.Exceptions;
 using Domain.Shared;
+using Domain.Shared.Constants;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

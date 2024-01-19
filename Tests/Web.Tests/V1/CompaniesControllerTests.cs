@@ -4,7 +4,7 @@ using Application.Companies.Queries;
 using Application.Companies.Queries.GetAll;
 using Application.Companies.Queries.GetById;
 using Domain.Entities;
-using Domain.Shared;
+using Domain.Shared.Paging;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿using Domain.Shared;
+﻿using Domain.Shared.Paging;
 using System.Linq.Expressions;
 
 namespace Application.Abstractions.Repositories;
