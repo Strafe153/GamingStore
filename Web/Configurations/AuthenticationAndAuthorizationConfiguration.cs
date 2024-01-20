@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Domain.Shared.Constants;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Web.Configurations;
@@ -15,7 +16,7 @@ public static class AuthenticationAndAuthorizationConfiguration
             })
             .AddJwtBearer(options =>
             {
-                options.Authority = configuration.GetConnectionString("IdentityServerConnection");
+                options.Authority = configuration.GetConnectionString(ConnectionStringsConstants.IdentityServerConnection);
                 options.Audience = "gamingStoreApi";
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters

@@ -1,4 +1,5 @@
-﻿using HealthChecks.UI.Client;
+﻿using Domain.Shared.Constants;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Web.HealthChecks;
 
@@ -10,10 +11,10 @@ public static class HealthChecksConfiguration
     {
         services
             .AddHealthChecks()
-            .AddSqlServer(configuration.GetConnectionString("DatabaseConnection")!)
-            .AddRedis(configuration.GetConnectionString("RedisConnection")!)
-            .AddAzureBlobStorage(configuration.GetConnectionString("BlobStorageConnection")!)
-            .AddElasticsearch(configuration.GetConnectionString("ElasticSearchConnection")!)
+            .AddSqlServer(configuration.GetConnectionString(ConnectionStringsConstants.DatabaseConnection)!)
+            .AddRedis(configuration.GetConnectionString(ConnectionStringsConstants.RedisConnection)!)
+            .AddAzureBlobStorage(configuration.GetConnectionString(ConnectionStringsConstants.BlobStorageConnection)!)
+            .AddElasticsearch(configuration.GetConnectionString(ConnectionStringsConstants.ElasticSearchConnection)!)
             .AddCheck<IdentityServerHealthCheck>("IdentityServer");
     }
 

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
+using System.Net.Http.Json;
 
-namespace Web.HttpClients;
+namespace Application.HttpClients;
 
 public class IdentityServerClient
 {

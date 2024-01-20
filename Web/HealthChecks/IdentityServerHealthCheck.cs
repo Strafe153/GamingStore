@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Web.HttpClients;
+﻿using Application.HttpClients;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Web.HealthChecks;
 

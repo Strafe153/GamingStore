@@ -33,7 +33,7 @@ public static class LoggersConfiguration
     }
 
     private static ElasticsearchSinkOptions ConfigureElasticSink(IConfiguration configuration, string environment) =>
-        new ElasticsearchSinkOptions(new Uri(configuration.GetConnectionString("ElasticSearchConnection")!))
+        new ElasticsearchSinkOptions(new Uri(configuration.GetConnectionString(ConnectionStringsConstants.ElasticSearchConnection)!))
         {
             AutoRegisterTemplate = true,
             IndexFormat = $"{Assembly.GetExecutingAssembly().GetName()?.Name?.ToLower().Replace('.', '-')}-{environment.ToLower()}-{DateTime.UtcNow:yyyy-MM}",

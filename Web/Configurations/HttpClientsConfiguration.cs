@@ -1,5 +1,6 @@
-﻿using Polly;
-using Web.HttpClients;
+﻿using Application.HttpClients;
+using Domain.Shared.Constants;
+using Polly;
 
 namespace Web.Configurations;
 
@@ -10,7 +11,8 @@ public static class HttpClientsConfiguration
         services
             .AddHttpClient<IdentityServerClient>(options =>
             {
-                options.BaseAddress = new Uri(configuration.GetConnectionString("IdentityServerConnection")!);
+                options.BaseAddress = new Uri(
+                    configuration.GetConnectionString(ConnectionStringsConstants.IdentityServerConnection)!);
             })
             .AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
     }
