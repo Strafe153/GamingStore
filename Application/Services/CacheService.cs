@@ -1,6 +1,8 @@
 ﻿using Application.Abstractions.Services;
+using Domain.Shared;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -9,14 +11,17 @@ namespace Application.Services;
 public class CacheService : ICacheService
 {
     private readonly IDistributedCache _cache;
+    private readonly CacheOptions _cacheOptions;
     private readonly ILogger<CacheService> _logger;
     private readonly JsonSerializerOptions _serializerOptions;
 
     public CacheService(
         IDistributedCache cache,
+        IOptions<CacheOptions> cacheOptions,
         ILogger<CacheService> logger)
     {
         _cache = cache;
+        _cacheOptions = cacheOptions.Value;
         _logger = logger;
 
         _serializerOptions = new JsonSerializerOptions()
@@ -48,8 +53,8 @@ public class CacheService : ICacheService
 
         await _cache.SetStringAsync(key, serializedData, new DistributedCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60),
-            SlidingExpiration = TimeSpan.FromSeconds(10)
+            AbsoluteExpirationRelativeToNow = _cacheOptions.AbsoluteExpirationRelativeToNow,
+            SlidingExpiration = _cacheOptions.SlidingExpiration
         }, token);
 
         _logger.LogInformation("Successfully cached data of type '{Type}'", typeof(T));

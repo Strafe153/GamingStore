@@ -19,6 +19,7 @@ builder.Services.ConfigureMediatR();
 builder.Services.ConfigureFluentValidation();
 
 builder.Services.ConfigureDatabase(builder.Configuration);
+builder.Services.ConfigureCache(builder.Configuration);
 builder.Services.ConfigureRedis(builder.Configuration);
 builder.Services.ConfigureAzure(builder.Configuration);
 
@@ -33,7 +34,6 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.ConfigureSwaggerUI();
