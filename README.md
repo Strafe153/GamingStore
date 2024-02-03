@@ -8,6 +8,7 @@
 * Devices management
 
 ## Dependencies
+* `Asp.Versioning.Mvc.ApiExplorer` for API versioning
 * `AspNetCore.HealthChecks.AzureStorage` for Azure Blob Storage health check
 * `AspNetCore.HealthChecks.Elasticsearch` for ElasticSearch health check
 * `AspNetCore.HealthChecks.Redis` for Redis health check
@@ -32,7 +33,6 @@
 * `Microsoft.AspNetCore.Identity.EntityFrameworkCore` for identity provider that uses EF Core
 * `Microsoft.AspNetCore.Mvc.Core` for core MVC components
 * `Microsoft.AspNetCore.Mvc.NewtonsoftJson` for MVC features that use Newtonsoft.Json
-* `Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer` for API versioning
 * `Microsoft.EntityFrameworkCore` for entity mapping
 * `Microsoft.EntityFrameworkCore.Design` for shared design-time components for EF Core tools
 * `Microsoft.EntityFrameworkCore.SqlServer` for DB context and entity mapping
