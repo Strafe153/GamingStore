@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+﻿using Asp.Versioning.ApiExplorer;
 using Microsoft.OpenApi.Models;
 
 namespace Web.Configurations;
@@ -11,6 +11,8 @@ public static class SwaggerConfiguration
 
         services.AddSwaggerGen(options =>
         {
+            const string BearerScheme = "Bearer";
+
             var apiVersionDescriptionProvider = services
                 .BuildServiceProvider()
                 .GetRequiredService<IApiVersionDescriptionProvider>();
@@ -19,16 +21,16 @@ public static class SwaggerConfiguration
             {
                 options.SwaggerDoc(description.GroupName, new OpenApiInfo
                 {
-                    Title = $"GamingStore {description.ApiVersion}",
+                    Title = $"{typeof(Program).Assembly.GetName().Name} {description.ApiVersion}",
                     Version = description.ApiVersion.ToString()
                 });
             }
 
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            options.AddSecurityDefinition(BearerScheme, new OpenApiSecurityScheme
             {
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer",
+                Scheme = BearerScheme,
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
                 Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer k35dl2slkbijbl29\"",
@@ -42,7 +44,7 @@ public static class SwaggerConfiguration
                         Reference = new OpenApiReference
                         {
                             Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
+                            Id = BearerScheme
                         }
                     },
                     Array.Empty<string>()

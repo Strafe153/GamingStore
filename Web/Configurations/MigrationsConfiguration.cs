@@ -29,7 +29,7 @@ public static class MigrationsConfiguration
             masterConnection.Open();
             masterConnection.Close();
         }
-        catch (SqlException)
+        catch
         {
             return false;
         }

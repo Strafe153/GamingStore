@@ -1,3 +1,4 @@
+using Presentation.AutoMapperProfiles;
 using Web.Configurations;
 using Web.Middleware;
 
@@ -25,7 +26,7 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.ConfigureAuthorization();
 
-builder.Services.ConfigureAutoMapper();
+builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
 builder.Services.ConfigureSwagger();
 
 var app = builder.Build();

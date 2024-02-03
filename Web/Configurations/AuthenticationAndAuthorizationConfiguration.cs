@@ -6,8 +6,7 @@ namespace Web.Configurations;
 
 public static class AuthenticationAndAuthorizationConfiguration
 {
-    public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
-    {
+    public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration) =>
         services
             .AddAuthentication(options =>
             {
@@ -24,16 +23,8 @@ public static class AuthenticationAndAuthorizationConfiguration
                     ClockSkew = TimeSpan.Zero,
                 };
             });
-    }
 
-    public static void ConfigureAuthorization(this IServiceCollection services)
-    {
+    public static void ConfigureAuthorization(this IServiceCollection services) =>
         services.AddAuthorization(options =>
-        {
-            options.AddPolicy("AdminOnly", policy =>
-            {
-                policy.RequireRole("Admin");
-            });
-        });
-    }
+            options.AddPolicy(AuthorizationConstants.AdminOnlyPolicy, policy => policy.RequireRole("Admin")));
 }

@@ -7,8 +7,7 @@ namespace Web.Configurations;
 
 public static class HealthChecksConfiguration
 {
-    public static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
-    {
+    public static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration) =>
         services
             .AddHealthChecks()
             .AddSqlServer(configuration.GetConnectionString(ConnectionStringsConstants.DatabaseConnection)!)
@@ -16,13 +15,10 @@ public static class HealthChecksConfiguration
             .AddAzureBlobStorage(configuration.GetConnectionString(ConnectionStringsConstants.BlobStorageConnection)!)
             .AddElasticsearch(configuration.GetConnectionString(ConnectionStringsConstants.ElasticSearchConnection)!)
             .AddCheck<IdentityServerHealthCheck>("IdentityServer");
-    }
 
-    public static void UseHealthChecks(this WebApplication application)
-    {
+    public static void UseHealthChecks(this WebApplication application) =>
         application.MapHealthChecks("/_health", new HealthCheckOptions
         {
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
-    }
 }

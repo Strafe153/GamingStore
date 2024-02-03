@@ -104,7 +104,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id:int:min(1)}/changeRole")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = AuthorizationConstants.AdminOnlyPolicy)]
     public async Task<ActionResult> ChangeRole(
         [FromRoute] int id,
         [FromBody] ChangeUserRoleRequest request,

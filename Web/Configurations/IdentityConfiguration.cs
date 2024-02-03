@@ -8,7 +8,8 @@ public static class IdentityConfiguration
 {
     public static void ConfigureIdentity(this IServiceCollection services)
     {
-        services.AddIdentity<User, IdentityRole<int>>()
+        services
+            .AddIdentity<User, IdentityRole<int>>()
             .AddEntityFrameworkStores<GamingStoreContext>();
 
         services.Configure<IdentityOptions>(options =>

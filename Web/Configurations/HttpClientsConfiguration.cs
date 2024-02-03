@@ -6,8 +6,7 @@ namespace Web.Configurations;
 
 public static class HttpClientsConfiguration
 {
-    public static void ConfigureHttpClients(this IServiceCollection services, IConfiguration configuration)
-    {
+    public static void ConfigureHttpClients(this IServiceCollection services, IConfiguration configuration) =>
         services
             .AddHttpClient<IdentityServerClient>(options =>
             {
@@ -15,5 +14,4 @@ public static class HttpClientsConfiguration
                     configuration.GetConnectionString(ConnectionStringsConstants.IdentityServerConnection)!);
             })
             .AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
-    }
 }

@@ -4,8 +4,7 @@ namespace Web.Configurations;
 
 public static class ControllersConfiguration
 {
-    public static void ConfigureControllers(this IServiceCollection services)
-    {
+    public static void ConfigureControllers(this IServiceCollection services) =>
         services
             .AddControllers()
             .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly)
@@ -13,5 +12,4 @@ public static class ControllersConfiguration
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
-    }
 }

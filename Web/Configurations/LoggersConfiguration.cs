@@ -33,10 +33,10 @@ public static class LoggersConfiguration
     }
 
     private static ElasticsearchSinkOptions ConfigureElasticSink(IConfiguration configuration, string environment) =>
-        new ElasticsearchSinkOptions(new Uri(configuration.GetConnectionString(ConnectionStringsConstants.ElasticSearchConnection)!))
+        new(new Uri(configuration.GetConnectionString(ConnectionStringsConstants.ElasticSearchConnection)!))
         {
             AutoRegisterTemplate = true,
-            IndexFormat = $"{Assembly.GetExecutingAssembly().GetName()?.Name?.ToLower().Replace('.', '-')}-{environment.ToLower()}-{DateTime.UtcNow:yyyy-MM}",
+            IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace('.', '-')}-{environment.ToLower()}-{DateTime.UtcNow:yyyy-MM}",
             NumberOfReplicas = 1,
             NumberOfShards = 2
         };

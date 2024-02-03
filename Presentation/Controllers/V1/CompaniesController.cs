@@ -17,7 +17,7 @@ namespace Presentation.Controllers.V1;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/companies")]
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = AuthorizationConstants.AdminOnlyPolicy)]
 [ApiVersion(ApiVersioningConstants.V1)]
 [EnableRateLimiting(RateLimitingConstants.TokenBucket)]
 public class CompaniesController : ControllerBase
