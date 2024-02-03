@@ -17,13 +17,11 @@ public class UserRepository : IUserRepository
         _userManager = userManager;
     }
 
-    public async Task<IdentityResult> CreateAsync(User user, string password) =>
-        await _userManager.CreateAsync(user, password);
+    public Task<IdentityResult> CreateAsync(User user, string password) => _userManager.CreateAsync(user, password);
 
-    public async Task<IdentityResult> DeleteAsync(User user) =>
-        await _userManager.DeleteAsync(user);
+    public Task<IdentityResult> DeleteAsync(User user) => _userManager.DeleteAsync(user);
 
-    public async Task<PaginatedList<User>> GetAllAsync(
+    public Task<PaginatedList<User>> GetAllAsync(
         int pageNumber, 
         int pageSize,
         CancellationToken token = default,
@@ -33,24 +31,22 @@ public class UserRepository : IUserRepository
             ? _userManager.Users
             : _userManager.Users.Where(filter);
 
-        var users = await query
+        var usersTask = query
             .AsNoTracking()
             .ToPaginatedList(pageNumber, pageSize, token);
 
-        return users;
+        return usersTask;
     }
 
-    public async Task<User?> GetByIdAsync(int id, CancellationToken token = default) =>
-        await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id, token);
+    public Task<User?> GetByIdAsync(int id, CancellationToken token = default) =>
+        _userManager.Users.FirstOrDefaultAsync(u => u.Id == id, token);
 
-    public async Task<User?> GetByEmailAsync(string email, CancellationToken token = default) =>
-        await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email, token);
+    public Task<User?> GetByEmailAsync(string email, CancellationToken token = default) =>
+        _userManager.Users.FirstOrDefaultAsync(u => u.Email == email, token);
 
-    public async Task<IdentityResult> UpdateAsync(User user) =>
-        await _userManager.UpdateAsync(user);
+    public Task<IdentityResult> UpdateAsync(User user) => _userManager.UpdateAsync(user);
 
-    public async Task<IdentityResult> AssignRoleAsync(User user, string role) =>
-        await _userManager.AddToRoleAsync(user, role);
+    public Task<IdentityResult> AssignRoleAsync(User user, string role) => _userManager.AddToRoleAsync(user, role);
 
     public async Task<IdentityResult> RemoveFromRolesAsync(User user)
     {
@@ -60,6 +56,6 @@ public class UserRepository : IUserRepository
         return result;
     }
 
-    public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword) =>
-        await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+    public Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword) =>
+        _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
 }

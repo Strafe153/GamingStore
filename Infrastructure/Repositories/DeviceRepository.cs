@@ -16,13 +16,11 @@ public class DeviceRepository : IRepository<Device>
         _context = context;
     }
 
-    public void Create(Device entity) =>
-        _context.Devices.Add(entity);
+    public void Create(Device entity) => _context.Devices.Add(entity);
 
-    public void Delete(Device entity) =>
-        _context.Devices.Remove(entity);
+    public void Delete(Device entity) => _context.Devices.Remove(entity);
 
-    public async Task<PaginatedList<Device>> GetAllAsync(
+    public Task<PaginatedList<Device>> GetAllAsync(
         int pageNumber, 
         int pageSize,
         CancellationToken token = default,
@@ -32,23 +30,18 @@ public class DeviceRepository : IRepository<Device>
             ? _context.Devices
             : _context.Devices.Where(filter);
 
-        var devices = await query
+        var devicesTask = query
             .Include(d => d.Company)
             .AsNoTracking()
             .ToPaginatedList(pageNumber, pageSize, token);
 
-        return devices;
+        return devicesTask;
     }
 
-    public async Task<Device?> GetByIdAsync(int id, CancellationToken token = default)
-    {
-        var device = await _context.Devices
+    public Task<Device?> GetByIdAsync(int id, CancellationToken token = default) =>
+        _context.Devices
             .Include(d => d.Company)
             .FirstOrDefaultAsync(d => d.Id == id, token);
 
-        return device;
-    }
-
-    public void Update(Device entity) =>
-        _context.Devices.Update(entity);
+    public void Update(Device entity) => _context.Devices.Update(entity);
 }
