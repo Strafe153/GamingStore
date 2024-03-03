@@ -6,11 +6,10 @@ namespace Web.Configurations;
 
 public static class RepositoriesConfiguration
 {
-    public static void AddRepositories(this IServiceCollection services)
-    {
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IRepository<Company>, CompanyRepository>();
-        services.AddScoped<IRepository<Device>, DeviceRepository>();
-    }
+	public static void AddRepositories(this IServiceCollection services) =>
+		services
+			.AddScoped<IUnitOfWork, UnitOfWork>()
+			.AddScoped<IUserRepository, UserRepository>()
+			.AddScoped<IRepository<Company>, CompanyRepository>()
+			.AddScoped<IRepository<Device>, DeviceRepository>();
 }
