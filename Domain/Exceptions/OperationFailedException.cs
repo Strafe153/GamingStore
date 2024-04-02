@@ -1,18 +1,18 @@
 ﻿namespace Domain.Exceptions;
 
-public class OperationFailedException : ApplicationException
+public class OperationFailedException : Exception
 {
-    public OperationFailedException()
-    {
-    }
+	public OperationFailedException()
+	{
+	}
 
-    public OperationFailedException(string message) 
+	public OperationFailedException(string message)
 		: base(message)
 	{
 	}
 
-    public OperationFailedException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
+	public OperationFailedException(string message, Exception innerException)
+		: base(message, innerException)
+	{
+	}
 }
