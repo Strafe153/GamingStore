@@ -20,7 +20,7 @@ public static class MigrationsConfiguration
 
     private static bool CanConnect(this GamingStoreContext dbContext)
     {
-        /* using */ var connecion = dbContext.Database.GetDbConnection();
+        using var connecion = dbContext.Database.GetDbConnection();
         var masterConnectionString = connecion.ConnectionString.Replace("gaming_store_db", "master");
         using var masterConnection = new SqlConnection(masterConnectionString);
 
