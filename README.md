@@ -31,7 +31,6 @@
 * `Microsoft.AspNetCore.Http.Abstractions` for object model for HTTP requests and responses
 * `Microsoft.AspNetCore.Http.Features` for HTTP feature interface definitions
 * `Microsoft.AspNetCore.Identity.EntityFrameworkCore` for identity provider that uses EF Core
-* `Microsoft.AspNetCore.Mvc.Core` for core MVC components
 * `Microsoft.AspNetCore.Mvc.NewtonsoftJson` for MVC features that use Newtonsoft.Json
 * `Microsoft.EntityFrameworkCore` for entity mapping
 * `Microsoft.EntityFrameworkCore.Design` for shared design-time components for EF Core tools
