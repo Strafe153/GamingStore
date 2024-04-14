@@ -43,10 +43,10 @@ app.UseHttpsRedirection();
 
 app.UseHealthChecks();
 
+app.UseRateLimiter();
+
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseRateLimiter();
 
 app.MapControllers();
 
