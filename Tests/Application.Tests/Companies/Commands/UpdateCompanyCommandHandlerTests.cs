@@ -32,7 +32,7 @@ public class UpdateCompanyCommandHandlerTests : IClassFixture<UpdateCompanyComma
     public async Task Handle_Should_ThrowNameNotUniqueException_WhenNameIsNotUnique()
     {
         // Arrange
-        _fixture.MockRepository
+        _fixture.MockCompanyRepository
             .Setup(r => r.Update(It.IsAny<Company>()))
             .Throws<DbUpdateException>();
 

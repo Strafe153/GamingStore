@@ -1,6 +1,6 @@
 ﻿namespace Application.Abstractions.Repositories;
 
-public interface IUnitOfWork
+public interface IDatabaseRepository
 {
     Task SaveChangesAsync();
 }

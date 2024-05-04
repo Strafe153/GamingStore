@@ -10,47 +10,47 @@ namespace Application.Devices.Commands.Create;
 
 public sealed class CreateDeviceCommandHandler : ICommandHandler<CreateDeviceCommand, Device>
 {
-    private readonly IRepository<Device> _deviceRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IPictureService _pictureService;
-    private readonly ILogger<CreateDeviceCommandHandler> _logger;
+	private readonly IRepository<Device> _deviceRepository;
+	private readonly IDatabaseRepository _databaseRepository;
+	private readonly IPictureService _pictureService;
+	private readonly ILogger<CreateDeviceCommandHandler> _logger;
 
-    public CreateDeviceCommandHandler(
-        IRepository<Device> deviceRepository, 
-        IUnitOfWork unitOfWork, 
-        IPictureService pictureService,
-        ILogger<CreateDeviceCommandHandler> logger)
-    {
-        _deviceRepository = deviceRepository;
-        _unitOfWork = unitOfWork;
-        _pictureService = pictureService;
-        _logger = logger;
-    }
+	public CreateDeviceCommandHandler(
+		IRepository<Device> deviceRepository,
+		IDatabaseRepository databaseRepository,
+		IPictureService pictureService,
+		ILogger<CreateDeviceCommandHandler> logger)
+	{
+		_deviceRepository = deviceRepository;
+		_databaseRepository = databaseRepository;
+		_pictureService = pictureService;
+		_logger = logger;
+	}
 
-    public async Task<Device> Handle(CreateDeviceCommand command, CancellationToken cancellationToken)
-    {
-        var picture = await _pictureService.UploadAsync(command.Picture, "device-pictures", command.Name);
-        var device = new Device(
-            command.Name,
-            command.Category,
-            command.Price,
-            command.InStock,
-            picture,
-            command.CompanyId);
+	public async Task<Device> Handle(CreateDeviceCommand command, CancellationToken cancellationToken)
+	{
+		var picture = await _pictureService.UploadAsync(command.Picture, "device-pictures", command.Name);
+		var device = new Device(
+			command.Name,
+			command.Category,
+			command.Price,
+			command.InStock,
+			picture,
+			command.CompanyId);
 
-        try
-        {
-            _deviceRepository.Create(device);
-            await _unitOfWork.SaveChangesAsync();
+		try
+		{
+			_deviceRepository.Create(device);
+			await _databaseRepository.SaveChangesAsync();
 
-            _logger.LogInformation("Succesfully created a Device");
+			_logger.LogInformation("Succesfully created a Device");
 
-            return device;
-        }
-        catch (DbUpdateException)
-        {
-            _logger.LogWarning("Failed to create a Device. The name '{Name}' is already taken", command.Name);
-            throw new ValueNotUniqueException($"Name '{command.Name}' is already taken");
-        }
-    }
+			return device;
+		}
+		catch (DbUpdateException)
+		{
+			_logger.LogWarning("Failed to create a Device. The name '{Name}' is already taken", command.Name);
+			throw new ValueNotUniqueException($"Name '{command.Name}' is already taken");
+		}
+	}
 }

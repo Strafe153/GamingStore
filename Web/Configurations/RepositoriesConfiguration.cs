@@ -8,7 +8,7 @@ public static class RepositoriesConfiguration
 {
 	public static void AddRepositories(this IServiceCollection services) =>
 		services
-			.AddScoped<IUnitOfWork, UnitOfWork>()
+			.AddScoped<IDatabaseRepository, DatabaseRepository>()
 			.AddScoped<IUserRepository, UserRepository>()
 			.AddScoped<IRepository<Company>, CompanyRepository>()
 			.AddScoped<IRepository<Device>, DeviceRepository>();

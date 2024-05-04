@@ -22,7 +22,7 @@ public class UpdateDeviceCommandHandlerTests : IClassFixture<UpdateDeviceCommand
     public async Task Handle_Should_ReturnUnit_WhenNameIsUnique()
     {
         // Arrange
-        _fixture.MockRepository
+        _fixture.MockDeviceRepository
             .Setup(r => r.Update(It.IsAny<Device>()));
 
         // Act
@@ -36,7 +36,7 @@ public class UpdateDeviceCommandHandlerTests : IClassFixture<UpdateDeviceCommand
     public async Task Handle_Should_ThrowNameNotUniqueException_WhenNameIsNotUnique()
     {
         // Arrange
-        _fixture.MockRepository
+        _fixture.MockDeviceRepository
             .Setup(r => r.Update(It.IsAny<Device>()))
             .Throws<DbUpdateException>();
 

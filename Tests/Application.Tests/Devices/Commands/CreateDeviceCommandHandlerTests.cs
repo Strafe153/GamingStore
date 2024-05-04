@@ -31,7 +31,7 @@ public class CreateDeviceCommandHandlerTests : IClassFixture<CreateDeviceCommand
     public async Task Handle_Should_ThrowNameNotUniqueException_WhenNameIsNotUnique()
     {
         // Arrange
-        _fixture.MockRepository
+        _fixture.MockDeviceRepository
             .Setup(r => r.Create(It.IsAny<Device>()))
             .Throws<DbUpdateException>();
 

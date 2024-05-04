@@ -24,14 +24,14 @@ public class DeleteCompanyCommandHandlerFixture
         var deleteCompanyCommandFaker = new Faker<DeleteCompanyCommand>()
             .CustomInstantiator(f => new(companyFaker.Generate()));
 
-        MockRepository = fixture.Freeze<Mock<IRepository<Company>>>();
-        MockUnitOfWork = fixture.Freeze<Mock<IUnitOfWork>>();
+        MockCompanyRepository = fixture.Freeze<Mock<IRepository<Company>>>();
+        MockDatabaseRepository = fixture.Freeze<Mock<IDatabaseRepository>>();
         MockPictureService = fixture.Freeze<Mock<IPictureService>>();
         MockLogger = fixture.Freeze<Mock<ILogger<DeleteCompanyCommandHandler>>>();
 
         DeleteCompanyCommandHandler = new DeleteCompanyCommandHandler(
-            MockRepository.Object,
-            MockUnitOfWork.Object,
+            MockCompanyRepository.Object,
+            MockDatabaseRepository.Object,
             MockPictureService.Object,
             MockLogger.Object);
 
@@ -39,8 +39,8 @@ public class DeleteCompanyCommandHandlerFixture
     }
 
     public DeleteCompanyCommandHandler DeleteCompanyCommandHandler { get; }
-    public Mock<IRepository<Company>> MockRepository { get; }
-    public Mock<IUnitOfWork> MockUnitOfWork { get; }
+    public Mock<IRepository<Company>> MockCompanyRepository { get; }
+    public Mock<IDatabaseRepository> MockDatabaseRepository { get; }
     public Mock<IPictureService> MockPictureService { get; }
     public Mock<ILogger<DeleteCompanyCommandHandler>> MockLogger { get; }
 

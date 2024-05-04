@@ -21,7 +21,7 @@ public class CreateCompanyCommandHandlerTests : IClassFixture<CreateCompanyComma
     public async Task Handle_Should_ReturnCompany_WhenNameIsUnique()
     {
         // Arrange
-        _fixture.MockRepository
+        _fixture.MockCompanyRepository
             .Setup(r => r.Create(It.IsAny<Company>()));
 
         // Act
@@ -35,7 +35,7 @@ public class CreateCompanyCommandHandlerTests : IClassFixture<CreateCompanyComma
     public async Task Handle_Should_ThrowNameNotUniqueException_WhenNameIsNotUnique()
     {
         // Arrange
-        _fixture.MockRepository
+        _fixture.MockCompanyRepository
             .Setup(r => r.Create(It.IsAny<Company>()))
             .Throws<DbUpdateException>();
 

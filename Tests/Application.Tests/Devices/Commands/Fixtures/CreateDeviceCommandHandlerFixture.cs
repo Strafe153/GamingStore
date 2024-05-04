@@ -24,14 +24,14 @@ public class CreateDeviceCommandHandlerFixture
             .RuleFor(c => c.InStock, f => f.Random.Int())
             .RuleFor(c => c.CompanyId, f => f.Random.Int(1, 5000));
 
-        MockRepository = fixture.Freeze<Mock<IRepository<Device>>>();
-        MockUnitOfWork = fixture.Freeze<Mock<IUnitOfWork>>();
+        MockDeviceRepository = fixture.Freeze<Mock<IRepository<Device>>>();
+        MockDatabaseRepository = fixture.Freeze<Mock<IDatabaseRepository>>();
         MockPictureService = fixture.Freeze<Mock<IPictureService>>();
         MockLogger = fixture.Freeze<Mock<ILogger<CreateDeviceCommandHandler>>>();
 
         CreateDeviceCommandHandler = new CreateDeviceCommandHandler(
-            MockRepository.Object,
-            MockUnitOfWork.Object,
+            MockDeviceRepository.Object,
+            MockDatabaseRepository.Object,
             MockPictureService.Object,
             MockLogger.Object);
 
@@ -39,8 +39,8 @@ public class CreateDeviceCommandHandlerFixture
     }
 
     public CreateDeviceCommandHandler CreateDeviceCommandHandler { get; }
-    public Mock<IRepository<Device>> MockRepository { get; }
-    public Mock<IUnitOfWork> MockUnitOfWork { get; }
+    public Mock<IRepository<Device>> MockDeviceRepository { get; }
+    public Mock<IDatabaseRepository> MockDatabaseRepository { get; }
     public Mock<IPictureService> MockPictureService { get; }
     public Mock<ILogger<CreateDeviceCommandHandler>> MockLogger { get; }
 
