@@ -57,7 +57,7 @@ public class UsersControllerFixture
 
         var totalItemsCount = Random.Shared.Next(2, 50);
 
-        var paginatedListFaker = new Faker<PaginatedList<User>>()
+        var pagedListFaker = new Faker<PagedList<User>>()
             .CustomInstantiator(f => new(
                 userFaker.Generate(totalItemsCount),
                 totalItemsCount,
@@ -90,7 +90,7 @@ public class UsersControllerFixture
         UpdateUserRequest = updateUserRequestFaker.Generate();
         ChangeUserPasswordRequest = changeUserPasswordRequestFaker.Generate();
         ChangeUserRoleRequest = changeUserRoleRequestFaker.Generate();
-        PaginatedList = paginatedListFaker.Generate();
+        PagedList = pagedListFaker.Generate();
     }
 
     public UsersController UsersController { get; }
@@ -105,5 +105,5 @@ public class UsersControllerFixture
     public UpdateUserRequest UpdateUserRequest { get; }
     public ChangeUserPasswordRequest ChangeUserPasswordRequest { get; }
     public ChangeUserRoleRequest ChangeUserRoleRequest { get; }
-    public PaginatedList<User> PaginatedList { get; }
+    public PagedList<User> PagedList { get; }
 }

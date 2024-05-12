@@ -18,7 +18,7 @@ public class GetAllCompaniesQueryHandlerTests : IClassFixture<GetAllCompaniesQue
 	}
 
 	[Fact]
-	public async Task Handle_Should_ReturnPaginatedListOfCompanyFromRepository_WhenCommandIsValid()
+	public async Task Handle_Should_ReturnPagedListOfCompanyFromRepository_WhenCommandIsValid()
     {
         // Arrange
         _fixture.MockCacheService
@@ -31,27 +31,27 @@ public class GetAllCompaniesQueryHandlerTests : IClassFixture<GetAllCompaniesQue
 				It.IsAny<int>(),
 				It.IsAny<CancellationToken>(),
 				It.IsAny<Expression<Func<Company, bool>>>()))
-			.ReturnsAsync(_fixture.PaginatedList);
+			.ReturnsAsync(_fixture.PagedList);
 
 		// Act
 		var result = await _fixture.GetAllCompaniesQueryHandler.Handle(_fixture.GetAllCompaniesQuery, _fixture.CancellationToken);
 
 		// Assert
-		result.Should().NotBeNull().And.BeOfType<PaginatedList<Company>>();
+		result.Should().NotBeNull().And.BeOfType<PagedList<Company>>();
     }
 
     [Fact]
-    public async Task Handle_Should_ReturnPaginatedListOfCompanyFromCache_WhenCommandIsValid()
+    public async Task Handle_Should_ReturnPagedListOfCompanyFromCache_WhenCommandIsValid()
     {
         // Arrange
         _fixture.MockCacheService
             .Setup(s => s.GetAsync<List<Company>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_fixture.PaginatedList);
+            .ReturnsAsync(_fixture.PagedList);
 
         // Act
         var result = await _fixture.GetAllCompaniesQueryHandler.Handle(_fixture.GetAllCompaniesQuery, _fixture.CancellationToken);
 
         // Assert
-        result.Should().NotBeNull().And.BeOfType<PaginatedList<Company>>();
+        result.Should().NotBeNull().And.BeOfType<PagedList<Company>>();
     }
 }

@@ -50,7 +50,7 @@ public class DevicesControllerFixture
 
         var totalItemsCount = Random.Shared.Next(2, 50);
 
-        var paginatedListFaker = new Faker<PaginatedList<Device>>()
+        var pagedListFaker = new Faker<PagedList<Device>>()
             .CustomInstantiator(f => new(
                 deviceFaker.Generate(totalItemsCount),
                 totalItemsCount,
@@ -81,7 +81,7 @@ public class DevicesControllerFixture
         Device = deviceFaker.Generate();
         CreateDeviceRequest = createDeviceRequestFaker.Generate();
         UpdateDeviceRequest = updateDeviceRequestFaker.Generate();
-        PaginatedList = paginatedListFaker.Generate();
+        PagedList = pagedListFaker.Generate();
     }
 
     public DevicesController DevicesController { get; }
@@ -89,10 +89,10 @@ public class DevicesControllerFixture
     public IMapper Mapper { get; }
 
     public int Id { get; }
-    public DevicePageParameters PageParameters { get; set; }
+    public DeviceParameters PageParameters { get; set; }
     public CancellationToken CancellationToken { get; }
     public Device Device { get; }
     public CreateDeviceRequest CreateDeviceRequest { get; }
     public UpdateDeviceRequest UpdateDeviceRequest { get; }
-    public PaginatedList<Device> PaginatedList { get; }
+    public PagedList<Device> PagedList { get; }
 }

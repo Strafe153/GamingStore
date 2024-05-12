@@ -6,4 +6,4 @@ namespace Application.Users.Queries.GetAll;
 
 public sealed record GetAllUsersQuery(
     int PageNumber, 
-    int PageSize) : IQuery<PaginatedList<User>>;
+    int PageSize) : IQuery<PagedList<User>>;

@@ -1,9 +1,7 @@
 ﻿using Application.Companies.Commands.Create;
-using Application.Companies.Commands.Update;
 using Application.Companies.Queries;
 using Application.Companies.Queries.GetAll;
 using Application.Companies.Queries.GetById;
-using Domain.Entities;
 using Domain.Shared.Paging;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -24,24 +22,24 @@ public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture
     }
 
     [Fact]
-    public async Task Get_Should_ReturnActionResultOfPaginatedModelOfGetCompanyResponse_WhenDataIsValid()
+    public async Task Get_Should_ReturnActionResultOfPagedModelOfGetCompanyResponse_WhenDataIsValid()
     {
         // Arrange
         _fixture.MockSender
             .Setup(s => s.Send(
                 It.IsAny<GetAllCompaniesQuery>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_fixture.PaginatedList);
+            .ReturnsAsync(_fixture.PagedList);
 
         // Act
         var result = await _fixture.CompaniesController.Get(_fixture.PageParameters, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
-        var paginatedModel = objectResult.Value.As<PaginatedModel<GetCompanyResponse>>();
+        var pagedModel = objectResult.Value.As<PagedModel<GetCompanyResponse>>();
 
         // Assert
-        result.Should().NotBeNull().And.BeOfType<ActionResult<PaginatedModel<GetCompanyResponse>>>();
+        result.Should().NotBeNull().And.BeOfType<ActionResult<PagedModel<GetCompanyResponse>>>();
         objectResult.StatusCode.Should().Be(StatusCodes.Status200OK);
-        paginatedModel.Entities.Should().NotBeEmpty();
+        pagedModel.Entities.Should().NotBeEmpty();
     }
 
     [Fact]

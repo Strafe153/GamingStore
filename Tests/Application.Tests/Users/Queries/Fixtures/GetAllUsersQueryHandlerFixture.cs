@@ -33,7 +33,7 @@ public class GetAllUsersQueryHandlerFixture
 
         var totalItemsCount = Random.Shared.Next(2, 50);
 
-        var paginatedListFaker = new Faker<PaginatedList<User>>()
+        var pagedListFaker = new Faker<PagedList<User>>()
             .CustomInstantiator(f => new(
                 userFaker.Generate(totalItemsCount),
                 totalItemsCount,
@@ -52,7 +52,7 @@ public class GetAllUsersQueryHandlerFixture
             MockLogger.Object);
 
         GetAllUsersQuery = getAllUsersQueryFaker.Generate();
-        PaginatedList = paginatedListFaker.Generate();
+        PagedList = pagedListFaker.Generate();
     }
 
     public GetAllUsersQueryHandler GetAllUsersQueryHandler { get; }
@@ -62,5 +62,5 @@ public class GetAllUsersQueryHandlerFixture
 
     public CancellationToken CancellationToken { get; }
     public GetAllUsersQuery GetAllUsersQuery { get; }
-    public PaginatedList<User> PaginatedList { get; }
+    public PagedList<User> PagedList { get; }
 }

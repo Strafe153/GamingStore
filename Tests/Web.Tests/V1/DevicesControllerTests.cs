@@ -1,9 +1,7 @@
 ﻿using Application.Devices.Commands.Create;
-using Application.Devices.Commands.Update;
 using Application.Devices.Queries;
 using Application.Devices.Queries.GetAll;
 using Application.Devices.Queries.GetById;
-using Domain.Entities;
 using Domain.Shared.Paging;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -24,24 +22,24 @@ public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
     }
 
     [Fact]
-    public async Task Get_Should_ReturnActionResultOfPaginatedModelOfGetDeviceResponse_WhenDataIsValid()
+    public async Task Get_Should_ReturnActionResultOfPagedModelOfGetDeviceResponse_WhenDataIsValid()
     {
         // Arrange
         _fixture.MockSender
             .Setup(s => s.Send(
                 It.IsAny<GetAllDevicesQuery>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_fixture.PaginatedList);
+            .ReturnsAsync(_fixture.PagedList);
 
         // Act
         var result = await _fixture.DevicesController.Get(_fixture.PageParameters, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
-        var paginatedModel = objectResult.Value.As<PaginatedModel<GetDeviceResponse>>();
+        var pagedModel = objectResult.Value.As<PagedModel<GetDeviceResponse>>();
 
         // Assert
-        result.Should().NotBeNull().And.BeOfType<ActionResult<PaginatedModel<GetDeviceResponse>>>();
+        result.Should().NotBeNull().And.BeOfType<ActionResult<PagedModel<GetDeviceResponse>>>();
         objectResult.StatusCode.Should().Be(StatusCodes.Status200OK);
-        paginatedModel.Entities.Should().NotBeEmpty();
+        pagedModel.Entities.Should().NotBeEmpty();
     }
 
     [Fact]

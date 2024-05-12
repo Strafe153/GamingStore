@@ -20,7 +20,7 @@ public class DeviceRepository : IRepository<Device>
 
     public void Delete(Device entity) => _context.Devices.Remove(entity);
 
-    public Task<PaginatedList<Device>> GetAllAsync(
+    public Task<PagedList<Device>> GetAllAsync(
         int pageNumber, 
         int pageSize,
         CancellationToken token = default,
@@ -33,7 +33,7 @@ public class DeviceRepository : IRepository<Device>
         var devicesTask = query
             .Include(d => d.Company)
             .AsNoTracking()
-            .ToPaginatedList(pageNumber, pageSize, token);
+            .ToPagedList(pageNumber, pageSize, token);
 
         return devicesTask;
     }

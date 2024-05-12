@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Devices.Queries.GetAll;
 
-public sealed class GetAllDevicesQueryHandler : IQueryHandler<GetAllDevicesQuery, PaginatedList<Device>>
+public sealed class GetAllDevicesQueryHandler : IQueryHandler<GetAllDevicesQuery, PagedList<Device>>
 {
     private readonly IRepository<Device> _deviceRepository;
     private readonly ICacheService _cacheService;
@@ -23,11 +23,11 @@ public sealed class GetAllDevicesQueryHandler : IQueryHandler<GetAllDevicesQuery
         _logger = logger;
     }
 
-    public async Task<PaginatedList<Device>> Handle(GetAllDevicesQuery query, CancellationToken cancellationToken)
+    public async Task<PagedList<Device>> Handle(GetAllDevicesQuery query, CancellationToken cancellationToken)
     {
         var key = $"devices:{query.PageNumber}:{query.PageSize}:{query.CompanyName ?? "all"}";
         var cachedDevices = await _cacheService.GetAsync<List<Device>>(key, cancellationToken);
-        PaginatedList<Device> devices;
+        PagedList<Device> devices;
 
         if (cachedDevices is null)
         {
@@ -50,7 +50,7 @@ public sealed class GetAllDevicesQueryHandler : IQueryHandler<GetAllDevicesQuery
         }
         else
         {
-            devices = new PaginatedList<Device>(cachedDevices, cachedDevices.Count, query.PageNumber, query.PageSize);
+            devices = new PagedList<Device>(cachedDevices, cachedDevices.Count, query.PageNumber, query.PageSize);
         }
 
         return devices;

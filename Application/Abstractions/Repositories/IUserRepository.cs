@@ -7,7 +7,7 @@ namespace Application.Abstractions.Repositories;
 
 public interface IUserRepository
 {
-    Task<PaginatedList<User>> GetAllAsync(
+    Task<PagedList<User>> GetAllAsync(
         int pageNumber,
         int pageSize,
         CancellationToken token = default,

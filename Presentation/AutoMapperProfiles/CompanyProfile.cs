@@ -11,7 +11,7 @@ public class CompanyProfile : Profile
 {
     public CompanyProfile()
     {
-        CreateMap<PaginatedList<Company>, PaginatedModel<GetCompanyResponse>>()
+        CreateMap<PagedList<Company>, PagedModel<GetCompanyResponse>>()
             .ForMember(pvm => pvm.Entities, opt => opt.MapFrom(pl => pl));
 
         CreateMap<Company, GetCompanyResponse>();

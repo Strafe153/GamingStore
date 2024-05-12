@@ -6,4 +6,4 @@ namespace Application.Companies.Queries.GetAll;
 
 public sealed record GetAllCompaniesQuery(
     int PageNumber,
-    int PageSize) : IQuery<PaginatedList<Company>>;
+    int PageSize) : IQuery<PagedList<Company>>;

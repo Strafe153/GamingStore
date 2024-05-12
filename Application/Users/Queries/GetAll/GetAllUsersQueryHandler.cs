@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Users.Queries.GetAll;
 
-public sealed class GetAllUsersQueryHandler : IQueryHandler<GetAllUsersQuery, PaginatedList<User>>
+public sealed class GetAllUsersQueryHandler : IQueryHandler<GetAllUsersQuery, PagedList<User>>
 {
     private readonly IUserRepository _userRepository;
     private readonly ICacheService _cacheService;
@@ -23,11 +23,11 @@ public sealed class GetAllUsersQueryHandler : IQueryHandler<GetAllUsersQuery, Pa
         _logger = logger;
     }
 
-    public async Task<PaginatedList<User>> Handle(GetAllUsersQuery query, CancellationToken cancellationToken)
+    public async Task<PagedList<User>> Handle(GetAllUsersQuery query, CancellationToken cancellationToken)
     {
         var key = $"users:{query.PageNumber}:{query.PageSize}";
         var cachedUsers = await _cacheService.GetAsync<List<User>>(key, cancellationToken);
-        PaginatedList<User> users;
+        PagedList<User> users;
 
         if (cachedUsers is null)
         {

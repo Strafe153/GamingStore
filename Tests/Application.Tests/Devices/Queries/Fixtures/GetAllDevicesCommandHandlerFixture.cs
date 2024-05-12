@@ -35,7 +35,7 @@ public class GetAllDevicesCommandHandlerFixture
 
         var totalItemsCount = Random.Shared.Next(2, 50);
 
-        var paginatedListFaker = new Faker<PaginatedList<Device>>()
+        var pagedListFaker = new Faker<PagedList<Device>>()
             .CustomInstantiator(f => new(
                 deviceFaker.Generate(totalItemsCount),
                 totalItemsCount,
@@ -54,7 +54,7 @@ public class GetAllDevicesCommandHandlerFixture
             MockLogger.Object);
 
         GetAllDevicesQuery = getAllDevicesQueryFaker.Generate();
-        PaginatedList = paginatedListFaker.Generate();
+        PagedList = pagedListFaker.Generate();
     }
 
     public GetAllDevicesQueryHandler GetAllDevicesQueryHandler { get; }
@@ -64,5 +64,5 @@ public class GetAllDevicesCommandHandlerFixture
 
     public CancellationToken CancellationToken { get; }
     public GetAllDevicesQuery GetAllDevicesQuery { get; }
-    public PaginatedList<Device> PaginatedList { get; }
+    public PagedList<Device> PagedList { get; }
 }

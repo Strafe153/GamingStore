@@ -7,4 +7,4 @@ namespace Application.Devices.Queries.GetAll;
 public sealed record GetAllDevicesQuery(
     int PageNumber,
     int PageSize,
-    string? CompanyName) : IQuery<PaginatedList<Device>>;
+    string? CompanyName) : IQuery<PagedList<Device>>;

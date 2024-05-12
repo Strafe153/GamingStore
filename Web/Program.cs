@@ -50,6 +50,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseDatabaseMigrations();
+await app.UseDatabaseMigrations();
 
 app.Run();

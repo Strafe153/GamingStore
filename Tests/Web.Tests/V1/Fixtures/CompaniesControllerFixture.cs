@@ -37,7 +37,7 @@ public class CompaniesControllerFixture
 
         var totalItemsCount = Random.Shared.Next(2, 50);
 
-        var paginatedListFaker = new Faker<PaginatedList<Company>>()
+        var pagedListFaker = new Faker<PagedList<Company>>()
             .CustomInstantiator(f => new(
                 companyFaker.Generate(totalItemsCount),
                 totalItemsCount,
@@ -68,7 +68,7 @@ public class CompaniesControllerFixture
         Company = companyFaker.Generate();
         CreateCompanyRequest = createCompanyRequestFaker.Generate();
         UpdateCompanyRequest = updateCompanyRequestFaker.Generate();
-        PaginatedList = paginatedListFaker.Generate();
+        PagedList = pagedListFaker.Generate();
     }
 
     public CompaniesController CompaniesController { get; }
@@ -81,5 +81,5 @@ public class CompaniesControllerFixture
     public Company Company { get; }
     public CreateCompanyRequest CreateCompanyRequest { get; }
     public UpdateCompanyRequest UpdateCompanyRequest { get; }
-    public PaginatedList<Company> PaginatedList { get; }
+    public PagedList<Company> PagedList { get; }
 }

@@ -1,11 +1,7 @@
-﻿using Application.Users.Commands.ChangePassword;
-using Application.Users.Commands.ChangeRole;
-using Application.Users.Commands.Register;
-using Application.Users.Commands.Update;
+﻿using Application.Users.Commands.Register;
 using Application.Users.Queries;
 using Application.Users.Queries.GetAll;
 using Application.Users.Queries.GetById;
-using Domain.Entities;
 using Domain.Shared.Paging;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -26,24 +22,24 @@ public class UsersControllerTests : IClassFixture<UsersControllerFixture>
     }
 
     [Fact]
-    public async Task Get_Should_ReturnActionResultOfPaginatedModelOfGetUserResponse_WhenDataIsValid()
+    public async Task Get_Should_ReturnActionResultOfPagedModelOfGetUserResponse_WhenDataIsValid()
     {
         // Arrange
         _fixture.MockSender
             .Setup(s => s.Send(
                 It.IsAny<GetAllUsersQuery>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_fixture.PaginatedList);
+            .ReturnsAsync(_fixture.PagedList);
 
         // Act
         var result = await _fixture.UsersController.Get(_fixture.PageParameters, _fixture.CancellationToken);
         var objectResult = result.Result.As<OkObjectResult>();
-        var paginatedModel = objectResult.Value.As<PaginatedModel<GetUserResponse>>();
+        var pagedModel = objectResult.Value.As<PagedModel<GetUserResponse>>();
 
         // Assert
-        result.Should().NotBeNull().And.BeOfType<ActionResult<PaginatedModel<GetUserResponse>>>();
+        result.Should().NotBeNull().And.BeOfType<ActionResult<PagedModel<GetUserResponse>>>();
         objectResult.StatusCode.Should().Be(StatusCodes.Status200OK);
-        paginatedModel.Entities.Should().NotBeEmpty();
+        pagedModel.Entities.Should().NotBeEmpty();
     }
 
     [Fact]

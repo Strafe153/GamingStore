@@ -18,7 +18,7 @@ public class GetAllDevicesCommandHandlerTests : IClassFixture<GetAllDevicesComma
     }
 
     [Fact]
-    public async Task Handle_Should_ReturnPaginatedListOfDeviceFromRepository_WhenCommandIsValid()
+    public async Task Handle_Should_ReturnPagedListOfDeviceFromRepository_WhenCommandIsValid()
     {
         // Arrange
         _fixture.MockCacheService
@@ -31,27 +31,27 @@ public class GetAllDevicesCommandHandlerTests : IClassFixture<GetAllDevicesComma
                 It.IsAny<int>(),
                 It.IsAny<CancellationToken>(),
                 It.IsAny<Expression<Func<Device, bool>>>()))
-            .ReturnsAsync(_fixture.PaginatedList);
+            .ReturnsAsync(_fixture.PagedList);
 
         // Act
         var result = await _fixture.GetAllDevicesQueryHandler.Handle(_fixture.GetAllDevicesQuery, _fixture.CancellationToken);
 
         // Assert
-        result.Should().NotBeNull().And.BeOfType<PaginatedList<Device>>();
+        result.Should().NotBeNull().And.BeOfType<PagedList<Device>>();
     }
 
     [Fact]
-    public async Task Handle_Should_ReturnPaginatedListOfDeviceFromCache_WhenCommandIsValid()
+    public async Task Handle_Should_ReturnPagedListOfDeviceFromCache_WhenCommandIsValid()
     {
         // Arrange
         _fixture.MockCacheService
             .Setup(s => s.GetAsync<List<Device>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_fixture.PaginatedList);
+            .ReturnsAsync(_fixture.PagedList);
 
         // Act
         var result = await _fixture.GetAllDevicesQueryHandler.Handle(_fixture.GetAllDevicesQuery, _fixture.CancellationToken);
 
         // Assert
-        result.Should().NotBeNull().And.BeOfType<PaginatedList<Device>>();
+        result.Should().NotBeNull().And.BeOfType<PagedList<Device>>();
     }
 }

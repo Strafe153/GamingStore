@@ -11,7 +11,7 @@ public class DeviceProfile : Profile
 {
     public DeviceProfile()
     {
-        CreateMap<PaginatedList<Device>, PaginatedModel<GetDeviceResponse>>()
+        CreateMap<PagedList<Device>, PagedModel<GetDeviceResponse>>()
             .ForMember(pvm => pvm.Entities, opt => opt.MapFrom(pl => pl));
 
         CreateMap<Device, GetDeviceResponse>();

@@ -13,7 +13,7 @@ public class UserProfile : Profile
 {
     public UserProfile()
     {
-        CreateMap<PaginatedList<User>, PaginatedModel<GetUserResponse>>()
+        CreateMap<PagedList<User>, PagedModel<GetUserResponse>>()
             .ForMember(pvm => pvm.Entities, opt => opt.MapFrom(pl => pl));
 
         CreateMap<User, GetUserResponse>();

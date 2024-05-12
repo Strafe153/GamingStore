@@ -30,6 +30,7 @@ public sealed class CreateDeviceCommandHandler : ICommandHandler<CreateDeviceCom
 	public async Task<Device> Handle(CreateDeviceCommand command, CancellationToken cancellationToken)
 	{
 		var picture = await _pictureService.UploadAsync(command.Picture, "device-pictures", command.Name);
+
 		var device = new Device(
 			command.Name,
 			command.Category,

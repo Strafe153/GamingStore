@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Companies.Queries.GetAll;
 
-public sealed class GetAllCompaniesQueryHandler : IQueryHandler<GetAllCompaniesQuery, PaginatedList<Company>>
+public sealed class GetAllCompaniesQueryHandler : IQueryHandler<GetAllCompaniesQuery, PagedList<Company>>
 {
     private readonly IRepository<Company> _companyRepository;
     private readonly ICacheService _cacheService;
@@ -23,11 +23,11 @@ public sealed class GetAllCompaniesQueryHandler : IQueryHandler<GetAllCompaniesQ
         _logger = logger;
     }
 
-    public async Task<PaginatedList<Company>> Handle(GetAllCompaniesQuery query, CancellationToken cancellationToken)
+    public async Task<PagedList<Company>> Handle(GetAllCompaniesQuery query, CancellationToken cancellationToken)
     {
         var key = $"companies:{query.PageNumber}:{query.PageSize}";
         var cachedCompanies = await _cacheService.GetAsync<List<Company>>(key, cancellationToken);
-        PaginatedList<Company> companies;
+        PagedList<Company> companies;
 
         if (cachedCompanies is null)
         {
@@ -36,7 +36,7 @@ public sealed class GetAllCompaniesQueryHandler : IQueryHandler<GetAllCompaniesQ
         }
         else
         {
-            companies = new PaginatedList<Company>(cachedCompanies, cachedCompanies.Count, query.PageNumber, query.PageSize);
+            companies = new PagedList<Company>(cachedCompanies, cachedCompanies.Count, query.PageNumber, query.PageSize);
         }
 
         _logger.LogInformation("Successfully retrieved all companies");

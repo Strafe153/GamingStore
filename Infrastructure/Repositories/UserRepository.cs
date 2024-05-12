@@ -21,7 +21,7 @@ public class UserRepository : IUserRepository
 
     public Task<IdentityResult> DeleteAsync(User user) => _userManager.DeleteAsync(user);
 
-    public Task<PaginatedList<User>> GetAllAsync(
+    public Task<PagedList<User>> GetAllAsync(
         int pageNumber, 
         int pageSize,
         CancellationToken token = default,
@@ -33,7 +33,7 @@ public class UserRepository : IUserRepository
 
         var usersTask = query
             .AsNoTracking()
-            .ToPaginatedList(pageNumber, pageSize, token);
+            .ToPagedList(pageNumber, pageSize, token);
 
         return usersTask;
     }
