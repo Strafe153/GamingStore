@@ -8,15 +8,15 @@ public static class MigrationsConfiguration
 {
 	public static async Task UseDatabaseMigrations(this WebApplication app)
 	{
-		//using var scope = app.Services.CreateScope();
-		//using var dbContext = scope.ServiceProvider.GetRequiredService<GamingStoreContext>();
+		using var scope = app.Services.CreateScope();
+		using var dbContext = scope.ServiceProvider.GetRequiredService<GamingStoreContext>();
 
-		//while (!dbContext.CanConnect())
-		//{
-		//	await Task.Delay(TimeSpan.FromSeconds(5));
-		//}
+		while (!dbContext.CanConnect())
+		{
+			await Task.Delay(TimeSpan.FromSeconds(5));
+		}
 
-		//dbContext?.Database.Migrate();
+		dbContext?.Database.Migrate();
 	}
 
 	private static bool CanConnect(this GamingStoreContext dbContext)
