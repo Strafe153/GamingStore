@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Net.Mime;
-
 using ProblemDetails = Domain.Shared.ProblemDetails.ProblemDetails;
 
 namespace Presentation.Controllers.V1;
@@ -38,7 +37,7 @@ public class DevicesController : ControllerBase
 	}
 
 	/// <summary>
-	/// Gets a page of devices
+	/// Fetches a page of devices
 	/// </summary>
 	/// <param name="pageParameters">Parameters containing number, size and company name</param>
 	/// <param name="cancellationToken">Cancellation token</param>
@@ -62,7 +61,7 @@ public class DevicesController : ControllerBase
 	}
 
 	/// <summary>
-	/// Gets a device by the specified identifier
+	/// Fetches a device by the specified identifier
 	/// </summary>
 	/// <param name="id">A device's identifier</param>
 	/// <param name="cancellationToken">Cancellation token</param>
@@ -122,7 +121,7 @@ public class DevicesController : ControllerBase
 	/// <response code="204">Returns if a device is updated successfully</response>
 	/// <response code="400">Returns if the validations are not passed</response>
 	/// <response code="401">Returns if a user is unauthorized</response>
-	/// <response code="404">Returns if device does not exist</response>
+	/// <response code="404">Returns if a device does not exist</response>
 	[HttpPut("{id:int:min(1)}")]
 	[Consumes(MediaTypes.FormData)]
 	[Produces(MediaTypeNames.Application.Json)]
@@ -150,9 +149,9 @@ public class DevicesController : ControllerBase
 	/// <param name="id">A device's identifier</param>
 	/// <param name="cancellationToken">Cancellation token</param>
 	/// <returns>No content</returns>
-	/// <response code="204">Returns if the device is updated successfully</response>
+	/// <response code="204">Returns if a device is updated successfully</response>
 	/// <response code="401">Returns if a user is unauthorized</response>
-	/// <response code="404">Returns if device does not exist</response>
+	/// <response code="404">Returns if a device does not exist</response>
 	[HttpDelete("{id:int:min(1)}")]
 	[Consumes(MediaTypeNames.Application.Json)]
 	[Produces(MediaTypeNames.Application.Json)]

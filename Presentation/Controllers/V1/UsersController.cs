@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Net.Mime;
-
 using ProblemDetails = Domain.Shared.ProblemDetails.ProblemDetails;
 
 namespace Presentation.Controllers.V1;
@@ -40,7 +39,7 @@ public class UsersController : ControllerBase
 	}
 
 	/// <summary>
-	/// Gets a page of users
+	/// Fetches a page of users
 	/// </summary>
 	/// <param name="pageParameters">Page parameters containing number and size</param>
 	/// <param name="cancellationToken">Cancellation token</param>
@@ -65,7 +64,7 @@ public class UsersController : ControllerBase
 	}
 
 	/// <summary>
-	/// Gets a user by the specified identifier
+	/// Fetches a user by the specified identifier
 	/// </summary>
 	/// <param name="id">A user's identifier</param>
 	/// <param name="cancellationToken">Cancellation token</param>
@@ -125,7 +124,7 @@ public class UsersController : ControllerBase
 	/// <response code="204">Returns if a user is updated successfully</response>
 	/// <response code="400">Returns if the validations are not passed</response>
 	/// <response code="401">Returns if a user is unauthorized</response>
-	/// <response code="404">Returns if user does not exist</response>
+	/// <response code="404">Returns if a user does not exist</response>
 	[HttpPut("{id:int:min(1)}")]
 	[Consumes(MediaTypes.FormData)]
 	[Produces(MediaTypeNames.Application.Json)]
@@ -167,7 +166,7 @@ public class UsersController : ControllerBase
 	/// <response code="204">Returns if a user's password is updated successfully</response>
 	/// <response code="400">Returns if the validations are not passed</response>
 	/// <response code="401">Returns if a user is unauthorized</response>
-	/// <response code="404">Returns if user does not exist</response>
+	/// <response code="404">Returns if a user does not exist</response>
 	[HttpPut("{id:int:min(1)}/password")]
 	[Consumes(MediaTypeNames.Application.Json)]
 	[Produces(MediaTypeNames.Application.Json)]
@@ -209,7 +208,7 @@ public class UsersController : ControllerBase
 	/// <response code="204">Returns if a user's role is changed successfully'</response>
 	/// <response code="400">Returns if the validations are not passed</response>
 	/// <response code="401">Returns if a user is unauthorized</response>
-	/// <response code="404">Returns if user does not exist</response>
+	/// <response code="404">Returns if a user does not exist</response>
 	[HttpPut("{id:int:min(1)}/role")]
 	[Authorize(Policy = AuthorizationConstants.AdminOnlyPolicy)]
 	[Consumes(MediaTypeNames.Application.Json)]
@@ -238,9 +237,9 @@ public class UsersController : ControllerBase
 	/// <param name="id">A user's identifier</param>
 	/// <param name="cancellationToken">Cancellation token</param>
 	/// <returns>No content</returns>
-	/// <response code="204">Returns if the user is updated successfully</response>
+	/// <response code="204">Returns if a user is updated successfully</response>
 	/// <response code="401">Returns if a user is unauthorized</response>
-	/// <response code="404">Returns if user does not exist</response>
+	/// <response code="404">Returns if a user does not exist</response>
 	[HttpDelete("{id:int:min(1)}")]
 	[Consumes(MediaTypeNames.Application.Json)]
 	[Produces(MediaTypeNames.Application.Json)]

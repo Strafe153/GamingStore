@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Net.Mime;
-
 using ProblemDetails = Domain.Shared.ProblemDetails.ProblemDetails;
 
 namespace Presentation.Controllers.V1;
@@ -38,7 +37,7 @@ public class CompaniesController : ControllerBase
 	}
 
 	/// <summary>
-	/// Gets a page of companies
+	/// Fetches a page of companies
 	/// </summary>
 	/// <param name="pageParameters">Page parameters containing number and size</param>
 	/// <param name="cancellationToken">Cancellation token</param>
@@ -62,7 +61,7 @@ public class CompaniesController : ControllerBase
 	}
 
 	/// <summary>
-	/// Gets a company by the specified identifier
+	/// Fetches a company by the specified identifier
 	/// </summary>
 	/// <param name="id">A company's identifier</param>
 	/// <param name="cancellationToken">Cancellation token</param>
@@ -122,7 +121,7 @@ public class CompaniesController : ControllerBase
 	/// <response code="204">Returns if a company is updated successfully</response>
 	/// <response code="400">Returns if the validations are not passed</response>
 	/// <response code="401">Returns if a user is unauthorized</response>
-	/// <response code="404">Returns if company does not exist</response>
+	/// <response code="404">Returns if a company does not exist</response>
 	[HttpPut("{id:int:min(1)}")]
 	[Consumes(MediaTypes.FormData)]
 	[Produces(MediaTypeNames.Application.Json)]
@@ -150,9 +149,9 @@ public class CompaniesController : ControllerBase
 	/// <param name="id">A company's identifier</param>
 	/// <param name="cancellationToken">Cancellation token</param>
 	/// <returns>No content</returns>
-	/// <response code="204">Returns if the company is updated successfully</response>
+	/// <response code="204">Returns if a company is updated successfully</response>
 	/// <response code="401">Returns if a user is unauthorized</response>
-	/// <response code="404">Returns if company does not exist</response>
+	/// <response code="404">Returns if a company does not exist</response>
 	[HttpDelete("{id:int:min(1)}")]
 	[Consumes(MediaTypeNames.Application.Json)]
 	[Produces(MediaTypeNames.Application.Json)]
