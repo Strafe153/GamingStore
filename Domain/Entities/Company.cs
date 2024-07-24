@@ -3,7 +3,7 @@
 public class Company
 {
     public Company(
-        string name, 
+        string name,
         string picture)
     {
         Name = name;

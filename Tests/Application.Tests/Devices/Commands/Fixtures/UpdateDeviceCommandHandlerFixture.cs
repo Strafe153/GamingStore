@@ -20,19 +20,21 @@ public class UpdateDeviceCommandHandlerFixture
 		var deviceFaker = new Faker<Device>()
 			.CustomInstantiator(f => new(
 				f.Commerce.ProductName(),
-				(DeviceCategory)Random.Shared.Next(Enum.GetValues(typeof(DeviceCategory)).Length),
+				f.PickRandom<DeviceCategory>(),
 				f.Random.Decimal(),
 				f.Random.Int(),
 				f.Internet.Url(),
 				f.Random.Int(1, 5000)));
 
 		var updateDeviceCommandFaker = new Faker<UpdateDeviceCommand>()
-			.RuleFor(c => c.Device, deviceFaker)
-			.RuleFor(c => c.Name, f => f.Commerce.ProductName())
-			.RuleFor(c => c.Category, f => (DeviceCategory)Random.Shared.Next(Enum.GetValues(typeof(DeviceCategory)).Length))
-			.RuleFor(c => c.Price, f => f.Random.Decimal())
-			.RuleFor(c => c.InStock, f => f.Random.Int())
-			.RuleFor(c => c.CompanyId, f => f.Random.Int(1, 5000));
+			.CustomInstantiator(f => new(
+				deviceFaker,
+				f.Commerce.ProductName(),
+				f.PickRandom<DeviceCategory>(),
+				f.Random.Decimal(),
+				f.Random.Int(),
+				f.Random.Int(1, 5000),
+				null));
 
 		MockDeviceRepository = fixture.Freeze<Mock<IRepository<Device>>>();
 		MockDatabaseRepository = fixture.Freeze<Mock<IDatabaseRepository>>();

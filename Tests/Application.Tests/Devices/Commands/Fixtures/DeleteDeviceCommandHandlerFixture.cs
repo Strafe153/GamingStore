@@ -20,14 +20,14 @@ public class DeleteDeviceCommandHandlerFixture
 		var deviceFaker = new Faker<Device>()
 			.CustomInstantiator(f => new(
 				f.Commerce.ProductName(),
-				(DeviceCategory)Random.Shared.Next(Enum.GetValues(typeof(DeviceCategory)).Length),
+				f.PickRandom<DeviceCategory>(),
 				f.Random.Decimal(),
 				f.Random.Int(),
 				f.Internet.Url(),
 				f.Random.Int(1, 5000)));
 
 		var deleteDeviceCommandFaker = new Faker<DeleteDeviceCommand>()
-			.CustomInstantiator(f => new(deviceFaker.Generate()));
+			.CustomInstantiator(f => new(deviceFaker));
 
 		MockDeviceRepository = fixture.Freeze<Mock<IRepository<Device>>>();
 		MockDatabaseRepository = fixture.Freeze<Mock<IDatabaseRepository>>();

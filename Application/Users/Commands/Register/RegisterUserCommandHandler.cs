@@ -26,12 +26,13 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
     public async Task<User> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
     {
         var profilePicture = await _pictureService.UploadAsync(command.ProfilePicture, "user-profile-pictures", command.Email);
+
         var user = new User(
-            command.FirstName, 
-            command.LastName, 
-            command.Email, 
-            command.UserName, 
-            command.PhoneNumber, 
+            command.FirstName,
+            command.LastName,
+            command.Email,
+            command.UserName,
+            command.PhoneNumber,
             profilePicture);
 
         var result = await _userRepository.CreateAsync(user, command.Password);

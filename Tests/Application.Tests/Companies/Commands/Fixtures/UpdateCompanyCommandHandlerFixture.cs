@@ -22,9 +22,11 @@ public class UpdateCompanyCommandHandlerFixture
 				f.Internet.Url()));
 
 		var updateCompanyCommandFaker = new Faker<UpdateCompanyCommand>()
-			.RuleFor(c => c.Name, f => f.Company.CompanyName())
-			.RuleFor(c => c.Company, companyFaker);
-
+			.CustomInstantiator(f => new(
+				companyFaker,
+				f.Company.CompanyName(),
+				null));
+		 
 		MockCompanyRepository = fixture.Freeze<Mock<IRepository<Company>>>();
 		MockDatabaseRepository = fixture.Freeze<Mock<IDatabaseRepository>>();
 		MockPictureService = fixture.Freeze<Mock<IPictureService>>();

@@ -16,6 +16,8 @@ public class CompanyProfile : Profile
 
         CreateMap<Company, GetCompanyResponse>();
         CreateMap<CreateCompanyRequest, CreateCompanyCommand>();
-        CreateMap<UpdateCompanyRequest, UpdateCompanyCommand>();
+
+        CreateMap<UpdateCompanyRequest, UpdateCompanyCommand>()
+            .ForCtorParam(nameof(UpdateCompanyCommand.Company), c => c.MapFrom(_ => default(Company)));
     }
 }

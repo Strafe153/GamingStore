@@ -8,10 +8,10 @@ public interface IRepository<T>
 	Task<PagedList<T>> GetAllAsync(
 		int pageNumber,
 		int pageSize,
-		CancellationToken token = default,
+		CancellationToken token,
 		Expression<Func<T, bool>>? filter = null);
 
-	Task<T?> GetByIdAsync(int id, CancellationToken token = default);
+	Task<T?> GetByIdAsync(int id, CancellationToken token);
 	void Create(T entity);
 	void Update(T entity);
 	void Delete(T entity);

@@ -24,7 +24,7 @@ public class UserRepository : IUserRepository
     public Task<PagedList<User>> GetAllAsync(
         int pageNumber, 
         int pageSize,
-        CancellationToken token = default,
+        CancellationToken token,
         Expression<Func<User, bool>>? filter = null)
     {
         var query = filter is null
@@ -38,11 +38,10 @@ public class UserRepository : IUserRepository
         return usersTask;
     }
 
-    public Task<User?> GetByIdAsync(int id, CancellationToken token = default) =>
-        _userManager.Users.FirstOrDefaultAsync(u => u.Id == id, token);
-
-    public Task<User?> GetByEmailAsync(string email, CancellationToken token = default) =>
-        _userManager.Users.FirstOrDefaultAsync(u => u.Email == email, token);
+    public Task<User?> GetByIdAsync(int id, CancellationToken token) =>
+        _userManager.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == id, token);
 
     public Task<IdentityResult> UpdateAsync(User user) => _userManager.UpdateAsync(user);
 

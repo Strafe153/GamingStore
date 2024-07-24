@@ -5,13 +5,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Devices.Commands.Update;
 
-public sealed record UpdateDeviceCommand : ICommand
-{
-    public Device Device { get; init; } = default!;
-    public string Name { get; init; } = default!;
-    public DeviceCategory Category { get; init; }
-    public decimal Price { get; init; }
-    public int InStock { get; init; }
-    public int CompanyId { get; init; }
-    public IFormFile? Picture { get; init; }
-}
+public sealed record UpdateDeviceCommand(
+	Device Device,
+	string Name,
+	DeviceCategory Category,
+	decimal Price,
+	int InStock,
+	int CompanyId,
+	IFormFile? Picture) : ICommand;

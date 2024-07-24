@@ -10,11 +10,10 @@ public interface IUserRepository
     Task<PagedList<User>> GetAllAsync(
         int pageNumber,
         int pageSize,
-        CancellationToken token = default,
+        CancellationToken token,
         Expression<Func<User, bool>>? filter = null);
 
-    Task<User?> GetByIdAsync(int id, CancellationToken token = default);
-    Task<User?> GetByEmailAsync(string email, CancellationToken token = default);
+    Task<User?> GetByIdAsync(int id, CancellationToken token);
     Task<IdentityResult> CreateAsync(User user, string password);
     Task<IdentityResult> UpdateAsync(User user);
     Task<IdentityResult> DeleteAsync(User user);

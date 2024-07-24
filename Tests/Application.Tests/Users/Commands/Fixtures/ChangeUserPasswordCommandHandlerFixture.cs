@@ -13,45 +13,46 @@ namespace Application.Tests.Users.Commands.Fixtures;
 
 public class ChangeUserPasswordCommandHandlerFixture
 {
-    public ChangeUserPasswordCommandHandlerFixture()
-    {
-        var fixture = new Fixture().Customize(new AutoMoqCustomization());
+	public ChangeUserPasswordCommandHandlerFixture()
+	{
+		var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
-        var userFaker = new Faker<User>()
-            .CustomInstantiator(f => new(
-                f.Name.FirstName(),
-                f.Name.LastName(),
-                f.Internet.Email(),
-                f.Internet.UserName(),
-                f.Phone.PhoneNumber(),
-                null));
+		var userFaker = new Faker<User>()
+			.CustomInstantiator(f => new(
+				f.Name.FirstName(),
+				f.Name.LastName(),
+				f.Internet.Email(),
+				f.Internet.UserName(),
+				f.Phone.PhoneNumber(),
+				null));
 
-        var changeUserPasswordCommandFaker = new Faker<ChangeUserPasswordCommand>()
-            .RuleFor(c => c.User, userFaker)
-            .RuleFor(c => c.CurrentPassword, f => f.Internet.Password())
-            .RuleFor(c => c.NewPassword, f => f.Internet.Password());
+		var changeUserPasswordCommandFaker = new Faker<ChangeUserPasswordCommand>()
+			.CustomInstantiator(f => new(
+				userFaker,
+				f.Internet.Password(),
+				f.Internet.Password()));
 
-        MockRepository = fixture.Freeze<Mock<IUserRepository>>();
-        MockUserService = fixture.Freeze<Mock<IUserService>>();
-        MockLogger = fixture.Freeze<Mock<ILogger<ChangeUserPasswordCommandHandler>>>();
+		MockRepository = fixture.Freeze<Mock<IUserRepository>>();
+		MockUserService = fixture.Freeze<Mock<IUserService>>();
+		MockLogger = fixture.Freeze<Mock<ILogger<ChangeUserPasswordCommandHandler>>>();
 
-        ChangeUserPasswordCommandHandler = new ChangeUserPasswordCommandHandler(
-            MockRepository.Object,
-            MockUserService.Object,
-            MockLogger.Object);
+		ChangeUserPasswordCommandHandler = new ChangeUserPasswordCommandHandler(
+			MockRepository.Object,
+			MockUserService.Object,
+			MockLogger.Object);
 
-        SucceededResult = IdentityResult.Success;
-        FailedResult = IdentityResult.Failed();
-        ChangeUserPasswordCommand = changeUserPasswordCommandFaker.Generate();
-    }
+		SucceededResult = IdentityResult.Success;
+		FailedResult = IdentityResult.Failed();
+		ChangeUserPasswordCommand = changeUserPasswordCommandFaker.Generate();
+	}
 
-    public ChangeUserPasswordCommandHandler ChangeUserPasswordCommandHandler { get; }
-    public Mock<IUserRepository> MockRepository { get; }
-    public Mock<IUserService> MockUserService { get; }
-    public Mock<ILogger<ChangeUserPasswordCommandHandler>> MockLogger { get; }
+	public ChangeUserPasswordCommandHandler ChangeUserPasswordCommandHandler { get; }
+	public Mock<IUserRepository> MockRepository { get; }
+	public Mock<IUserService> MockUserService { get; }
+	public Mock<ILogger<ChangeUserPasswordCommandHandler>> MockLogger { get; }
 
-    public CancellationToken CancellationToken { get; }
-    public IdentityResult SucceededResult { get; }
-    public IdentityResult FailedResult { get; }
-    public ChangeUserPasswordCommand ChangeUserPasswordCommand { get; }
+	public CancellationToken CancellationToken { get; }
+	public IdentityResult SucceededResult { get; }
+	public IdentityResult FailedResult { get; }
+	public ChangeUserPasswordCommand ChangeUserPasswordCommand { get; }
 }

@@ -16,6 +16,8 @@ public class DeviceProfile : Profile
 
         CreateMap<Device, GetDeviceResponse>();
         CreateMap<CreateDeviceRequest, CreateDeviceCommand>();
-        CreateMap<UpdateDeviceRequest, UpdateDeviceCommand>();
+
+        CreateMap<UpdateDeviceRequest, UpdateDeviceCommand>()
+            .ForCtorParam(nameof(UpdateDeviceCommand.Device), c => c.MapFrom(_ => default(Device)));
     }
 }

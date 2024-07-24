@@ -5,5 +5,5 @@ using Domain.Shared.Paging;
 namespace Application.Companies.Queries.GetAll;
 
 public sealed record GetAllCompaniesQuery(
-    int PageNumber,
-    int PageSize) : IQuery<PagedList<Company>>;
+	int PageNumber,
+	int PageSize) : IQuery<PagedList<Company>>;

@@ -17,7 +17,7 @@ public class CreateCompanyCommandHandlerFixture
 		var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
 		var createCompanyCommandFaker = new Faker<CreateCompanyCommand>()
-			.RuleFor(c => c.Name, f => f.Company.CompanyName());
+			.CustomInstantiator(f => new(f.Company.CompanyName(), null));
 
 		MockCompanyRepository = fixture.Freeze<Mock<IRepository<Company>>>();
 		MockDatabaseRepository = fixture.Freeze<Mock<IDatabaseRepository>>();

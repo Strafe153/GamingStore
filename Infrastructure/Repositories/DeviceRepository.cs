@@ -23,7 +23,7 @@ public class DeviceRepository : IRepository<Device>
     public Task<PagedList<Device>> GetAllAsync(
         int pageNumber, 
         int pageSize,
-        CancellationToken token = default,
+        CancellationToken token,
         Expression<Func<Device, bool>>? filter = null)
     {
         var query = filter is null
@@ -38,9 +38,10 @@ public class DeviceRepository : IRepository<Device>
         return devicesTask;
     }
 
-    public Task<Device?> GetByIdAsync(int id, CancellationToken token = default) =>
+    public Task<Device?> GetByIdAsync(int id, CancellationToken token) =>
         _context.Devices
             .Include(d => d.Company)
+            .AsNoTracking()
             .FirstOrDefaultAsync(d => d.Id == id, token);
 
     public void Update(Device entity) => _context.Devices.Update(entity);

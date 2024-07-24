@@ -14,15 +14,20 @@ public class UserProfile : Profile
     public UserProfile()
     {
         CreateMap<PagedList<User>, PagedModel<GetUserResponse>>()
-            .ForMember(pvm => pvm.Entities, opt => opt.MapFrom(pl => pl));
+            .ForMember(m => m.Entities, o => o.MapFrom(l => l));
 
         CreateMap<User, GetUserResponse>();
 
         CreateMap<RegisterUserRequest, RegisterUserCommand>()
-            .ForMember(ruc => ruc.UserName, opt => opt.MapFrom(rur => rur.Email));
+            .ForCtorParam(nameof(RegisterUserCommand.UserName), c => c.MapFrom(r => r.Email));
 
-        CreateMap<UpdateUserRequest, UpdateUserCommand>();
-        CreateMap<ChangeUserPasswordRequest, ChangeUserPasswordCommand>();
-        CreateMap<ChangeUserRoleRequest, ChangeUserRoleCommand>();
+        CreateMap<UpdateUserRequest, UpdateUserCommand>()
+            .ForCtorParam(nameof(UpdateUserCommand.User), c => c.MapFrom(_ => default(User)));
+
+        CreateMap<ChangeUserPasswordRequest, ChangeUserPasswordCommand>()
+            .ForCtorParam(nameof(ChangeUserPasswordCommand.User), c => c.MapFrom(_ => default(User)));
+
+        CreateMap<ChangeUserRoleRequest, ChangeUserRoleCommand>()
+            .ForCtorParam(nameof(ChangeUserRoleCommand.User), c => c.MapFrom(_ => default(User)));
     }
 }

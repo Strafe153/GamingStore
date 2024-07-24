@@ -137,6 +137,7 @@ public class CompaniesController : ControllerBase
 		var query = new GetCompanyByIdQuery(id);
 		var company = await _sender.Send(query, cancellationToken);
 
+		//var command = new UpdateCompanyCommand(company, request.Name, request.Picture);
 		var command = _mapper.Map<UpdateCompanyCommand>(request) with { Company = company };
 		await _sender.Send(command, cancellationToken);
 
