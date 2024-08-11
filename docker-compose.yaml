@@ -1,10 +1,8 @@
-version: '3.8'
-
 services:
   web:
     build:
-      context: .
-      dockerfile: ./Web/Dockerfile
+      context: ./Web/
+      dockerfile: Dockerfile
     container_name: web
     ports:
       - 8080:80
@@ -22,7 +20,7 @@ services:
       - Azure__ContainerLink=https://host.docker.internal:10000/devstoreaccount1
     volumes:
       - ~/.aspnet/https:/https:ro
-      - gaming_store:/app/shared_data
+      - gaming-store-data:/app/shared_data
     depends_on:
       - ms_sql_server
       - azurite
@@ -45,7 +43,7 @@ services:
       - Cors__Methods__0=*
       - Cors__Headers__0=*
     volumes:
-      - gaming_store:/app/shared_data
+      - gaming-store-data:/app/shared_data
     depends_on:
       - ms_sql_server
       - web
@@ -59,16 +57,18 @@ services:
     ports:
       - 1433:1433
     volumes:
-      - gaming_store:/app/shared_data
+      - gaming-store-data:/app/shared_data
   
   redis:
-    image: redis
+    image: redis:7.4.0
     container_name: redis
     ports:
       - 6379:6379
+    volumes:
+      - redis-data:/data
 
   azurite:
-    image: mcr.microsoft.com/azure-storage/azurite
+    image: mcr.microsoft.com/azure-storage/azurite:3.10.0
     container_name: azurite
     command: "azurite --loose --blobHost 0.0.0.0 --blobPort 10000 --location /workspace --debug /workspace/debug.log"
     ports:
@@ -79,8 +79,6 @@ services:
   elastic_search:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.1
     container_name: elastic_search
-    volumes:
-      - gaming_store:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     environment:
@@ -88,6 +86,8 @@ services:
       - discovery.type=single-node
     networks:
       - elastic
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.8.1
@@ -102,7 +102,9 @@ services:
       - elastic
 
 volumes:
-  gaming_store:
+  gaming-store-data:
+  redis-data:
+  elastic-data:
 
 networks:
   elastic:

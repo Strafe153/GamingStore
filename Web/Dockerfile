@@ -1,6 +1,5 @@
-# syntax=docker/dockerfile:1
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+WORKDIR /source
     
 # Copy csproj and restore as distinct layers
 COPY ../*.sln ./
@@ -22,11 +21,11 @@ COPY ../Infrastructure/. ./Infrastructure/
 COPY ../Presentation/. ./Presentation/
 COPY ../Tests/Application.Tests/. ./Tests/Application.Tests/
 COPY ../Tests/Web.Tests/. ./Tests/Web.Tests/
-WORKDIR /app/Web
-RUN dotnet publish -c Release -o /app/out
+WORKDIR /source/Web
+RUN dotnet publish -c Release -o /app --no-restore
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
-COPY --from=build-env /app/out ./
+COPY --from=build /app .
 ENTRYPOINT ["dotnet", "Web.dll"]

@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Net.Mime;
-using ProblemDetails = Domain.Shared.ProblemDetails.ProblemDetails;
 
 namespace Presentation.Controllers.V1;
 

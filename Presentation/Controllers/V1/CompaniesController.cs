@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Net.Mime;
-using ProblemDetails = Domain.Shared.ProblemDetails.ProblemDetails;
 
 namespace Presentation.Controllers.V1;
 
@@ -105,7 +104,7 @@ public class CompaniesController : ControllerBase
 	{
 		var command = _mapper.Map<CreateCompanyCommand>(request);
 
-		var company = await _sender.Send(command, cancellationToken);
+        var company = await _sender.Send(command, cancellationToken);
 		var companyResponse = _mapper.Map<GetCompanyResponse>(company);
 
 		return CreatedAtAction(nameof(Get), new { companyResponse.Id }, companyResponse);
@@ -137,7 +136,6 @@ public class CompaniesController : ControllerBase
 		var query = new GetCompanyByIdQuery(id);
 		var company = await _sender.Send(query, cancellationToken);
 
-		//var command = new UpdateCompanyCommand(company, request.Name, request.Picture);
 		var command = _mapper.Map<UpdateCompanyCommand>(request) with { Company = company };
 		await _sender.Send(command, cancellationToken);
 

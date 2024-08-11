@@ -1,6 +1,5 @@
 ﻿using Domain.Shared.Constants;
 using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Web.HealthChecks;
 
 namespace Web.Configurations;
@@ -17,8 +16,10 @@ public static class HealthChecksConfiguration
             .AddCheck<IdentityServerHealthCheck>("IdentityServer");
 
     public static void UseHealthChecks(this WebApplication application) =>
-        application.MapHealthChecks("/_health", new HealthCheckOptions
-        {
-            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-        });
+        application.MapHealthChecks(
+            "/_health",
+            new()
+            {
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
 }

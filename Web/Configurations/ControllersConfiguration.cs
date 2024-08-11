@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Web.Configurations;
 
@@ -8,8 +8,5 @@ public static class ControllersConfiguration
         services
             .AddControllers()
             .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly)
-            .AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
+            .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 }
