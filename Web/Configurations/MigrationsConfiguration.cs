@@ -16,7 +16,7 @@ public static class MigrationsConfiguration
 			await Task.Delay(TimeSpan.FromSeconds(5));
 		}
 
-		//dbContext?.Database.Migrate();
+		dbContext?.Database.Migrate();
 	}
 
 	private static bool CanConnect(this GamingStoreContext dbContext)
