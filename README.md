@@ -31,7 +31,6 @@
 * `Microsoft.AspNetCore.Http.Abstractions` for object model for HTTP requests and responses
 * `Microsoft.AspNetCore.Http.Features` for HTTP feature interface definitions
 * `Microsoft.AspNetCore.Identity.EntityFrameworkCore` for identity provider that uses EF Core
-* `Microsoft.AspNetCore.Mvc.NewtonsoftJson` for MVC features that use Newtonsoft.Json
 * `Microsoft.EntityFrameworkCore` for entity mapping
 * `Microsoft.EntityFrameworkCore.Design` for shared design-time components for EF Core tools
 * `Microsoft.EntityFrameworkCore.SqlServer` for DB context and entity mapping
@@ -46,7 +45,6 @@
 * `Microsoft.IdentityModel.Tokens` for security tokens
 * `Microsoft.NET.Test.Sdk` for .NET SDK for testing
 * `Moq` for mocking
-* `Newtonsoft.Json` for JSON serialization
 * `Serilog.AspNetCore` for Serilog support for ASP.NET Core
 * `Serilog.Enrichers.Environment` for enricihing the Serilog configuration with Environment properties
 * `Serilog.Exceptions` for detailed Serilog exceptions
