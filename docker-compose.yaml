@@ -1,8 +1,8 @@
 services:
   web:
     build:
-      context: ./Web/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./Web/Dockerfile
     container_name: web
     ports:
       - 8080:80
