@@ -40,7 +40,7 @@
 * `Microsoft.Extensions.Configuration.Abstractions` for configuration abstractions
 * `Microsoft.Extensions.Configuration.UserSecrets` for user secrets provider
 * `Microsoft.Extensions.DependencyInjection.Abstractions` for DI abstractions
-* `Microsoft.Extensions.Http.Polly` for transient fault handling
+* `Microsoft.Extensions.Http.Resilience` for transient fault handling
 * `Microsoft.Extensions.Identity.Stores` for Identity membership system
 * `Microsoft.IdentityModel.Tokens` for security tokens
 * `Microsoft.NET.Test.Sdk` for .NET SDK for testing
