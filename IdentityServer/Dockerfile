@@ -4,15 +4,11 @@ WORKDIR /source
     
 # Copy csproj and restore as distinct layers
 COPY ../*.sln ./
-COPY ../Web/*.csproj ./Web/
 COPY ../IdentityServer/*.csproj ./IdentityServer/
 COPY ../Application/*.csproj ./Application/
 COPY ../Domain/*.csproj ./Domain/
 COPY ../Infrastructure/*.csproj ./Infrastructure/
-COPY ../Presentation/*.csproj ./Presentation/
-COPY ../Tests/Application.Tests/*.csproj ./Tests/Application.Tests/
-COPY ../Tests/Presentation.Tests/*.csproj ./Tests/Presentation.Tests/
-RUN dotnet restore
+RUN dotnet restore ./IdentityServer/IdentityServer.csproj
     
 # Copy everything else and build
 COPY ../IdentityServer/. ./IdentityServer/
