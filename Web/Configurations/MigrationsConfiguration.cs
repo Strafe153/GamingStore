@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using Domain.Shared.Constants;
+using Infrastructure;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,8 +22,8 @@ public static class MigrationsConfiguration
 
 	private static bool CanConnect(this GamingStoreContext dbContext)
 	{
-		using var connection = dbContext.Database.GetDbConnection();
-		var masterConnectionString = connection.ConnectionString.Replace("gaming_store_db", "master");
+		var connection = dbContext.Database.GetDbConnection();
+		var masterConnectionString = connection.ConnectionString.Replace(DatabaseConstants.GamingStore, DatabaseConstants.Master);
 		using SqlConnection masterConnection = new(masterConnectionString);
 
 		try

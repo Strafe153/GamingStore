@@ -1,8 +1,8 @@
 services:
   web:
     build:
-      context: ./Web/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./Web/Dockerfile
     container_name: web
     ports:
       - 8080:80
@@ -21,6 +21,8 @@ services:
     volumes:
       - ~/.aspnet/https:/https:ro
       - gaming-store-data:/app/shared_data
+    networks:
+      - gaming_store
     depends_on:
       - ms_sql_server
       - azurite
@@ -44,6 +46,8 @@ services:
       - Cors__Headers__0=*
     volumes:
       - gaming-store-data:/app/shared_data
+    networks:
+      - gaming_store
     depends_on:
       - ms_sql_server
       - web
@@ -56,6 +60,8 @@ services:
       - SA_PASSWORD=Pa55w0rd!
     ports:
       - 1433:1433
+    networks:
+      - gaming_store
     volumes:
       - gaming-store-data:/app/shared_data
   
@@ -64,6 +70,8 @@ services:
     container_name: redis
     ports:
       - 6379:6379
+    networks:
+      - gaming_store
     volumes:
       - redis-data:/data
 
@@ -73,6 +81,8 @@ services:
     command: "azurite --loose --blobHost 0.0.0.0 --blobPort 10000 --location /workspace --debug /workspace/debug.log"
     ports:
       - 10000:10000
+    networks:
+      - gaming_store
     volumes:
       - ./azurite:/workspace
 
@@ -86,6 +96,7 @@ services:
       - discovery.type=single-node
     networks:
       - elastic
+      - gaming_store
     volumes:
       - elastic-data:/usr/share/elasticsearch/data
 
@@ -100,6 +111,7 @@ services:
       - ELASTICSEARCH_URL=http://elastic_search:9200
     networks:
       - elastic
+      - gaming_store
 
 volumes:
   gaming-store-data:
@@ -108,4 +120,6 @@ volumes:
 
 networks:
   elastic:
+    driver: bridge
+  gaming_store:
     driver: bridge
