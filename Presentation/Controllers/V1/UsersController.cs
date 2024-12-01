@@ -96,7 +96,7 @@ public class UsersController : ControllerBase
 	/// <response code="401">Returns if a user is unauthorized</response>
 	[HttpPost("register")]
 	[AllowAnonymous]
-	[Consumes(MediaTypes.FormData)]
+	[Consumes(MediaTypeNames.Multipart.FormData)]
 	[Produces(MediaTypeNames.Application.Json)]
 	[ProducesResponseType(typeof(GetUserResponse), StatusCodes.Status201Created)]
 	[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
@@ -125,7 +125,7 @@ public class UsersController : ControllerBase
 	/// <response code="401">Returns if a user is unauthorized</response>
 	/// <response code="404">Returns if a user does not exist</response>
 	[HttpPut("{id:int:min(1)}")]
-	[Consumes(MediaTypes.FormData)]
+	[Consumes(MediaTypeNames.Multipart.FormData)]
 	[Produces(MediaTypeNames.Application.Json)]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]

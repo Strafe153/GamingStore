@@ -1,5 +1,6 @@
 ﻿using Application.HttpClients;
 using Domain.Shared.Constants;
+using Microsoft.Extensions.Http.Resilience;
 using Polly;
 
 namespace Web.Configurations;
@@ -13,5 +14,17 @@ public static class HttpClientsConfiguration
                 options.BaseAddress = new Uri(
                     configuration.GetConnectionString(ConnectionStringsConstants.IdentityServerConnection)!);
             })
-            .AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
+            .AddResilienceHandler("identityServerResiliencePipeline", builder =>
+            {
+                builder.AddRetry(
+                    new HttpRetryStrategyOptions
+                    {
+                        MaxRetryAttempts = 3,
+                        BackoffType = DelayBackoffType.Exponential,
+                        Delay = TimeSpan.FromSeconds(.5),
+                        UseJitter = true
+                    });
+
+                builder.AddTimeout(TimeSpan.FromSeconds(3));
+            });
 }

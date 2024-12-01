@@ -93,7 +93,7 @@ public class CompaniesController : ControllerBase
 	/// <response code="400">Returns if the validations are not passed</response>
 	/// <response code="401">Returns if a user is unauthorized</response>
 	[HttpPost]
-	[Consumes(MediaTypes.FormData)]
+	[Consumes(MediaTypeNames.Multipart.FormData)]
 	[Produces(MediaTypeNames.Application.Json)]
 	[ProducesResponseType(typeof(GetCompanyResponse), StatusCodes.Status201Created)]
 	[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
@@ -122,7 +122,7 @@ public class CompaniesController : ControllerBase
 	/// <response code="401">Returns if a user is unauthorized</response>
 	/// <response code="404">Returns if a company does not exist</response>
 	[HttpPut("{id:int:min(1)}")]
-	[Consumes(MediaTypes.FormData)]
+	[Consumes(MediaTypeNames.Multipart.FormData)]
 	[Produces(MediaTypeNames.Application.Json)]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
