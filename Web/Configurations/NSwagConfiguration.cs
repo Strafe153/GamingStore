@@ -7,6 +7,17 @@ namespace Web.Configurations;
 
 public static class NSwagConfiguration
 {
+    private const string _bearer = "Bearer";
+    private const string _authorization = "Authorization";
+    private const string _jwtFormat = "JWT";
+
+    const string _description = """
+        Enter 'Bearer' [space] and then your token in the text input below.
+        Example: "Bearer kl4wof7t3nf"
+    """;
+
+    private static readonly string? _assemblyName = typeof(Program).Assembly.GetName().Name;
+
     public static void ConfigureNSwag(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
@@ -23,12 +34,14 @@ public static class NSwagConfiguration
 
     private static void RegisterApiDocument(this IServiceCollection services, ApiVersionDescription description)
     {
+        var title = $"{_assemblyName} {description.ApiVersion}";
+
         services.AddOpenApiDocument(options =>
         {
             options.DocumentName = description.GroupName;
-            options.Title = $"{typeof(Program).Assembly.GetName().Name} {description.ApiVersion}";
+            options.Title = title;
             options.Version = description.ApiVersion.ToString();
-            options.ApiGroupNames = new[] { description.GroupName };
+            options.ApiGroupNames = [description.GroupName];
 
             options.RegisterBearerScheme();
         });
@@ -36,20 +49,18 @@ public static class NSwagConfiguration
 
     private static void RegisterBearerScheme(this AspNetCoreOpenApiDocumentGeneratorSettings options)
     {
-        const string BearerScheme = "Bearer";
-
         OpenApiSecurityScheme bearerScheme = new()
         {
+            Name = _authorization,
+            BearerFormat = _jwtFormat,
+            Description = _description,
             Type = OpenApiSecuritySchemeType.ApiKey,
-            Name = "Authorization",
-            In = OpenApiSecurityApiKeyLocation.Header,
-            Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer kl4wof7t3nf\"",
-            BearerFormat = "JWT"
+            In = OpenApiSecurityApiKeyLocation.Header
         };
 
-        OperationSecurityScopeProcessor bearerProcessor = new(BearerScheme);
+        OperationSecurityScopeProcessor bearerProcessor = new(_bearer);
 
-        options.AddSecurity(BearerScheme, bearerScheme);
+        options.AddSecurity(_bearer, bearerScheme);
         options.OperationProcessors.Add(bearerProcessor);
     }
 }
