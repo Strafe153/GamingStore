@@ -28,7 +28,7 @@ builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.ConfigureAuthorization();
 
 builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
-builder.Services.ConfigureSwagger();
+builder.Services.ConfigureNSwag();
 
 var app = builder.Build();
 
@@ -36,7 +36,8 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
-    app.ConfigureSwaggerUI();
+    app.UseOpenApi();
+    app.UseSwaggerUi();
 }
 
 app.UseHttpsRedirection();
