@@ -5,7 +5,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Shared.Paging;
 
-namespace Presentation.AutoMapperProfiles;
+namespace Application.AutoMapperProfiles;
 
 public class DeviceProfile : Profile
 {

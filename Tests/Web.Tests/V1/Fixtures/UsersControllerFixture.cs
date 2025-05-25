@@ -1,4 +1,5 @@
-﻿using Application.Users.Commands.ChangePassword;
+﻿using Application.AutoMapperProfiles;
+using Application.Users.Commands.ChangePassword;
 using Application.Users.Commands.ChangeRole;
 using Application.Users.Commands.Register;
 using Application.Users.Commands.Update;
@@ -11,10 +12,9 @@ using Domain.Shared.PageParameters;
 using Domain.Shared.Paging;
 using MediatR;
 using Moq;
-using Presentation.AutoMapperProfiles;
-using Presentation.Controllers.V1;
+using Web.Controllers.V1;
 
-namespace Presentation.Tests.V1.Fixtures;
+namespace Web.Tests.V1.Fixtures;
 
 public class UsersControllerFixture
 {

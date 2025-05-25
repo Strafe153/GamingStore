@@ -7,10 +7,10 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Presentation.Tests.V1.Fixtures;
+using Web.Tests.V1.Fixtures;
 using Xunit;
 
-namespace Presentation.Tests.V1;
+namespace Web.Tests.V1;
 
 public class DevicesControllerTests : IClassFixture<DevicesControllerFixture>
 {
