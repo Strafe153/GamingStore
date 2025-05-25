@@ -1,4 +1,4 @@
-using Presentation.AutoMapperProfiles;
+using Application.AutoMapperProfiles;
 using Web.Configurations;
 using Web.Middleware;
 
