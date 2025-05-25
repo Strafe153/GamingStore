@@ -17,7 +17,6 @@
 * `AutoFixture` for test fixtures
 * `AutoFixture.AutoMoq` for Moq support with AutoFixture
 * `AutoMapper` for DTO mapping
-* `AutoMapper.Extensions.Microsoft.DependencyInjection` for DI with AutoMapper
 * `Azure.Storage.Blobs` for images storing in Azure Blob Storage
 * `Bogus` for fake data generation
 * `FluentAssertions` for assertions
