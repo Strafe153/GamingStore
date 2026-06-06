@@ -5,31 +5,27 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>54a28ab4-4ab8-49e6-9583-b979409533aa</UserSecretsId>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);1591</NoWarn>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="7.1.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="6.1.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.Elasticsearch" Version="7.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="6.0.4" />
-    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="6.0.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.5" />
-    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.0.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
-    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
-    <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
-    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="9.0.3" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="[7.1.0]" />
+    <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="[6.1.2]" />
+    <PackageReference Include="AspNetCore.HealthChecks.Elasticsearch" Version="[7.0.0]" />
+    <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="[6.0.4]" />
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="[6.0.2]" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="[6.0.5]" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="[11.2.2]" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="[11.0.0]" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="[6.0.10]" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="[6.0.10]" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="[9.0.0]" />
+    <PackageReference Include="Serilog.AspNetCore" Version="[6.0.1]" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="[2.2.0]" />
+    <PackageReference Include="Serilog.Exceptions" Version="[8.4.0]" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="[9.0.3]" />
+    <PackageReference Include="Serilog.Sinks.File" Version="[5.0.0]" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="[6.4.0]" />
   </ItemGroup>
 
   <ItemGroup>
