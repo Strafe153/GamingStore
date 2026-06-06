@@ -660,8 +660,8 @@
       },
       "Newtonsoft.Json": {
         "type": "Transitive",
-        "resolved": "13.0.1",
-        "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
+        "resolved": "12.0.2",
+        "contentHash": "rTK0s2EKlfHsQsH6Yx2smvcTCeyoDNgCW7FEYyV01drPlh2T243PR2DiDXqtC5N4GDm4Ma/lkxfW5a/4793vbA=="
       },
       "Serilog": {
         "type": "Transitive",
@@ -956,8 +956,7 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "[5.0.17, 5.0.17]",
-          "Microsoft.Extensions.Identity.Stores": "[6.0.10, 6.0.10]",
-          "Newtonsoft.Json": "[13.0.1, 13.0.1]"
+          "Microsoft.Extensions.Identity.Stores": "[6.0.10, 6.0.10]"
         }
       },
       "infrastructure": {

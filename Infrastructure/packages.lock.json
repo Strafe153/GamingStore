@@ -475,11 +475,6 @@
           "Microsoft.NETCore.Platforms": "3.1.0"
         }
       },
-      "Newtonsoft.Json": {
-        "type": "Transitive",
-        "resolved": "13.0.1",
-        "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
-      },
       "SixLabors.ImageSharp": {
         "type": "Transitive",
         "resolved": "3.1.6",
@@ -682,8 +677,7 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "[5.0.17, 5.0.17]",
-          "Microsoft.Extensions.Identity.Stores": "[6.0.10, 6.0.10]",
-          "Newtonsoft.Json": "[13.0.1, 13.0.1]"
+          "Microsoft.Extensions.Identity.Stores": "[6.0.10, 6.0.10]"
         }
       }
     }

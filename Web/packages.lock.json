@@ -920,11 +920,6 @@
           "Elasticsearch.Net": "7.17.5"
         }
       },
-      "Newtonsoft.Json": {
-        "type": "Transitive",
-        "resolved": "13.0.1",
-        "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
-      },
       "Pipelines.Sockets.Unofficial": {
         "type": "Transitive",
         "resolved": "2.2.2",
@@ -1290,8 +1285,7 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "[5.0.17, 5.0.17]",
-          "Microsoft.Extensions.Identity.Stores": "[6.0.10, 6.0.10]",
-          "Newtonsoft.Json": "[13.0.1, 13.0.1]"
+          "Microsoft.Extensions.Identity.Stores": "[6.0.10, 6.0.10]"
         }
       },
       "infrastructure": {
