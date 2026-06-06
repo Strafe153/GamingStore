@@ -5,8 +5,8 @@ using Application.Devices.Commands.Update;
 using Application.Devices.Queries;
 using Application.Devices.Queries.GetAll;
 using Application.Devices.Queries.GetById;
+using Application.Mappings;
 using Asp.Versioning;
-using AutoMapper;
 using Domain.Shared.Constants;
 using Domain.Shared.PageParameters;
 using Domain.Shared.Paging;
@@ -25,14 +25,10 @@ namespace Web.Controllers.V1;
 public class DevicesController : ControllerBase
 {
     private readonly ISender _sender;
-    private readonly IMapper _mapper;
 
-    public DevicesController(
-        ISender sender,
-        IMapper mapper)
+    public DevicesController(ISender sender)
     {
         _sender = sender;
-        _mapper = mapper;
     }
 
     /// <summary>
@@ -54,7 +50,7 @@ public class DevicesController : ControllerBase
         var query = new GetAllDevicesQuery(pageParameters.PageNumber, pageParameters.PageSize, pageParameters.Company);
 
         var devices = await _sender.Send(query, cancellationToken);
-        var deviceResponses = _mapper.Map<PagedModel<GetDeviceResponse>>(devices);
+        var deviceResponses = devices.ToPagedModel();
 
         return Ok(deviceResponses);
     }
@@ -78,7 +74,7 @@ public class DevicesController : ControllerBase
         var query = new GetDeviceByIdQuery(id);
 
         var device = await _sender.Send(query, cancellationToken);
-        var deviceResponse = _mapper.Map<GetDeviceResponse>(device);
+        var deviceResponse = device.ToResponse();
 
         return Ok(deviceResponse);
     }
@@ -102,10 +98,10 @@ public class DevicesController : ControllerBase
         [FromForm] CreateDeviceRequest request,
         CancellationToken cancellationToken)
     {
-        var command = _mapper.Map<CreateDeviceCommand>(request);
+        var command = request.ToCommand();
 
         var device = await _sender.Send(command, cancellationToken);
-        var deviceResponse = _mapper.Map<GetDeviceResponse>(device);
+        var deviceResponse = device.ToResponse();
 
         return CreatedAtAction(nameof(Get), new { deviceResponse.Id }, deviceResponse);
     }
@@ -136,7 +132,7 @@ public class DevicesController : ControllerBase
         var query = new GetDeviceByIdQuery(id);
         var device = await _sender.Send(query, cancellationToken);
 
-        var command = _mapper.Map<UpdateDeviceCommand>(request) with { Device = device };
+        var command = request.ToCommand() with { Device = device };
         await _sender.Send(command, cancellationToken);
 
         return NoContent();

@@ -1,4 +1,3 @@
-using Application.AutoMapperProfiles;
 using Web.Configurations;
 using Web.Middleware;
 
@@ -27,7 +26,6 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.ConfigureAuthorization();
 
-builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
 builder.Services.ConfigureNSwag();
 
 var app = builder.Build();

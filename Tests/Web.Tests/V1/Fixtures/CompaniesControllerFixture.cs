@@ -1,9 +1,7 @@
-﻿using Application.AutoMapperProfiles;
-using Application.Companies.Commands.Create;
+﻿using Application.Companies.Commands.Create;
 using Application.Companies.Commands.Update;
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using AutoMapper;
 using Bogus;
 using Domain.Entities;
 using Domain.Shared.PageParameters;
@@ -48,14 +46,7 @@ public class CompaniesControllerFixture
 
         MockSender = fixture.Freeze<Mock<ISender>>();
 
-        Mapper = new MapperConfiguration(options =>
-        {
-            options.AddProfile(new CompanyProfile());
-        }).CreateMapper();
-
-        CompaniesController = new CompaniesController(
-            MockSender.Object,
-            Mapper);
+        CompaniesController = new CompaniesController(MockSender.Object);
 
         Id = Random.Shared.Next(1, 5000);
 
@@ -73,7 +64,6 @@ public class CompaniesControllerFixture
 
     public CompaniesController CompaniesController { get; }
     public Mock<ISender> MockSender { get; }
-    public IMapper Mapper { get; }
 
     public int Id { get; }
     public PageParameters PageParameters { get; set; }

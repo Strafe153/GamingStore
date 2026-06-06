@@ -1,11 +1,9 @@
-﻿using Application.AutoMapperProfiles;
-using Application.Users.Commands.ChangePassword;
+﻿using Application.Users.Commands.ChangePassword;
 using Application.Users.Commands.ChangeRole;
 using Application.Users.Commands.Register;
 using Application.Users.Commands.Update;
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using AutoMapper;
 using Bogus;
 using Domain.Entities;
 using Domain.Shared.PageParameters;
@@ -68,14 +66,7 @@ public class UsersControllerFixture
 
         MockSender = fixture.Freeze<Mock<ISender>>();
 
-        Mapper = new MapperConfiguration(options =>
-        {
-            options.AddProfile(new UserProfile());
-        }).CreateMapper();
-
-        UsersController = new UsersController(
-            MockSender.Object,
-            Mapper);
+        UsersController = new UsersController(MockSender.Object);
 
         Id = Random.Shared.Next(1, 5000);
 
@@ -95,7 +86,6 @@ public class UsersControllerFixture
 
     public UsersController UsersController { get; }
     public Mock<ISender> MockSender { get; }
-    public IMapper Mapper { get; }
 
     public int Id { get; }
     public PageParameters PageParameters { get; set; }

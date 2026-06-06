@@ -1,9 +1,7 @@
-﻿using Application.AutoMapperProfiles;
-using Application.Devices.Commands.Create;
+﻿using Application.Devices.Commands.Create;
 using Application.Devices.Commands.Update;
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using AutoMapper;
 using Bogus;
 using Domain.Entities;
 using Domain.Enums;
@@ -61,14 +59,7 @@ public class DevicesControllerFixture
 
         MockSender = fixture.Freeze<Mock<ISender>>();
 
-        Mapper = new MapperConfiguration(options =>
-        {
-            options.AddProfile(new DeviceProfile());
-        }).CreateMapper();
-
-        DevicesController = new DevicesController(
-            MockSender.Object,
-            Mapper);
+        DevicesController = new DevicesController(MockSender.Object);
 
         Id = Random.Shared.Next(1, 5000);
 
@@ -86,7 +77,6 @@ public class DevicesControllerFixture
 
     public DevicesController DevicesController { get; }
     public Mock<ISender> MockSender { get; }
-    public IMapper Mapper { get; }
 
     public int Id { get; }
     public DeviceParameters PageParameters { get; set; }

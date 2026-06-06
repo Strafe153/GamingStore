@@ -1,4 +1,5 @@
 ﻿using System.Net.Mime;
+using Application.Mappings;
 using Application.Users.Commands.ChangePassword;
 using Application.Users.Commands.ChangeRole;
 using Application.Users.Commands.Delete;
@@ -8,7 +9,6 @@ using Application.Users.Queries;
 using Application.Users.Queries.GetAll;
 using Application.Users.Queries.GetById;
 using Asp.Versioning;
-using AutoMapper;
 using Domain.Shared.Constants;
 using Domain.Shared.PageParameters;
 using Domain.Shared.Paging;
@@ -27,14 +27,10 @@ namespace Web.Controllers.V1;
 public class UsersController : ControllerBase
 {
     private readonly ISender _sender;
-    private readonly IMapper _mapper;
 
-    public UsersController(
-        ISender sender,
-        IMapper mapper)
+    public UsersController(ISender sender)
     {
         _sender = sender;
-        _mapper = mapper;
     }
 
     /// <summary>
@@ -57,7 +53,7 @@ public class UsersController : ControllerBase
         var query = new GetAllUsersQuery(pageParameters.PageNumber, pageParameters.PageSize);
 
         var users = await _sender.Send(query, cancellationToken);
-        var userResponses = _mapper.Map<PagedModel<GetUserResponse>>(users);
+        var userResponses = users.ToPagedModel();
 
         return Ok(userResponses);
     }
@@ -80,7 +76,7 @@ public class UsersController : ControllerBase
         var query = new GetUserByIdQuery(id);
 
         var user = await _sender.Send(query, cancellationToken);
-        var userResponse = _mapper.Map<GetUserResponse>(user);
+        var userResponse = user.ToResponse();
 
         return Ok(userResponse);
     }
@@ -105,10 +101,10 @@ public class UsersController : ControllerBase
         [FromForm] RegisterUserRequest request,
         CancellationToken cancellationToken)
     {
-        var command = _mapper.Map<RegisterUserCommand>(request);
+        var command = request.ToRegisterCommand();
 
         var user = await _sender.Send(command, cancellationToken);
-        var userResponse = _mapper.Map<GetUserResponse>(user);
+        var userResponse = user.ToResponse();
 
         return CreatedAtAction(nameof(Get), new { userResponse.Id }, userResponse);
     }
@@ -139,7 +135,7 @@ public class UsersController : ControllerBase
         var query = new GetUserByIdQuery(id);
         var user = await _sender.Send(query, cancellationToken);
 
-        var command = _mapper.Map<UpdateUserCommand>(request) with { User = user };
+        var command = request.ToCommand() with { User = user };
         await _sender.Send(command, cancellationToken);
 
         return NoContent();
@@ -181,7 +177,7 @@ public class UsersController : ControllerBase
         var query = new GetUserByIdQuery(id);
         var user = await _sender.Send(query, cancellationToken);
 
-        var command = _mapper.Map<ChangeUserPasswordCommand>(request) with { User = user };
+        var command = request.ToCommand() with { User = user };
         await _sender.Send(command, cancellationToken);
 
         return NoContent();
@@ -224,7 +220,7 @@ public class UsersController : ControllerBase
         var query = new GetUserByIdQuery(id);
         var user = await _sender.Send(query, cancellationToken);
 
-        var command = _mapper.Map<ChangeUserRoleCommand>(request) with { User = user };
+        var command = request.ToCommand() with { User = user };
         await _sender.Send(command, cancellationToken);
 
         return NoContent();

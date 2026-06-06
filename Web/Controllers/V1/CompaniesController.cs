@@ -5,8 +5,8 @@ using Application.Companies.Commands.Update;
 using Application.Companies.Queries;
 using Application.Companies.Queries.GetAll;
 using Application.Companies.Queries.GetById;
+using Application.Mappings;
 using Asp.Versioning;
-using AutoMapper;
 using Domain.Shared.Constants;
 using Domain.Shared.PageParameters;
 using Domain.Shared.Paging;
@@ -25,14 +25,10 @@ namespace Web.Controllers.V1;
 public class CompaniesController : ControllerBase
 {
     private readonly ISender _sender;
-    private readonly IMapper _mapper;
 
-    public CompaniesController(
-        ISender sender,
-        IMapper mapper)
+    public CompaniesController(ISender sender)
     {
         _sender = sender;
-        _mapper = mapper;
     }
 
     /// <summary>
@@ -54,7 +50,7 @@ public class CompaniesController : ControllerBase
         var query = new GetAllCompaniesQuery(pageParameters.PageNumber, pageParameters.PageSize);
 
         var companies = await _sender.Send(query, cancellationToken);
-        var companyResponses = _mapper.Map<PagedModel<GetCompanyResponse>>(companies);
+        var companyResponses = companies.ToPagedModel();
 
         return Ok(companyResponses);
     }
@@ -78,7 +74,7 @@ public class CompaniesController : ControllerBase
         var query = new GetCompanyByIdQuery(id);
 
         var company = await _sender.Send(query, cancellationToken);
-        var companyResponse = _mapper.Map<GetCompanyResponse>(company);
+        var companyResponse = company.ToResponse();
 
         return Ok(companyResponse);
     }
@@ -102,10 +98,10 @@ public class CompaniesController : ControllerBase
         [FromForm] CreateCompanyRequest request,
         CancellationToken cancellationToken)
     {
-        var command = _mapper.Map<CreateCompanyCommand>(request);
+        var command = request.ToCommand();
 
         var company = await _sender.Send(command, cancellationToken);
-        var companyResponse = _mapper.Map<GetCompanyResponse>(company);
+        var companyResponse = company.ToResponse();
 
         return CreatedAtAction(nameof(Get), new { companyResponse.Id }, companyResponse);
     }
@@ -136,7 +132,7 @@ public class CompaniesController : ControllerBase
         var query = new GetCompanyByIdQuery(id);
         var company = await _sender.Send(query, cancellationToken);
 
-        var command = _mapper.Map<UpdateCompanyCommand>(request) with { Company = company };
+        var command = request.ToCommand() with { Company = company };
         await _sender.Send(command, cancellationToken);
 
         return NoContent();

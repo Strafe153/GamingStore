@@ -16,7 +16,6 @@
 * `AspNetCore.HealthChecks.UI.Client` for detailed health checks information
 * `AutoFixture` for test fixtures
 * `AutoFixture.AutoMoq` for Moq support with AutoFixture
-* `AutoMapper` for DTO mapping
 * `Azure.Storage.Blobs` for images storing in Azure Blob Storage
 * `Bogus` for fake data generation
 * `FluentAssertions` for assertions
