@@ -26,7 +26,7 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.ConfigureAuthorization();
 
-builder.Services.ConfigureNSwag();
+builder.Services.ConfigureSwagger();
 
 var app = builder.Build();
 
@@ -34,8 +34,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseOpenApi();
-    app.UseSwaggerUi();
+    app.ConfigureSwaggerUI();
 }
 
 app.UseHttpsRedirection();

@@ -43,7 +43,6 @@
 * `Microsoft.IdentityModel.Tokens` for security tokens
 * `Microsoft.NET.Test.Sdk` for .NET SDK for testing
 * `Moq` for mocking
-* `NSwag.AspNetCore` for Swagger support
 * `Serilog.AspNetCore` for Serilog support for ASP.NET Core
 * `Serilog.Enrichers.Environment` for enricihing the Serilog configuration with Environment properties
 * `Serilog.Exceptions` for detailed Serilog exceptions
@@ -51,6 +50,7 @@
 * `Serilog.Sinks.Elasticsearch` for Serilog Elasticsearch sink
 * `Serilog.Sinks.File` for Serilog file sink
 * `SixLabors.ImageSharp` for images manipulation
+* `Swashbuckle.AspNetCore` for Swagger support
 * `System.IdentityModel.Tokens.Jwt` for JWT
 * `xunit` for unit-tests
 * `xunit.runner.visualstudio` for running tests in Visual Studio
