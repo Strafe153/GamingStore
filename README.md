@@ -14,11 +14,7 @@
 * `AspNetCore.HealthChecks.Redis` for Redis health check
 * `AspNetCore.HealthChecks.SqlServer` for SQL Server health check
 * `AspNetCore.HealthChecks.UI.Client` for detailed health checks information
-* `AutoFixture` for test fixtures
-* `AutoFixture.AutoMoq` for Moq support with AutoFixture
 * `Azure.Storage.Blobs` for images storing in Azure Blob Storage
-* `Bogus` for fake data generation
-* `FluentAssertions` for assertions
 * `FluentValidation` for DTO validation
 * `IdentityServer4` for OpenID Connect and OAuth 2.0
 * `IdentityServer4.AspNetIdentity` for ASP.NET Core integration with IdentityServer4
@@ -41,8 +37,6 @@
 * `Microsoft.Extensions.Http.Resilience` for transient fault handling
 * `Microsoft.Extensions.Identity.Stores` for Identity membership system
 * `Microsoft.IdentityModel.Tokens` for security tokens
-* `Microsoft.NET.Test.Sdk` for .NET SDK for testing
-* `Moq` for mocking
 * `Serilog.AspNetCore` for Serilog support for ASP.NET Core
 * `Serilog.Enrichers.Environment` for enricihing the Serilog configuration with Environment properties
 * `Serilog.Exceptions` for detailed Serilog exceptions
@@ -52,8 +46,6 @@
 * `SixLabors.ImageSharp` for images manipulation
 * `Swashbuckle.AspNetCore` for Swagger support
 * `System.IdentityModel.Tokens.Jwt` for JWT
-* `xunit` for unit-tests
-* `xunit.runner.visualstudio` for running tests in Visual Studio
 
 ## How To Use?
 1. Sign Up
